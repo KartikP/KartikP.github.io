@@ -9,6 +9,14 @@ body {
     border-radius: 35%
 }
 
+p:hover {
+  background:black;
+}
+
+tr:hover {
+  background:black;
+}
+
 
 .topnav {
     overflow: hidden;
