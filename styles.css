@@ -9,14 +9,34 @@ body {
     border-radius: 35%
 }
 
+p {
+    line-height: 150%;
+}
+
+article {
+    line-height:200%;
+}
+
 p:hover {
-  background:black;
+    background:black;
 }
 
 tr:hover {
-  background:black;
+    background:black;
+    align-items:center;
 }
 
+footer {
+    display:flex;
+    /*position: fixed;*/
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    width: 100%;
+    justify-content:center;
+    align-items:center;
+}
 
 .topnav {
     overflow: hidden;
@@ -55,5 +75,5 @@ a:visited {
 }
 
 a:hover {
-    color:white
+    color: #DAF7A6   
 }
