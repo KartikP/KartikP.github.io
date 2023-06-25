@@ -2,6 +2,11 @@
 /* CSS Document */
 body {
   margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   animation: fadeInAnimation ease 2s;
             animation-iteration-count: 1;
@@ -15,11 +20,40 @@ body {
                 opacity: 1;
             }
 }
-
-#dp {
-    border-radius: 35%
+h1 {
+    font-size: 48px;
+    margin-top:0px;
 }
-
+.container {
+    display: flex;
+    align-items: center;
+    max-width:1000px;
+}
+.code {
+    width:1000px
+} 
+.image {
+    text-align: center;
+}
+    
+.text {
+    text-align: center;
+    padding: 20px;
+}
+#dp {
+    border-radius: 25%
+}
+.profile-image {
+    width: 250px; /* Adjust the width as needed */
+    height: auto; /* Adjust the height as needed */
+    padding: 10px; /* Adjust the spacing between the image and name */
+}
+.description {
+    display: flex;
+    overflow-wrap: break-word;
+    font-size: 18px; /* Adjust the font size as needed */
+    text-align: left
+}
 p {
     line-height: 150%;
 }
@@ -61,7 +95,18 @@ tr:hover {
     background-color: #;
     color: white;
 }
-
+footer {
+    display:flex;
+    /*position: fixed;*/
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    width: 100%;
+    justify-content:center;
+    align-items:center;
+    text-align: center;
+}
 .footer {
     text-align: center;
     padding: 20px;
