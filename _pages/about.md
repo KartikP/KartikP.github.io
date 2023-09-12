@@ -17,5 +17,6 @@ Computational neuroscientist transitioning into a data scientist role. 5+ years 
 Hobbies
 ======
 💪🏽 [Lifting heavy things up](https://www.youtube.com/watch?v=GuIlVmL0KBc&list=PLTjllZp4uE3l5TqwPOoGT_XvSBVgp2JEO)
+
 🚲 Amateur cyclist (training for Iron Man)
 
