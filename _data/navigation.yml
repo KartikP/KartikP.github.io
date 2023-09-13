@@ -1,5 +1,9 @@
 # main links links
 main:
+  - title: "Resume"
+    #url: /cv/
+    url: /files/Kartik_Pradeepan_Resume.pdf
+
   - title: "Publications"
     url: /publications/
 
@@ -9,15 +13,11 @@ main:
   #- title: "Teaching"
   #  url: /teaching/    
     
-  - title: "Portfolio"
-    url: /portfolio/
+  - title: "Projects"
+    url: /projects/
         
   #- title: "Blog Posts"
   #  url: /year-archive/
-    
-  - title: "Resume"
-    #url: /cv/
-    url: /files/Kartik_Pradeepan_Resume.pdf
-    
+     
   #- title: "Guide"
   #  url: /markdown/
