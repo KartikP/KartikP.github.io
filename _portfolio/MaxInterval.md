@@ -1,5 +1,5 @@
 ---
-title: "MaxInterval Burst Detection (Python/Matlab)"
+title: "MaxInterval Burst Detection Algorithm (Python/Matlab)"
 excerpt: "Detects single electrode spike train bursts based on 5 parameters. Currently implemented in Python and Matlab."
 collection: projects
 ---
