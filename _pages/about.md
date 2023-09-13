@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-Currently wrapping up my PhD @ Western University.
+Currently wrapping up my 🧠 PhD @ Western University.
 
 About me
 ======
@@ -28,5 +28,5 @@ Hobbies
 🚲 Cycling my way towards an Iron Man\
 📚 Constantly learning (currently reading Outlive: The Science and Art of Longevity)\
 🍰 Making the World's Best Tiramisu (yes, I know...but there's no tiramisu emoji)\
-😁 Keeping up the adventures of Luffy\
+😁 Keeping up the adventures of [Luffy](https://www.youtube.com/watch?v=AfZmNBonIeI)
 
