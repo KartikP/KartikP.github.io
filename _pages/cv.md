@@ -27,12 +27,15 @@ Awards
 * Laurene Paterson Estate Scholarship, $1000 CAD (Sept 2017)
 
 
-
 Academic Work Experience
 ======
 <strong>Doctoral Researcher</strong> (2018-present)
 * Project: Investigating neuronal network development of neurodevelopmental disorders and neurodegenerative diseases using multielectrode arrays
 * Supervisors: Dr. Julio Martinez-Trujillo & Dr. Lyle Muller
+
+{: 
+#teaching
+}
 
 <strong>Graduate Teaching Assistant </strong>(2019-2023)
 * 2023: Introduction to Psychology as a Social Science (Dr. Shelley Cross-Mellor)
@@ -44,13 +47,17 @@ Academic Work Experience
 <strong>Research Assistant </strong>(2016-2018)
 * Project: Primer design and optimizing gene knockdown using qPCR in *drosophila* transgenic RNAi lines
 * Supervisor: Dr. Jamie Kramer
-  
 
+{: 
+#presentations
+}
 Presentations
 ======
 20+ presentations to provincial and international audience for the Society for Neuroscience, Canadian Association for Neuroscience, Gordon Research Conference & Seminar, Developmental Disabilities Research Day, London Health Research Day, Clinical Neurological Sciences Research Day, Schulich School of Medicine & Dentistry Psychiatry Grand Rounds, Robarts Research Institute, and Kiwanis Senior's Center.
   
-
+{: 
+#communication
+}
 Scientific Outreach and Publication Communication
 ======
 * Society of Neuroscience Graduate Students (SONGS) Dorsal Column Writer
@@ -66,6 +73,9 @@ Scientific Outreach and Publication Communication
 * Retiring with Strong Minds presentation - Kiwanis Senior’s Center
 * Be Al U CaN B Genetics in-class (grade 7/8) presentation - Mr. Gardiner at Abdereen P.S.
 
+{: 
+#leadership
+}
 Leadership and Organization
 ======
 * University Consulting Group Team Lead (London Community Foundation) (Sept 2022 - Dec 2022)
