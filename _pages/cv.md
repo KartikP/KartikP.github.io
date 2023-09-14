@@ -35,11 +35,11 @@ Academic Work Experience
 * Supervisors: Dr. Julio Martinez-Trujillo & Dr. Lyle Muller
 
 <strong>Graduate Teaching Assistant </strong>(2019-2023)
-* 2019: Physiology of Senses (Dr. Tutis Villis)
-* 2020-2021: Mammalian Physiology (Professor Tom Stavkraky)
-* 2021-2022: Human Physiology (Dr. Christine Bell)
-* 2022-2023: Human Physiology (Dr. Pierre Thibeault)
 * 2023: Introduction to Psychology as a Social Science (Dr. Shelley Cross-Mellor)
+* 2022-2023: Human Physiology (Dr. Pierre Thibeault)
+* 2021-2022: Human Physiology (Dr. Christine Bell)
+* 2020-2021: Mammalian Physiology (Professor Tom Stavkraky)
+* 2019: Physiology of Senses (Dr. Tutis Villis)
 
 <strong>Research Assistant </strong>(2016-2018)
 * Project: Primer design and optimizing gene knockdown using qPCR in *drosophila* transgenic RNAi lines
