@@ -274,7 +274,11 @@
       
 
       <section class="page__content" itemprop="text">
-        <p>A Max Interval (MI) burst detection algorithm was created to identify individual bursts. MI is a fixed threshold-based method for identifying bursts that uses five fixed threshold parameters (maximum ISI at start of the burst, maximum ISI in burst, minimum burst duration, minimum IBI, and minimum number of spikes within burst) to identify, merge, and exclude potential bursts. The values for these parameters are chosen a priori.</p>
+        <p><a href="https://github.com/KartikP/MaxIntervalPy/blob/main/MaxInterval_demo.ipynb">Demo</a><br />
+<a href="https://github.com/KartikP/MaxIntervalPy">Python Project Link</a><br />
+<a href="https://github.com/KartikP/MaxInterval">Matlab Project Links</a></p>
+
+<p>A Max Interval (MI) burst detection algorithm was created to identify individual bursts. MI is a fixed threshold-based method for identifying bursts that uses five fixed threshold parameters (maximum ISI at start of the burst, maximum ISI in burst, minimum burst duration, minimum IBI, and minimum number of spikes within burst) to identify, merge, and exclude potential bursts. The values for these parameters are chosen a priori.</p>
 
 <p>The algorithm is separated into three phases:</p>
 
@@ -289,10 +293,6 @@
     <p>Quality control – removes any small burst less than the minimum burst duration or has less than minimum number of spikes in burst. This step can potentially delete all spikes. The bursts are stored in a MATLAB cell array to permit detailed analysis of burst dynamics.</p>
   </li>
 </ol>
-
-<p><a href="https://github.com/KartikP/MaxIntervalPy/blob/main/MaxInterval_demo.ipynb">Demo</a><br />
-<a href="https://github.com/KartikP/MaxIntervalPy">Python Project Link</a><br />
-<a href="https://github.com/KartikP/MaxInterval">Matlab Project Links</a></p>
 
         
       </section>

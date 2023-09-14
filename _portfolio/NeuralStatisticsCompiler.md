@@ -4,7 +4,7 @@ excerpt: "Simple to use GUI for the automated analysis of multielectrode array f
 collection: projects
 ---
 
-[Project link](https://github.com/KartikP/BIOPHYS9709B-FCNN/blob/main/Pradeepan_Kartik_Final_Code.ipynb)\
+[Project link](https://github.com/KartikP/BIOPHYS9709B-FCNN/blob/main/Pradeepan_Kartik_Final_Code.ipynb)
 
 The Neural Statistics Compiler is a project aimed at facilitating the investigation of early neuronal network dynamics in neurodevelopmental and neurodegenerative disorders using multielectrode array (MEA) technology. MEA data analysis requires sophisticated electrophysiological techniques such as spike sorting, multidimensional analysis, and machine learning. However, these techniques are typically not part of the training repertoire of developmental and molecular biologists.
 
