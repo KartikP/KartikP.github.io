@@ -101,6 +101,9 @@ Technical Skills
 * Visualization
   * Matplotlib, Seaborn, NetworkX, MNE, Tableau, Illustrator/Affinity Designer
 
+{: 
+#publications
+}
 Publications
 ======
   <ul>{% for post in site.publications %}
