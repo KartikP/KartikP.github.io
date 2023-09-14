@@ -11,7 +11,7 @@ title                    : "KARTIK PRADEEPAN"
 title_separator          : "-"
 name                     : &name "KARTIK PRADEEPAN"
 description              : &description "personal description"
-url                      : https://kartikp.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : www.kartikpradeepan.com # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "kartikp/kartikp.github.io"
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
@@ -103,7 +103,7 @@ author:
   impactstory      : 
   lastfm           :
   linkedin         : "kartikpradeepan"
-  orcid            : "http://orcid.org/0000-0003-0979-7928"
+  orcid            : "https://orcid.org/0000-0003-0979-7928"
   pinterest        :
   soundcloud       :
   stackoverflow    : # http://stackoverflow.com/users/123456/username
