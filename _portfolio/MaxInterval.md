@@ -3,6 +3,9 @@ title: "MaxInterval Burst Detection Algorithm (Python/Matlab)"
 excerpt: "Detects single electrode spike train bursts based on 5 parameters. Currently implemented in Python and Matlab."
 collection: projects
 ---
+[Demo](https://github.com/KartikP/MaxIntervalPy/blob/main/MaxInterval_demo.ipynb)\
+[Python Project Link](https://github.com/KartikP/MaxIntervalPy)\
+[Matlab Project Links](https://github.com/KartikP/MaxInterval)\
 
 A Max Interval (MI) burst detection algorithm was created to identify individual bursts. MI is a fixed threshold-based method for identifying bursts that uses five fixed threshold parameters (maximum ISI at start of the burst, maximum ISI in burst, minimum burst duration, minimum IBI, and minimum number of spikes within burst) to identify, merge, and exclude potential bursts. The values for these parameters are chosen a priori.
 
@@ -13,7 +16,3 @@ The algorithm is separated into three phases:
 2. Merge bursts – any pair of bursts that have an IBI less than the minimum IBI will be merged into a single burst.
 
 3. Quality control – removes any small burst less than the minimum burst duration or has less than minimum number of spikes in burst. This step can potentially delete all spikes. The bursts are stored in a MATLAB cell array to permit detailed analysis of burst dynamics.
-
-[Demo](https://github.com/KartikP/MaxIntervalPy/blob/main/MaxInterval_demo.ipynb)\
-[Python Project Link](https://github.com/KartikP/MaxIntervalPy)\
-[Matlab Project Links](https://github.com/KartikP/MaxInterval)
