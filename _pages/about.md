@@ -12,7 +12,7 @@ Currently wrapping up my 🧠 PhD @ Western University.
 
 About me
 ======
-Computational neuroscientist transitioning into data science. 5+ years of experience in designing experiments, handling complex datasets, developing analysis pipelines, and implementing statistical/machine learning models. My experience in leading cross- functional collaborations and communicating technical findings equips me to work seamlessly in interdisciplinary teams. My background in management consulting for non-profit organizations demonstrates my capacity to apply data-driven solutions to real-world challenges.
+Computational neuroscientist transitioning into a [full stack](https://shopify.engineering/what-is-a-full-stack-data-scientist) data scientist. Over 5 years of experience in identifying gaps in knowledge, designing experiments, performing exploratory data analysis on complex datasets, developing analysis pipelines, and implementing statistical/machine learning models. My experience in leading cross- functional collaborations and communicating technical findings equips me to work seamlessly in interdisciplinary teams. My background in management consulting for non-profit organizations demonstrates my capacity to apply data-driven solutions to business challenges.
 
 Professional experience
 ======
