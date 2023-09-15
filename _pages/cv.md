@@ -97,7 +97,7 @@ Technical Skills
 * Languages
   * Python, MATLAB, SQL, Bash, Git, R (via Jasp)
 * Techniques
-  * Pandas, SciPy, NumPy, Scikit-Learn, PyTorch, TensorFlow, Keras, Statsmodels, nevergrad, NLP (SpaCy, NLTK, HuggingFace LLMs, OpenAI API)
+  * Pandas, SciPy, NumPy, Scikit-Learn, PyTorch, TensorFlow, Keras, Statsmodels, nevergrad, NLP (SpaCy, NLTK, HuggingFace LLMs, OpenAI API), Beautiful Soup, Selenium
 * Visualization
   * Matplotlib, Seaborn, NetworkX, MNE, Tableau, Illustrator/Affinity Designer
 
