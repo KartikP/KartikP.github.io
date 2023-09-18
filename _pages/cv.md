@@ -53,7 +53,7 @@ Academic Work Experience
 }
 Presentations
 ======
-20+ presentations to provincial and international audience for the Society for Neuroscience, Canadian Association for Neuroscience, Gordon Research Conference & Seminar, Developmental Disabilities Research Day, London Health Research Day, Clinical Neurological Sciences Research Day, Schulich School of Medicine & Dentistry Psychiatry Grand Rounds, Robarts Research Institute, and Kiwanis Senior's Center.
+20+ presentations to provincial and international audiences at the Society for Neuroscience, Canadian Association for Neuroscience, Gordon Research Conference & Seminar, Developmental Disabilities Research Day, London Health Research Day, Clinical Neurological Sciences Research Day, Schulich School of Medicine & Dentistry Psychiatry Grand Rounds, Robarts Research Institute, and Kiwanis Senior's Center.
   
 {: 
 #communication
@@ -82,7 +82,7 @@ Leadership and Organization
 * Society of Neuroscience Graduate Students Presentation Workshop Chair (July 2020 - Sept 2022)
 * Society of Graduate Students Neuroscience Councillor September (2020 - July 2022)
 * University Consulting Group Consultant (Athletes for Hope) (Jan 2022 - May 2022)
-* Graduate Program Reviewer Jan 2022 - Mar 2022)
+* Graduate Program Reviewer (Jan 2022 - Mar 2022)
 * Robarts Association of Trainees and Students Council (May 2019 - June 2021)
 
 Relevant Academic Courses
