@@ -3,6 +3,7 @@ title: "Detection of Reverberating Super Bursts in Neuronal Multielectrode Data"
 excerpt: "Production implementation of burst reverberation toolbox. Packages a data pipeline (that applies unsupervised learning, regression techniques, and feature generators) into a desktop GUI for use by non-coding research scientists."
 collection: projects
 url: https://github.com/KartikP/Burst-Reverberation-Toolbox
+date: 2023-07-21
 ---
 
 [Project Link](https://github.com/KartikP/Burst-Reverberation-Toolbox)

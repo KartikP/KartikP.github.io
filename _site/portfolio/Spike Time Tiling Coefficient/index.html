@@ -1,0 +1,1271 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+
+<meta charset="utf-8">
+
+
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Spiking Time Tiling Coefficient - Pairwise correlations between spike trains - KARTIK PRADEEPAN</title>
+
+
+
+
+
+
+
+<meta property="og:locale" content="en-US">
+<meta property="og:site_name" content="KARTIK PRADEEPAN">
+<meta property="og:title" content="Spiking Time Tiling Coefficient - Pairwise correlations between spike trains">
+
+
+  <link rel="canonical" href="http://localhost:4000/portfolio/Spike%20Time%20Tiling%20Coefficient/">
+  <meta property="og:url" content="http://localhost:4000/portfolio/Spike%20Time%20Tiling%20Coefficient/">
+
+
+
+  <meta property="og:description" content="How to load data, calculate STTC, and then visualize correlation matrix in various formats">
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2023-09-19T00:00:00-07:00">
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "KARTIK PRADEEPAN",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="KARTIK PRADEEPAN Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+    
+
+<!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="57x57" href="http://localhost:4000/images/apple-touch-icon-57x57.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="60x60" href="http://localhost:4000/images/apple-touch-icon-60x60.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="72x72" href="http://localhost:4000/images/apple-touch-icon-72x72.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="76x76" href="http://localhost:4000/images/apple-touch-icon-76x76.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="114x114" href="http://localhost:4000/images/apple-touch-icon-114x114.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="120x120" href="http://localhost:4000/images/apple-touch-icon-120x120.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="144x144" href="http://localhost:4000/images/apple-touch-icon-144x144.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="152x152" href="http://localhost:4000/images/apple-touch-icon-152x152.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="180x180" href="http://localhost:4000/images/apple-touch-icon-180x180.png?v=M44lzPylqQ">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/android-chrome-192x192.png" sizes="192x192">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/favicon-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="http://localhost:4000/images/manifest.json?v=M44lzPylqQ">
+<link rel="mask-icon" href="http://localhost:4000/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000">
+<link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-TileImage" content="http://localhost:4000/images/mstile-144x144.png?v=M44lzPylqQ">
+<meta name="msapplication-config" content="http://localhost:4000/images/browserconfig.xml?v=M44lzPylqQ">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="http://localhost:4000/assets/css/academicons.css"/>
+
+<script type="text/x-mathjax-config"> MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: "all" } } }); </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <button><div class="navicon"></div></button>
+        <ul class="visible-links">
+          <li class="masthead__menu-item masthead__menu-item--lg"><a href="http://localhost:4000/">KARTIK PRADEEPAN</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/files/Kartik_Pradeepan_Resume.pdf">Resume</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/publications/">Publications</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/projects/">Projects</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/cv/">CV</a></li>
+          
+        </ul>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <div class="sidebar sticky">
+  
+
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  <div class="author__avatar">
+    
+    	<img src="http://localhost:4000/images/ani_dp.png" class="author__avatar" alt="Kartik Pradeepan">
+    
+  </div>
+
+  <div class="author__content">
+    <h3 class="author__name">Kartik Pradeepan</h3>
+    <p class="author__bio">Computational Neuroscience & Data Science</p>
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> The Pale Blue Dot</li>
+      
+      
+      
+      
+        <li><a href="mailto:kartikspradeepan@gmail.com"><i class="fas fa-fw fa-envelope" aria-hidden="true"></i> Email</a></li>
+      
+      
+       
+      
+        <li><a href="https://twitter.com/KartikPradeepan"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+      
+      
+      
+      
+        <li><a href="https://www.linkedin.com/in/kartikpradeepan"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+      
+      
+      
+      
+      
+      
+        <li><a href="https://github.com/KartikP"><i class="fab fa-fw fa-github" aria-hidden="true"></i> Github</a></li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+        <li><a href="https://scholar.google.ca/citations?user=qP7VnZ8AAAAJ&hl=en"><i class="fas fa-fw fa-graduation-cap"></i> Google Scholar</a></li>
+      
+      
+      
+        <li><a href="https://orcid.org/0000-0003-0979-7928"><i class="ai ai-orcid-square ai-fw"></i> ORCID</a></li>
+      
+      
+      
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Spiking Time Tiling Coefficient - Pairwise correlations between spike trains">
+    <meta itemprop="description" content="How to load data, calculate STTC, and then visualize correlation matrix in various formats">
+    <meta itemprop="datePublished" content="September 19, 2023">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Spiking Time Tiling Coefficient - Pairwise correlations between spike trains
+</h1>
+          
+        
+        
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2023-09-19T00:00:00-07:00">September 19, 2023</time></p>
+        
+        
+             
+        
+    
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p><a href="https://github.com/KartikP/STTC_demo/blob/main/STTC_demo.ipynb">Demo</a></p>
+
+<h2 id="install-necessary-packages">Install necessary packages</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">elephant</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">networkx</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">mne</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">mne_connectivity</span>
+</code></pre></div></div>
+
+<h2 id="import-libraries">Import Libraries</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">neo</span>
+<span class="kn">import</span> <span class="nn">quantities</span> <span class="k">as</span> <span class="n">pq</span>
+<span class="kn">from</span> <span class="nn">elephant.spike_train_correlation</span> <span class="kn">import</span> <span class="n">spike_time_tiling_coefficient</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="n">nx</span>
+<span class="kn">from</span> <span class="nn">mne.viz</span> <span class="kn">import</span> <span class="n">circular_layout</span>
+<span class="kn">from</span> <span class="nn">mne_connectivity.viz</span> <span class="kn">import</span> <span class="n">plot_connectivity_circle</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">pearsonr</span>
+</code></pre></div></div>
+
+<h2 id="load-data">Load Data</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">well_data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"/content/drive/MyDrive/Colab Notebooks/Well_data.csv"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">well_data</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div id="df-3f668a17-003a-4ea8-a8e8-a3f7f9ffa191" class="colab-df-container">
+    <div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>Time (s)</th>
+      <th>Electrode</th>
+      <th>Well</th>
+      <th>Channel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>80</td>
+      <td>0.00568</td>
+      <td>C4_43</td>
+      <td>C4</td>
+      <td>43</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>87</td>
+      <td>0.00608</td>
+      <td>C4_16</td>
+      <td>C4</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>620</td>
+      <td>0.07856</td>
+      <td>C4_16</td>
+      <td>C4</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>626</td>
+      <td>0.08040</td>
+      <td>C4_55</td>
+      <td>C4</td>
+      <td>55</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>700</td>
+      <td>0.10656</td>
+      <td>C4_16</td>
+      <td>C4</td>
+      <td>16</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-3f668a17-003a-4ea8-a8e8-a3f7f9ffa191')" title="Convert this dataframe to an interactive table." style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z" />
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-3f668a17-003a-4ea8-a8e8-a3f7f9ffa191 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-3f668a17-003a-4ea8-a8e8-a3f7f9ffa191');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+<div id="df-343065d7-5f35-4bd8-b847-1debe7d8d734">
+  <button class="colab-df-quickchart" onclick="quickchart('df-343065d7-5f35-4bd8-b847-1debe7d8d734')" title="Suggest charts." style="display:none;">
+
+&lt;svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px"&gt;
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+    </g>
+&lt;/svg&gt;
+  </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+  <script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-343065d7-5f35-4bd8-b847-1debe7d8d734 button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+    </div>
+  </div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">well_data</span><span class="p">[</span><span class="s">"Electrode"</span><span class="p">].</span><span class="n">unique</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array(['C4_43', 'C4_16', 'C4_55', 'C4_87', 'C4_46', 'C4_18', 'C4_85',
+       'C4_47', 'C4_31', 'C4_83', 'C4_61', 'C4_78', 'C4_86', 'C4_67',
+       'C4_63', 'C4_81', 'C4_42', 'C4_56', 'C4_57', 'C4_22', 'C4_53',
+       'C4_72', 'C4_21', 'C4_66', 'C4_28', 'C4_75', 'C4_48', 'C4_12',
+       'C4_58', 'C4_38', 'C4_68', 'C4_84', 'C4_65', 'C4_88', 'C4_54',
+       'C4_77', 'C4_34', 'C4_17', 'C4_36', 'C4_45', 'C4_24', 'C4_76',
+       'C4_26', 'C4_74', 'C4_37', 'C4_32', 'C4_11', 'C4_44', 'C4_27',
+       'C4_71', 'C4_33', 'C4_14', 'C4_41', 'C4_35', 'C4_82', 'C4_13',
+       'C4_62', 'C4_51', 'C4_64', 'C4_52', 'C4_15', 'C4_23'], dtype=object)
+</code></pre></div></div>
+
+<p>This is how my data looks like. The “Unnamed: 0” column is just indices from a large dataframe this data was extracted from (and my carelessness in not dropping the column). The <em>Electrode</em> name in my data is organized based on the well and channel position. The original data had 12 wells (A1-&gt;C4). The first digit in <em>Channel</em> is the X or row position, and the second digit is Y or column position. <strong>My data is from a 64 channel (8x8) multielectrode array.</strong></p>
+
+<p>This will likely look different from your data. You can either format your data to match this or you can change how the “generate_raster()” function works to handle your data.</p>
+
+<h2 id="quick-look-at-the-network-activity">Quick look at the network activity</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">hist</span><span class="p">(</span><span class="n">well_data</span><span class="p">[</span><span class="s">"Time (s)"</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">300</span><span class="p">);</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">despine</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Time (s)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Total number of spikes in network (Bin size:1s)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Sort of like a PSTH - representing network activity"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 1.0, 'Sort of like a PSTH - representing network activity')
+</code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_13_1.png" alt="png" /></p>
+
+<h2 id="handling-spike-sorted-data"><em>Handling spike sorted data</em></h2>
+<p>Note: The code below is made for MUA activity (i.e., one signal per channel). For spike-sorted data that may have multiple units from a single channel, my first attempt would be to create “pseudo-channels”. This is where you create new channel labels that reflect an arbitrary spatial organization.</p>
+
+<p>For example: If you have 6 channels in a 2x3 grid and each channel has between 0-3 units, you can do the following.</p>
+
+<p><strong>Original channel labels</strong>: [11, 12, 21, 22, 31, 32]</p>
+
+<p><strong>Number of units per channel</strong>: [2, 1, 0, 3, 1, 1]</p>
+
+<p>This means channel 11 had 2 units, channel 12 had 1 units, channel 21 had 0 units, etc, etc.</p>
+
+<p><strong>Pseudo-channel labels</strong>: [1101, 1102, 1201, 2201, 2202, 2203, 3101, 3201]</p>
+
+<p>In this case, I multiplied the original channel labels by 100 and added the unit ID. Channels that had no units were ignored.</p>
+
+<p>By doing this, you should still have the option to preserve some spatial organization when visualizing the data. Personally have not looked into this, so external readings may be required to actually get this done. Otherwise, you can skip trying to plot everything in a grid and just do an unstructed network graph.</p>
+
+<h2 id="convert-data-frame-into-a-usable-array-format">Convert data frame into a usable array format</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">channel_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">9</span><span class="p">)]</span>
+<span class="s">'''
+The above produces the following:
+  [11, 12, 13, 14, 15, 16, 17, 18,
+  21, 22, 23, 24, 25, 26, 27, 28,
+  31, 32, 33, 34, 35, 36, 37, 38,
+  41, 42, 43, 44, 45, 46, 47, 48,
+  51, 52, 53, 54, 55, 56, 57, 58,
+  61, 62, 63, 64, 65, 66, 67, 68,
+  71, 72, 73, 74, 75, 76, 77, 78,
+  81, 82, 83, 84, 85, 86, 87, 88]
+'''</span>
+
+<span class="c1"># Sort data frame containing mixed-bag of electrode and spike times based on channel name
+</span><span class="k">def</span> <span class="nf">generate_raster</span><span class="p">(</span><span class="n">well_data</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">channel_ids</span><span class="p">):</span>
+  <span class="s">'''
+  well_data: Data frame in the format seen above
+  duration: Length of recording in seconds (in this case 300 seconds)
+  channel_ids: Name of all channels in the format seen in the data frame "channel" column
+  '''</span>
+  <span class="n">raster</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="c1"># Loop through each channel regardless of activity
+</span>  <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">channel_ids</span><span class="p">:</span>
+    <span class="c1"># If the channel is found in my data (i.e., it had at least 1 spike)
+</span>    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="ow">in</span> <span class="n">well_data</span><span class="p">[</span><span class="s">"Channel"</span><span class="p">].</span><span class="n">to_list</span><span class="p">():</span>
+      <span class="c1"># Find spike times associated with that channel
+</span>      <span class="n">spiketrain</span> <span class="o">=</span> <span class="n">well_data</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">well_data</span><span class="p">[</span><span class="s">"Channel"</span><span class="p">]</span><span class="o">==</span><span class="nb">int</span><span class="p">(</span><span class="n">channel</span><span class="p">),</span> <span class="n">well_data</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="nb">str</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">"Time"</span><span class="p">)].</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+      <span class="c1"># Convert spike times that occur before the end of the recording (i.e., duration) to an array
+</span>      <span class="n">spiketrain</span> <span class="o">=</span> <span class="n">spiketrain</span><span class="p">.</span><span class="n">to_numpy</span><span class="p">().</span><span class="n">flatten</span><span class="p">()[</span><span class="n">spiketrain</span><span class="p">.</span><span class="n">to_numpy</span><span class="p">().</span><span class="n">flatten</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">duration</span><span class="p">]</span>
+      <span class="c1"># Store array
+</span>      <span class="n">raster</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">spiketrain</span><span class="p">)</span>
+    <span class="c1"># If the channel is not found in my data, I still want to store that it was empty
+</span>    <span class="k">else</span><span class="p">:</span>
+      <span class="n">raster</span><span class="p">.</span><span class="n">append</span><span class="p">([])</span>
+  <span class="k">return</span> <span class="n">raster</span>
+
+<span class="n">raster</span> <span class="o">=</span> <span class="n">generate_raster</span><span class="p">(</span><span class="n">well_data</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">channel_ids</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="visualize-network-activity-as-a-raster-plot">Visualize network activity (as a raster plot)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">rcParams</span><span class="p">.</span><span class="n">update</span><span class="p">({</span><span class="s">'font.size'</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">rc</span><span class="p">(</span><span class="s">'axes'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">eventplot</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'black'</span><span class="p">,</span> <span class="n">linelengths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_21_0.png" alt="png" /></p>
+
+<h2 id="calculate-pairwise-correlation-using-elephants-sttc">Calculate pairwise correlation using Elephant’s STTC</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">calculate_pairwise_correlations</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.005</span><span class="o">*</span><span class="n">pq</span><span class="p">.</span><span class="n">s</span><span class="p">):</span>
+  <span class="c1"># Create an empty n x n matrix, where n is the number of channels
+</span>  <span class="n">sttc_m</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">raster</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">raster</span><span class="p">)))</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">nan</span>
+
+  <span class="c1"># Iterate through each channel, compute pairwise correlations, store in matrix in appropriate position
+</span>  <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ch1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">raster</span><span class="p">):</span>
+      <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">ch2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">raster</span><span class="p">):</span>
+        <span class="n">ch1_spiketrain</span> <span class="o">=</span> <span class="n">neo</span><span class="p">.</span><span class="n">SpikeTrain</span><span class="p">(</span><span class="n">ch1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s">"s"</span><span class="p">,</span> <span class="n">t_stop</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
+        <span class="n">ch2_spiketrain</span> <span class="o">=</span> <span class="n">neo</span><span class="p">.</span><span class="n">SpikeTrain</span><span class="p">(</span><span class="n">ch2</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s">"s"</span><span class="p">,</span> <span class="n">t_stop</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
+        <span class="n">sttc_m</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">spike_time_tiling_coefficient</span><span class="p">(</span><span class="n">ch1_spiketrain</span><span class="p">,</span> <span class="n">ch2_spiketrain</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">sttc_m</span>
+
+<span class="n">sttc</span> <span class="o">=</span> <span class="n">calculate_pairwise_correlations</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">300</span><span class="o">*</span><span class="n">pq</span><span class="p">.</span><span class="n">s</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="visualize-correlation-matrix">Visualize correlation matrix</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Since correlation matrix is symmetrical, grab only the lower triangle to avoid repeat correlations
+</span><span class="n">STTC_lt</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">tril</span><span class="p">(</span><span class="n">sttc</span><span class="p">,</span> <span class="n">k</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">STTC_lt</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">STTC_lt</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">STTC_lt</span><span class="p">)</span>
+
+<span class="c1"># Visualize
+</span><span class="n">hm</span> <span class="o">=</span> <span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">STTC_lt</span><span class="p">,</span>
+            <span class="n">yticklabels</span><span class="o">=</span><span class="n">channel_ids</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">channel_ids</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">sns</span><span class="p">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s">"Reds"</span><span class="p">,</span><span class="n">as_cmap</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span> <span class="n">cbar</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span><span class="s">'label'</span><span class="p">:</span> <span class="s">'Spike Time Tiling Coefficient (STTC)'</span><span class="p">},</span>
+            <span class="n">square</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c1"># To do: Fix X-tick label spacing to be every 8th
+</span></code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_27_0.png" alt="png" /></p>
+
+<h2 id="plot-distribution-of-correlations">Plot distribution of correlations</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Filter data so that nan and 0 values are removed.
+</span><span class="n">flattened_nonzero_STTC</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">STTC_lt</span><span class="p">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="p">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span>
+
+<span class="c1"># Visualize and descriptive statistics
+</span><span class="n">sns</span><span class="p">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">flattened_nonzero_STTC</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Non-zero Pairwise Correlations"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">flattened_nonzero_STTC</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s">'black'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">flattened_nonzero_STTC</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s">'red'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="sa">f</span><span class="s">"Non-zero Mean (</span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">flattened_nonzero_STTC</span><span class="p">)</span><span class="si">}</span><span class="s">)"</span><span class="p">,</span><span class="sa">f</span><span class="s">"Non-zero Median (</span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">flattened_nonzero_STTC</span><span class="p">)</span><span class="si">}</span><span class="s">)"</span><span class="p">])</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">despine</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_30_0.png" alt="png" /></p>
+
+<p>Since mean is slightly less than median, the distribution is left-skewed. But considering how close they are, this distribution is arguably symmetrical.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sns</span><span class="p">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">flattened_nonzero_STTC</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Non-zero Pairwise Correlations"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Spike time tiling coefficient"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0, 0.5, 'Spike time tiling coefficient')
+</code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_32_1.png" alt="png" /></p>
+
+<h2 id="determine-threshold-based-on-distribution-of-correlations-and-filter-values">Determine threshold based on distribution of correlations and filter values</h2>
+
+<p>Considering that there can be up to 2048 edges (64 channels x 64 channels / 2), I will be thresholding subsequent visualizations for any correlation greater than the third quartile (~0.6).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">THRESHOLD</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">flattened_nonzero_STTC</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">)</span> <span class="c1"># Gets 3rd quartile (i.e., end of IQR)
+</span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"We will be using a correlation threshold of </span><span class="si">{</span><span class="n">THRESHOLD</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="s">'''
+Replace values that didn't meet the threshold to 0. Ideally, you convert them to
+nan values, but for some reason,t for some reason the connectivity circle handles
+nan values as very large numbers and throws off the n_lines parameter, such that
+you need to plot many more lines than needed.
+'''</span>
+<span class="n">STTC_threshold</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">STTC_lt</span> <span class="o">&lt;</span> <span class="n">THRESHOLD</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">STTC_lt</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>We will be using a correlation threshold of 0.6064791131257226
+</code></pre></div></div>
+
+<h2 id="visualize-connectivity-grid">Visualize connectivity grid</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create color palette that will be used to visualize spatial position of electrodes
+</span><span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="p">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s">"Spectral"</span><span class="p">,</span><span class="mi">512</span><span class="p">)</span>
+<span class="n">palette1</span> <span class="o">=</span> <span class="p">[</span><span class="n">palette</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">8</span><span class="p">)]</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">palplot</span><span class="p">(</span><span class="n">palette1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_39_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a graph object
+</span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">Graph</span><span class="p">()</span>
+
+<span class="c1"># Add nodes to the graph
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">):</span>
+  <span class="n">G</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="c1"># Add edges to the graph based on the correlations
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+      <span class="n">correlation</span> <span class="o">=</span> <span class="n">STTC_threshold</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+      <span class="k">if</span> <span class="n">correlation</span> <span class="o">&gt;=</span> <span class="n">THRESHOLD</span><span class="p">:</span> <span class="c1"># Only add node if value passes threshold (probably don't need this anymore)
+</span>        <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">correlation</span><span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">get_edge_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="s">'weight'</span><span class="p">).</span><span class="n">values</span><span class="p">()</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="p">[(</span><span class="n">w</span><span class="o">-</span><span class="mf">0.29</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">weights</span><span class="p">)]</span>
+
+<span class="c1"># Create a layout for the graph as a 4x4 grid
+</span><span class="n">pos</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">pos</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="n">i</span><span class="p">)</span>
+
+<span class="c1"># Create label map with electrode names
+</span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">old_label</span><span class="p">:</span> <span class="n">new_label</span> <span class="k">for</span> <span class="n">old_label</span><span class="p">,</span> <span class="n">new_label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">nodes</span><span class="p">(),</span> <span class="n">channel_ids</span><span class="p">)}</span>
+
+<span class="c1"># Draw the graph using the grid layout
+</span><span class="n">nx</span><span class="p">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">palette1</span><span class="p">,</span>
+        <span class="n">with_labels</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">font_color</span><span class="o">=</span><span class="s">'black'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+
+<span class="c1"># Display the graph
+</span><span class="n">plt</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="s">'off'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(-0.7350000000000001,
+ 7.734999999999999,
+ -7.734999999999999,
+ 0.7350000000000001)
+</code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_40_1.png" alt="png" /></p>
+
+<h2 id="visualize-connectivity-circle">Visualize connectivity circle</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">node_order</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">node_order</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="n">channel_ids</span><span class="p">)</span>
+<span class="c1"># This will format the grid. Group boundaries separates distinct rows in this data
+</span><span class="n">node_angles</span> <span class="o">=</span> <span class="n">circular_layout</span><span class="p">(</span><span class="n">channel_ids</span><span class="p">,</span> <span class="n">node_order</span><span class="p">,</span> <span class="n">start_pos</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">group_boundaries</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">56</span><span class="p">])</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="s">'black'</span><span class="p">,</span>
+                        <span class="n">subplot_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">polar</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+<span class="c1"># Plots the top 500 strongest connections
+</span><span class="n">plot_connectivity_circle</span><span class="p">(</span><span class="n">STTC_threshold</span><span class="p">,</span> <span class="n">channel_ids</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">THRESHOLD</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_lines</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                          <span class="n">node_angles</span><span class="o">=</span><span class="n">node_angles</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                          <span class="n">textcolor</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span>
+                          <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_43_0.png" alt="png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(&lt;Figure size 800x800 with 2 Axes&gt;, &lt;PolarAxes: &gt;)
+</code></pre></div></div>
+
+<h2 id="plot-correlation-with-respect-to-distance-between-electrodes">Plot correlation with respect to distance between electrodes</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Calculates a matrix of distances that maps onto the same nxn matrix of correlations
+</span><span class="k">def</span> <span class="nf">calculate_distance</span><span class="p">(</span><span class="n">electrode_spacing</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">channel_ids</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">electrode_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="s">'''
+    Each well contains 64 electrodes arranged in an 8x8 grid.
+    Electrode spacing: 150um
+    Electrode diameter: 50um
+    Recording area: 1.1mm x 1.1mm
+    '''</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ch1</span> <span class="ow">in</span> <span class="n">channel_ids</span><span class="p">:</span>
+        <span class="n">ch1_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ch1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ch1_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ch1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">ch2</span> <span class="ow">in</span> <span class="n">channel_ids</span><span class="p">:</span>
+            <span class="n">ch2_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ch2</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">ch2_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ch2</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">distance_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">ch2_x</span><span class="o">-</span><span class="n">ch1_x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">ch2_y</span><span class="o">-</span><span class="n">ch1_y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">electrode_spacing</span>
+            <span class="n">distance</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">distance_tmp</span><span class="p">)</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">distance</span><span class="p">))),</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">distance</span><span class="p">)))))</span>
+    <span class="k">return</span> <span class="n">distance</span>
+
+<span class="n">MEA_distances</span> <span class="o">=</span> <span class="n">calculate_distance</span><span class="p">(</span><span class="n">channel_ids</span><span class="o">=</span><span class="n">channel_ids</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">MEA_distances</span><span class="p">,</span>
+            <span class="n">cbar</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span><span class="s">'label'</span><span class="p">:</span> <span class="s">'Distance between electrodes (um)'</span><span class="p">},</span>
+            <span class="n">square</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Axes: &gt;
+</code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_46_1.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a data frame with all the STTCs associated with appropriate distance.
+# This data frame makes it easier to plot later, especially once you have other variables that act as groups
+</span><span class="n">distance</span> <span class="o">=</span> <span class="n">MEA_distances</span><span class="p">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">flattened_STTC</span> <span class="o">=</span> <span class="n">STTC_lt</span><span class="p">.</span><span class="n">flatten</span><span class="p">()</span> <span class="c1"># I am going to use the original STTC (using filtered STTC was only for visualization purposes)
+</span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">flattened_STTC</span><span class="p">):</span>
+  <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Both arrays have matching lengths"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Array length mismatch - check how the MEA distances are calculated. Likely incorrect channel_ids"</span><span class="p">)</span>
+
+<span class="n">STTC_distances</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">"Distance"</span><span class="p">:</span> <span class="n">distance</span><span class="p">,</span> <span class="s">"STTC"</span><span class="p">:</span> <span class="n">flattened_STTC</span><span class="p">})</span>
+<span class="n">STTC_distances</span><span class="p">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">STTC_distances</span><span class="p">.</span><span class="n">tail</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Both arrays have matching lengths
+</code></pre></div></div>
+
+<div id="df-d707a583-d811-411d-957f-984d9a0f1300" class="colab-df-container">
+    <div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Distance</th>
+      <th>STTC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4091</th>
+      <td>600.0</td>
+      <td>0.722781</td>
+    </tr>
+    <tr>
+      <th>4092</th>
+      <td>450.0</td>
+      <td>0.738558</td>
+    </tr>
+    <tr>
+      <th>4093</th>
+      <td>300.0</td>
+      <td>0.759270</td>
+    </tr>
+    <tr>
+      <th>4094</th>
+      <td>150.0</td>
+      <td>0.810300</td>
+    </tr>
+    <tr>
+      <th>4095</th>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-d707a583-d811-411d-957f-984d9a0f1300')" title="Convert this dataframe to an interactive table." style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z" />
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-d707a583-d811-411d-957f-984d9a0f1300 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-d707a583-d811-411d-957f-984d9a0f1300');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+<div id="df-d7ab580d-361b-437f-9d28-b5000aeb6af7">
+  <button class="colab-df-quickchart" onclick="quickchart('df-d7ab580d-361b-437f-9d28-b5000aeb6af7')" title="Suggest charts." style="display:none;">
+
+&lt;svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px"&gt;
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+    </g>
+&lt;/svg&gt;
+  </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+  <script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-d7ab580d-361b-437f-9d28-b5000aeb6af7 button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+    </div>
+  </div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sns</span><span class="p">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">STTC_distances</span><span class="p">[</span><span class="n">STTC_distances</span><span class="p">[</span><span class="s">"Distance"</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s">"Distance"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">"STTC"</span><span class="p">)</span>
+<span class="n">pearsonr</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">STTC_distances</span><span class="p">[</span><span class="s">"Distance"</span><span class="p">],</span> <span class="n">STTC_distances</span><span class="p">[</span><span class="s">"STTC"</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Distance between electrodes (um)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Spike time tiling coefficient"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="n">pearsonr</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">despine</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="../STTC_demo_files/STTC_demo_48_0.png" alt="png" /></p>
+
+<p>regplot performs and then visualizes linear regression model fit.
+Based on the calculated Pearson Correlation Coefficient of 0.06, there is a very weak positive correlation between STTC and distance.</p>
+
+<p>This is surprising because it would have been expected that closer electrodes (i.e., shorter inter-channel distance) would be more correlated and that the correlation decreases with increasing distance.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+
+
+      </footer>
+
+      
+
+<section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/portfolio/Spike%20Time%20Tiling%20Coefficient/" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/portfolio/Spike%20Time%20Tiling%20Coefficient/" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/portfolio/Spike%20Time%20Tiling%20Coefficient/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+      
+
+
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/portfolio/NeuralStatisticsCompiler/" class="pagination--pager" title="Neural Statistics Compiler for Automated Analysis of Multielectrode Array (MEA) Data
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+<a href="/sitemap/">Sitemap</a>
+<!-- end custom footer snippets -->
+
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+    
+    
+      <li><a href="http://github.com/KartikP"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 KARTIK PRADEEPAN. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'G-M1JHV55BQ5', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+  </body>
+</html>
+

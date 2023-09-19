@@ -2,6 +2,7 @@
 title: "Deep Learning for the Diagnosis and Classification of Rett Syndrome"
 excerpt: "Detects single electrode spike train bursts based on 5 parameters. Currently implemented in Python and Matlab."
 collection: projects
+date: 2022-09-26
 ---
 [Project link](https://github.com/KartikP/BIOPHYS9709B-FCNN/blob/main/Pradeepan_Kartik_Final_Code.ipynb)
 
