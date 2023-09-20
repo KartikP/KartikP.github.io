@@ -473,8 +473,6 @@ plt.eventplot(raster, color='black', linelengths=0.5, linewidths=0.75, alpha=0.3
     
 
 
-
-
 ## Calculate pairwise correlation using Elephant's STTC
 
 
