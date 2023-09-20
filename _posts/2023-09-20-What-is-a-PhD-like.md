@@ -11,7 +11,7 @@ tags:
 
 I recently read a post on /r/datascience that raised the question: `why so many people with PhDs think that's an easy pass for data science?`
 
-Inintially, I found this question rather puzzling. The notion of a "PhD", and as an "easy pass" is contradictory. Obtaining a PhD is anything but easy; it  often constitutes the most formidable intellectual challenge a person has to rise up to in their lifetime. Perhaps that is one source of confusion. So for now, I will attempt to describe `what does a PhD really require` and I will be focusing on a STEM degree (although I believe this can be applied to some non-STEM programs).
+Initially, I found this question rather puzzling. The notion of a "PhD", and as an "easy pass" is contradictory. Obtaining a PhD is anything but easy; it  often constitutes the most formidable intellectual challenge a person has to rise up to in their lifetime. Perhaps that is one source of confusion. So for now, I will attempt to describe `what does a PhD really require` and I will be focusing on a STEM degree (although I believe this can be applied to some non-STEM programs).
 
 A PhD is also known as a Doctorate in Philosophy degree. In most fields, it is the highest academic degree a person can achieve. It typically is the result of several years of research and study in a very narrow and technical domain of knowledge. It culminates as a substantial novel contribution to scientific knowledge (e.g., increasing understanding, developing new technologies, shifting paradigms, etc.)
 
