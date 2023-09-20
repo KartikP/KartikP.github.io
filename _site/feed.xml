@@ -1,4 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-09-20T11:11:49-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">KARTIK PRADEEPAN</title><subtitle>personal description</subtitle><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><entry><title type="html">How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)</title><link href="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/" rel="alternate" type="text/html" title="How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)" /><published>2023-09-19T00:00:00-07:00</published><updated>2023-09-19T00:00:00-07:00</updated><id>http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll</id><content type="html" xml:base="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/">&lt;p&gt;Since creating this personal website, I’ve wanted to find a way to embed python notebook snippets to showcase my projects and hopefully eventually create tutorials that people can learn from. To do this, you need to convert python notebook files (.ipynb) into markdown (.md) along with all the embeded images.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-09-20T12:49:56-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">KARTIK PRADEEPAN</title><subtitle>personal description</subtitle><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><entry><title type="html">What is a PhD really like?</title><link href="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/" rel="alternate" type="text/html" title="What is a PhD really like?" /><published>2023-09-20T00:00:00-07:00</published><updated>2023-09-20T00:00:00-07:00</updated><id>http://localhost:4000/posts/2023/09/What-is-a-PhD-like</id><content type="html" xml:base="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/">&lt;h2 id=&quot;what-is-a-phd-really-like&quot;&gt;What is a PhD really like?&lt;/h2&gt;
+
+&lt;p&gt;I recently read a post on /r/datascience that raised the question: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;why so many people with PhDs think that&apos;s an easy pass for data science?&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Inintially, I found this question rather puzzling. The notion of a “PhD”, and as an “easy pass” is contradictory. Obtaining a PhD is anything but easy; it  often constitutes the most formidable intellectual challenge a person has to rise up to in their lifetime. Perhaps that is one source of confusion. So for now, I will attempt to describe &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;what does a PhD really require&lt;/code&gt; and I will be focusing on a STEM degree (although I believe this can be applied to some non-STEM programs).&lt;/p&gt;
+
+&lt;p&gt;A PhD is also known as a Doctorate in Philosophy degree. In most fields, it is the highest academic degree a person can achieve. It typically is the result of several years of research and study in a very narrow and technical domain of knowledge. It culminates as a substantial novel contribution to scientific knowledge (e.g., increasing understanding, developing new technologies, shifting paradigms, etc.)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Over the course of a PhD program, students will undertake a rigorous journey that requires them to:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Consume thousands of pages of knowledge in their field,&lt;/li&gt;
+  &lt;li&gt;Identify gaps in the current understanding,&lt;/li&gt;
+  &lt;li&gt;Generate well-constructed hypotheses,&lt;/li&gt;
+  &lt;li&gt;Design carefully thought out experiments to test hypotheses,&lt;/li&gt;
+  &lt;li&gt;Perform (often technical and cutting-edge) experiments,&lt;/li&gt;
+  &lt;li&gt;Collect data (often from a variety of sources and tools),&lt;/li&gt;
+  &lt;li&gt;Conduct extensive analysis of the data,&lt;/li&gt;
+  &lt;li&gt;Formulate scientific interpretations of the results,&lt;/li&gt;
+  &lt;li&gt;Publish the findings in reputable peer-reviewed journals,&lt;/li&gt;
+  &lt;li&gt;Present their findings to other academics,&lt;/li&gt;
+  &lt;li&gt;And repeat this until they’ve met their degree requirements.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;All this is generally done with a certain level of autonomy that is alien to the structured coursework of undergraduate and master’s programs.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Throughout their journey as a PhD student, they will encounter numerous challenges:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Experiments will fail,&lt;/li&gt;
+  &lt;li&gt;Inter-personal conflicts between supervisors, lab members, collaborators (or their animal model 🤣) will develop,&lt;/li&gt;
+  &lt;li&gt;Manuscripts will get rejected,&lt;/li&gt;
+  &lt;li&gt;Projects will hit dead-ends,&lt;/li&gt;
+  &lt;li&gt;They will feel like quitting.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Yet some how, they must overcome all this and succeed.&lt;/p&gt;
+
+&lt;p&gt;Then, at the end of their degree, they will compile all their findings into a 200-page(ish) thesis that will be sent to experts in their field. They hope they get the &lt;em&gt;opportunity&lt;/em&gt; to stand in front of them and defend every decision they made over the last X years. Of the course of a 2 hour defense, you will look like you haven’t slept in 2 days. Jokes aside, I guarantee you that every STEM PhD holder has gone through this. A PhD is grueling, frustrating, anything but easy, yet often rewarding in retrospect (see &lt;a href=&quot;https://www.rei.com/blog/climb/fun-scale&quot;&gt;type 2 fun&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;Hopefully you can understand that a PhD is not something you should be willing to do unless you truly enjoy the pursuit of knowledge.&lt;/p&gt;
+
+&lt;p&gt;As to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;what makes people with PhDs more adept at data science right out of school?&lt;/code&gt;, I will address that question in a separate post.&lt;/p&gt;</content><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><category term="PhD" /><category term="self-reflection" /><category term="career" /><summary type="html">What is a PhD really like?</summary></entry><entry><title type="html">How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)</title><link href="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/" rel="alternate" type="text/html" title="How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)" /><published>2023-09-19T00:00:00-07:00</published><updated>2023-09-19T00:00:00-07:00</updated><id>http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll</id><content type="html" xml:base="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/">&lt;p&gt;Since creating this personal website, I’ve wanted to find a way to embed python notebook snippets to showcase my projects and hopefully eventually create tutorials that people can learn from. To do this, you need to convert python notebook files (.ipynb) into markdown (.md) along with all the embeded images.&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;Create a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_notebooks&lt;/code&gt; directory inside the master folder. This is where you should be putting your jupyter notebooks.&lt;/li&gt;

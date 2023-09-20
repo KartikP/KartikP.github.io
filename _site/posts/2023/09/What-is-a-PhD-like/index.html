@@ -19,7 +19,7 @@
 
 
 
-<title>How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages) - KARTIK PRADEEPAN</title>
+<title>What is a PhD really like? - KARTIK PRADEEPAN</title>
 
 
 
@@ -29,15 +29,15 @@
 
 <meta property="og:locale" content="en-US">
 <meta property="og:site_name" content="KARTIK PRADEEPAN">
-<meta property="og:title" content="How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)">
+<meta property="og:title" content="What is a PhD really like?">
 
 
-  <link rel="canonical" href="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/">
-  <meta property="og:url" content="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/">
+  <link rel="canonical" href="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/">
+  <meta property="og:url" content="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/">
 
 
 
-  <meta property="og:description" content="Since creating this personal website, I’ve wanted to find a way to embed python notebook snippets to showcase my projects and hopefully eventually create tutorials that people can learn from. To do this, you need to convert python notebook files (.ipynb) into markdown (.md) along with all the embeded images.">
+  <meta property="og:description" content="What is a PhD really like?">
 
 
 
@@ -52,7 +52,7 @@
 
 
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2023-09-19T00:00:00-07:00">
+  <meta property="article:published_time" content="2023-09-20T00:00:00-07:00">
 
 
 
@@ -258,29 +258,29 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)">
-    <meta itemprop="description" content="Since creating this personal website, I’ve wanted to find a way to embed python notebook snippets to showcase my projects and hopefully eventually create tutorials that people can learn from. To do this, you need to convert python notebook files (.ipynb) into markdown (.md) along with all the embeded images.">
-    <meta itemprop="datePublished" content="September 19, 2023">
+    <meta itemprop="headline" content="What is a PhD really like?">
+    <meta itemprop="description" content="What is a PhD really like?">
+    <meta itemprop="datePublished" content="September 20, 2023">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 class="page__title" itemprop="headline">How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)
+          <h1 class="page__title" itemprop="headline">What is a PhD really like?
 </h1>
           
             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
 
 
   
-	  less than 1 minute read
+	  3 minute read
 	
 </p>
           
         
         
         
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2023-09-19T00:00:00-07:00">September 19, 2023</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2023-09-20T00:00:00-07:00">September 20, 2023</time></p>
         
         
              
@@ -290,17 +290,48 @@
       
 
       <section class="page__content" itemprop="text">
-        <p>Since creating this personal website, I’ve wanted to find a way to embed python notebook snippets to showcase my projects and hopefully eventually create tutorials that people can learn from. To do this, you need to convert python notebook files (.ipynb) into markdown (.md) along with all the embeded images.</p>
+        <h2 id="what-is-a-phd-really-like">What is a PhD really like?</h2>
 
+<p>I recently read a post on /r/datascience that raised the question: <code class="language-plaintext highlighter-rouge">why so many people with PhDs think that's an easy pass for data science?</code></p>
+
+<p>Inintially, I found this question rather puzzling. The notion of a “PhD”, and as an “easy pass” is contradictory. Obtaining a PhD is anything but easy; it  often constitutes the most formidable intellectual challenge a person has to rise up to in their lifetime. Perhaps that is one source of confusion. So for now, I will attempt to describe <code class="language-plaintext highlighter-rouge">what does a PhD really require</code> and I will be focusing on a STEM degree (although I believe this can be applied to some non-STEM programs).</p>
+
+<p>A PhD is also known as a Doctorate in Philosophy degree. In most fields, it is the highest academic degree a person can achieve. It typically is the result of several years of research and study in a very narrow and technical domain of knowledge. It culminates as a substantial novel contribution to scientific knowledge (e.g., increasing understanding, developing new technologies, shifting paradigms, etc.)</p>
+
+<p><strong>Over the course of a PhD program, students will undertake a rigorous journey that requires them to:</strong></p>
 <ol>
-  <li>Create a <code class="language-plaintext highlighter-rouge">_notebooks</code> directory inside the master folder. This is where you should be putting your jupyter notebooks.</li>
-  <li>Using terminal, navigate to the <code class="language-plaintext highlighter-rouge">_notebooks</code> directory and type the following command to convert it to markdown <code class="language-plaintext highlighter-rouge">jupyter nbconvert &lt;name of file&gt;.ipynb --to markdown</code></li>
-  <li>Move the converted products (which should be the .md file along with a folder containing an image outputs) to <code class="language-plaintext highlighter-rouge">_posts</code> folder.</li>
-  <li>Add the Jekyll AcademicPages metadata.</li>
-  <li>Add <code class="language-plaintext highlighter-rouge">../</code> infront of every image path. This will allow the path of the image (which is in the <code class="language-plaintext highlighter-rouge">_posts</code> folder) to be read. Alternatively, you can place the images in the <code class="language-plaintext highlighter-rouge">_images</code> folder but will need to adjust the path accordingly.</li>
+  <li>Consume thousands of pages of knowledge in their field,</li>
+  <li>Identify gaps in the current understanding,</li>
+  <li>Generate well-constructed hypotheses,</li>
+  <li>Design carefully thought out experiments to test hypotheses,</li>
+  <li>Perform (often technical and cutting-edge) experiments,</li>
+  <li>Collect data (often from a variety of sources and tools),</li>
+  <li>Conduct extensive analysis of the data,</li>
+  <li>Formulate scientific interpretations of the results,</li>
+  <li>Publish the findings in reputable peer-reviewed journals,</li>
+  <li>Present their findings to other academics,</li>
+  <li>And repeat this until they’ve met their degree requirements.</li>
 </ol>
 
-<p>There you have it! Pretty simple. Lets you turn your website into an all-in-one repository for all your projects.</p>
+<p>All this is generally done with a certain level of autonomy that is alien to the structured coursework of undergraduate and master’s programs.</p>
+
+<p><strong>Throughout their journey as a PhD student, they will encounter numerous challenges:</strong></p>
+<ol>
+  <li>Experiments will fail,</li>
+  <li>Inter-personal conflicts between supervisors, lab members, collaborators (or their animal model 🤣) will develop,</li>
+  <li>Manuscripts will get rejected,</li>
+  <li>Projects will hit dead-ends,</li>
+  <li>They will feel like quitting.</li>
+</ol>
+
+<p>Yet some how, they must overcome all this and succeed.</p>
+
+<p>Then, at the end of their degree, they will compile all their findings into a 200-page(ish) thesis that will be sent to experts in their field. They hope they get the <em>opportunity</em> to stand in front of them and defend every decision they made over the last X years. Of the course of a 2 hour defense, you will look like you haven’t slept in 2 days. Jokes aside, I guarantee you that every STEM PhD holder has gone through this. A PhD is grueling, frustrating, anything but easy, yet often rewarding in retrospect (see <a href="https://www.rei.com/blog/climb/fun-scale">type 2 fun</a>)</p>
+
+<p>Hopefully you can understand that a PhD is not something you should be willing to do unless you truly enjoy the pursuit of knowledge.</p>
+
+<p>As to <code class="language-plaintext highlighter-rouge">what makes people with PhDs more adept at data science right out of school?</code>, I will address that question in a separate post.</p>
+
 
         
       </section>
@@ -325,23 +356,15 @@
     
       
       
-      <a href="http://localhost:4000/tags/#code" class="page__taxonomy-item" rel="tag">code</a><span class="sep">, </span>
+      <a href="http://localhost:4000/tags/#career" class="page__taxonomy-item" rel="tag">career</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#data-science" class="page__taxonomy-item" rel="tag">data science</a><span class="sep">, </span>
+      <a href="http://localhost:4000/tags/#phd" class="page__taxonomy-item" rel="tag">PhD</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#jekyll" class="page__taxonomy-item" rel="tag">jekyll</a><span class="sep">, </span>
-    
-      
-      
-      <a href="http://localhost:4000/tags/#jupyter-notebooks" class="page__taxonomy-item" rel="tag">jupyter-notebooks</a><span class="sep">, </span>
-    
-      
-      
-      <a href="http://localhost:4000/tags/#python" class="page__taxonomy-item" rel="tag">python</a>
+      <a href="http://localhost:4000/tags/#self-reflection" class="page__taxonomy-item" rel="tag">self-reflection</a>
     
     </span>
   </p>
@@ -358,11 +381,11 @@
     <h4 class="page__share-title">Share on</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/posts/2023/09/What-is-a-PhD-like/" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/posts/2023/09/What-is-a-PhD-like/" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/posts/2023/09/What-is-a-PhD-like/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
       
@@ -370,11 +393,11 @@
 
   <nav class="pagination">
     
-      <a href="#" class="pagination--pager disabled">Previous</a>
+      <a href="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/" class="pagination--pager" title="How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)
+">Previous</a>
     
     
-      <a href="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/" class="pagination--pager" title="What is a PhD really like?
-">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
@@ -403,7 +426,7 @@
 
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/" rel="permalink">What is a PhD really like?
+        <a href="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/" rel="permalink">How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)
 </a>
       
     </h2>
@@ -413,17 +436,17 @@
 
 
   
-	  3 minute read
+	  less than 1 minute read
 	
 </p>
     
 
         
-         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2023-09-20T00:00:00-07:00">September 20, 2023</time></p>
+         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2023-09-19T00:00:00-07:00">September 19, 2023</time></p>
         
 
     
-    <p class="archive__item-excerpt" itemprop="description"><h2 id="what-is-a-phd-really-like">What is a PhD really like?</h2>
+    <p class="archive__item-excerpt" itemprop="description"><p>Since creating this personal website, I’ve wanted to find a way to embed python notebook snippets to showcase my projects and hopefully eventually create tutorials that people can learn from. To do this, you need to convert python notebook files (.ipynb) into markdown (.md) along with all the embeded images.</p>
 
 </p>
     
