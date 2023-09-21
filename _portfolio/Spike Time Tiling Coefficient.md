@@ -514,6 +514,8 @@ hm = sns.heatmap(STTC_lt,
             square=True);
 plt.xticks(range(0, len(channel_ids), 4), channel_ids[::4]);
 plt.yticks(range(0, len(channel_ids), 4), channel_ids[::4]);
+plt.xlabel("Channel ID")
+plt.ylabel("Channel ID")
 ```
 
 
