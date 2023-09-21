@@ -511,8 +511,9 @@ hm = sns.heatmap(STTC_lt,
             yticklabels=channel_ids, xticklabels=channel_ids,
             cmap=sns.color_palette("Reds",as_cmap=True), cbar=True,
             cbar_kws={'label': 'Spike Time Tiling Coefficient (STTC)'},
-            square=True)
-# To do: Fix X-tick label spacing to be every 8th
+            square=True);
+plt.xticks(range(0, len(channel_ids), 4), channel_ids[::4]);
+plt.yticks(range(0, len(channel_ids), 4), channel_ids[::4]);
 ```
 
 
