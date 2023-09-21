@@ -722,9 +722,12 @@ The above produces the following:
             <span class="n">yticklabels</span><span class="o">=</span><span class="n">channel_ids</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">channel_ids</span><span class="p">,</span>
             <span class="n">cmap</span><span class="o">=</span><span class="n">sns</span><span class="p">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s">"Reds"</span><span class="p">,</span><span class="n">as_cmap</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span> <span class="n">cbar</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
             <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span><span class="s">'label'</span><span class="p">:</span> <span class="s">'Spike Time Tiling Coefficient (STTC)'</span><span class="p">},</span>
-            <span class="n">square</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="c1"># To do: Fix X-tick label spacing to be every 8th
-</span></code></pre></div></div>
+            <span class="n">square</span><span class="o">=</span><span class="bp">True</span><span class="p">);</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">channel_ids</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span> <span class="n">channel_ids</span><span class="p">[::</span><span class="mi">4</span><span class="p">]);</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">channel_ids</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span> <span class="n">channel_ids</span><span class="p">[::</span><span class="mi">4</span><span class="p">]);</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Channel ID"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Channel ID"</span><span class="p">)</span>
+</code></pre></div></div>
 
 <p><img src="../STTC_demo_files/STTC_demo_27_0.png" alt="png" /></p>
 
