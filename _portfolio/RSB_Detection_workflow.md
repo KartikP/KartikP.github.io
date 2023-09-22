@@ -5,7 +5,7 @@ collection: projects
 date: 2023-09-21
 ---
 
-*Still a work in progress. This tutorial will be update in chunks. Analysis is quite long and I'm only 1/5 done.*
+*Still a work in progress. This tutorial will be updated in chunks. Analysis is quite long and I'm only 1/5 done.*
 
 ## Install necessary packages
 
