@@ -2,12 +2,22 @@
 title: "Tutorial: Reverberating Super Burst Detection Workflow"
 excerpt: "A breakdown of how RSB detection and analysis works."
 collection: projects
-date: 2023-09-21
+date: 2023-09-24
 ---
 
-*Still a work in progress. This tutorial will be updated in chunks. Analysis is quite long and I'm only 1/5 done.*
+This is a tutorial on how reverberating super bursts were detected in Pradeepan et al., 2023.
+
+
+---
+
+
+DISCLAIMER: The approach used in the manuscript relies upon the generation of spike density functions - to convert a discrete, analog signal (i.e., 1s and 0s) into a continuous one (i.e., spike density function). By doing so, we are theoretically changing the signal into something it is not. However, through careful interrogation, we have assured the questions we asked are not biased by this step.
+
+To navigate around this issue, I have also developed a different approach. This "secondary approach" avoids the convolution of a kernel and relies upon my implementation of the Max Interval Burst Detection algorithm combined with a histogram-based approach to detecting network events. By combining these two approaches, we're able to cut the run time of the analysis by up to 95%, however the trade off is the accuracy of burst boundaries. Nonetheless, the results are still comparable. This secondary approach will be shared in this document as a hyperlink, including a separate tutorial at another time.
 
 ## Install necessary packages
+
+Requirements: Pandas, Numpy, Matplotlib, Seaborn, Math, Scipy, Sci-kit learn
 
 ## Import libraries
 
@@ -22,9 +32,13 @@ import math
 from scipy.stats import norm
 from scipy.signal import convolve
 from scipy.signal import find_peaks
+from scipy.signal import resample
+from sklearn.preprocessing import MinMaxScaler
 
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
+from scipy.stats import skew
+from scipy.stats import mode
+
 
 ```
 
@@ -69,7 +83,7 @@ def organize_spikelist(filepath):
 spiketimes, metadata, label = organize_spikelist(filename)
 ```
 
-    <ipython-input-4-4aef381c3626>:3: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support regex separators (separators > 1 char and different from '\s+' are interpreted as regex); you can avoid this warning by specifying engine='python'.
+    <ipython-input-3-2eeb288d4c56>:3: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support regex separators (separators > 1 char and different from '\s+' are interpreted as regex); you can avoid this warning by specifying engine='python'.
       spikelist_file = pd.read_csv(filepath, sep='\r\n', header=None)
 
 
@@ -82,7 +96,7 @@ spiketimes.head()
 
 
 
-  <div id="df-a25a432f-46e4-46a0-819c-bc2bea4e0195" class="colab-df-container">
+  <div id="df-320bd06f-04c2-4d7f-944a-099895dbfc8e" class="colab-df-container">
     <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -149,7 +163,7 @@ spiketimes.head()
     <div class="colab-df-buttons">
 
   <div class="colab-df-container">
-    <button class="colab-df-convert" onclick="convertToInteractive('df-a25a432f-46e4-46a0-819c-bc2bea4e0195')"
+    <button class="colab-df-convert" onclick="convertToInteractive('df-320bd06f-04c2-4d7f-944a-099895dbfc8e')"
             title="Convert this dataframe to an interactive table."
             style="display:none;">
 
@@ -201,12 +215,12 @@ spiketimes.head()
 
     <script>
       const buttonEl =
-        document.querySelector('#df-a25a432f-46e4-46a0-819c-bc2bea4e0195 button.colab-df-convert');
+        document.querySelector('#df-320bd06f-04c2-4d7f-944a-099895dbfc8e button.colab-df-convert');
       buttonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
 
       async function convertToInteractive(key) {
-        const element = document.querySelector('#df-a25a432f-46e4-46a0-819c-bc2bea4e0195');
+        const element = document.querySelector('#df-320bd06f-04c2-4d7f-944a-099895dbfc8e');
         const dataTable =
           await google.colab.kernel.invokeFunction('convertToInteractive',
                                                     [key], {});
@@ -226,8 +240,8 @@ spiketimes.head()
   </div>
 
 
-<div id="df-4e3a6e10-7901-42d9-a864-ccb3a4720420">
-  <button class="colab-df-quickchart" onclick="quickchart('df-4e3a6e10-7901-42d9-a864-ccb3a4720420')"
+<div id="df-83e9c6f7-6f26-482d-b5f5-c64fb09efa26">
+  <button class="colab-df-quickchart" onclick="quickchart('df-83e9c6f7-6f26-482d-b5f5-c64fb09efa26')"
             title="Suggest charts."
             style="display:none;">
 
@@ -346,7 +360,7 @@ spiketimes.head()
     }
     (() => {
       let quickchartButtonEl =
-        document.querySelector('#df-4e3a6e10-7901-42d9-a864-ccb3a4720420 button');
+        document.querySelector('#df-83e9c6f7-6f26-482d-b5f5-c64fb09efa26 button');
       quickchartButtonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
     })();
@@ -429,7 +443,7 @@ plt.title("Sort of like a PSTH - representing network activity")
 
 
     
-![png](../RSB_Detection_workflow_files/RSB_Detection_workflow_14_1.png)
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_16_1.png)
     
 
 
@@ -458,7 +472,7 @@ plt.title("Multiple peaks within a network event")
 
 
     
-![png](../RSB_Detection_workflow_files/RSB_Detection_workflow_16_1.png)
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_18_1.png)
     
 
 
@@ -527,7 +541,7 @@ plt.xlabel("Time (s)")
 
 
     
-![png](../RSB_Detection_workflow_files/RSB_Detection_workflow_20_1.png)
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_22_1.png)
     
 
 
@@ -553,11 +567,13 @@ plt.xlabel("Time (s)")
 
 
     
-![png](../RSB_Detection_workflow_files/RSB_Detection_workflow_22_1.png)
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_24_1.png)
     
 
 
 
+
+# Signal Conditioning
 
 ## Approach 1: Generate spike density function
 
@@ -626,7 +642,7 @@ kernel = generate_gaussian_kernel(sigma=0.075)
 maxFR, channel_sdf = [], []
 for n, channel in enumerate(channel_ids):
   spiketrain = raster[n]
-  channel_spikematrix = generate_spikematrix(spiketrain, fs=12500, duration=duration)
+  channel_spikematrix = generate_spikematrix(spiketrain, fs=fs, duration=duration)
   sdf_tmp = generate_sdf(channel_spikematrix, kernel)
   channel_sdf.append(sdf_tmp)
   maxFR.append(max(sdf_tmp))
@@ -653,13 +669,13 @@ plt.legend(["Network SDF", "Weighted Network SDF"])
 
 
 
-    <matplotlib.legend.Legend at 0x7aaa5bd15930>
+    <matplotlib.legend.Legend at 0x7ed80051fbe0>
 
 
 
 
     
-![png](../RSB_Detection_workflow_files/RSB_Detection_workflow_34_1.png)
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_37_1.png)
     
 
 
@@ -673,7 +689,7 @@ plt.figure(figsize=(10,5))
 plt.rcParams.update({'font.size': 12})
 plt.rc('axes', linewidth=1)
 plt.eventplot(raster, color='black', linelengths=0.5, linewidths=0.75, alpha=0.35);
-t = np.arange(0,duration,1/12500)
+t = np.arange(0,duration,1/fs)
 plt.plot(t,weighted_network_sdf, color='black')
 plt.xlim(146, 157)
 plt.ylabel("Channels/Firing Rate (Hz)")
@@ -689,7 +705,7 @@ plt.xlabel("Time (s)")
 
 
     
-![png](../RSB_Detection_workflow_files/RSB_Detection_workflow_37_1.png)
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_40_1.png)
     
 
 
@@ -729,12 +745,14 @@ def detect_burst_peaks(sdf, delta=0.5, fs=12500):
 
 ```python
 burst_peak_times = []
+prime_burst_peak_times = []
 if isBursting:
   burst_peak_times = detect_burst_peaks(weighted_network_sdf)
-print(f"Detected {len(burst_peak_times)} potential network bursts.")
+  prime_burst_peak_times = detect_burst_peaks(weighted_network_sdf, delta=max(weighted_network_sdf)*0.5)
+print(f"Detected {len(burst_peak_times)} potential network bursts and {len(prime_burst_peak_times)} likely initiation bursts.")
 ```
 
-    Detected 145 potential network bursts.
+    Detected 145 potential network bursts and 30 likely initiation bursts.
 
 
 
@@ -743,11 +761,12 @@ plt.figure(figsize=(10,5))
 plt.rcParams.update({'font.size': 12})
 plt.rc('axes', linewidth=1)
 plt.eventplot(raster, color='black', linelengths=0.5, linewidths=0.75, alpha=0.35);
-t = np.arange(0,duration,1/12500)
+t = np.arange(0,duration,1/fs)
 plt.plot(t,weighted_network_sdf, color='black')
 plt.xlim(135,165)
 plt.ylabel("Channels/Firing Rate (Hz)")
 plt.xlabel("Time (s)")
+sns.despine()
 
 plt.plot(burst_peak_times, weighted_network_sdf[(burst_peak_times*fs).astype(int)], 'v')
 ```
@@ -755,13 +774,13 @@ plt.plot(burst_peak_times, weighted_network_sdf[(burst_peak_times*fs).astype(int
 
 
 
-    [<matplotlib.lines.Line2D at 0x7aaa51140220>]
+    [<matplotlib.lines.Line2D at 0x7ed7ee9285b0>]
 
 
 
 
     
-![png](../RSB_Detection_workflow_files/RSB_Detection_workflow_45_1.png)
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_48_1.png)
     
 
 
@@ -790,7 +809,7 @@ plt.ylabel("Firing rate (Hz)")
 
 
     
-![png](../RSB_Detection_workflow_files/RSB_Detection_workflow_49_1.png)
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_52_1.png)
     
 
 
@@ -867,6 +886,560 @@ sns.despine()
 
 
     
-![png](../RSB_Detection_workflow_files/RSB_Detection_workflow_53_0.png)
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_56_0.png)
+    
+
+
+### Inter-burst-peak-interval skewness
+
+
+```python
+def burst_skewness(ibpi):
+  if skew(ibpi) > 0:
+    return True
+  else:
+    return False
+
+ibpi_skewness = burst_skewness(burst_peak_times)
+
+sns.histplot(data=ibpi, bins=20)
+plt.xlabel("Inter-burst-peak-interval (s)")
+sns.despine()
+```
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_58_0.png)
+    
+
+
+## Rmax calculation (Crawling the histogram)
+
+There are a number of different approaches to find the local minimum between a distribution. I initially attempted using Hartigan's Dip Test (via Unidip package) but found that depending on the frequency of network events, it would struggle to detect the local minimum. The approach that I found first that worked best was trying to replicate how my visual detection worked. In essence, I would plot histograms with varying bin sizes/ number of bins and see if there was a point where there was a 0 count bin between the two clear peaks. That approach worked most of the time. The issue with it is that it goes with the first bin that has a 0 count, which may result in certain RSBs being missed. This did a good enough job to be the main approach for Pradeepan et al., 2023.
+
+
+```python
+def hist_find_rmax(ibpi, labels, steps=2):
+  initiation_burst = ibpi[labels==0]
+  max_num_bins = int(len(ibpi/1.5))
+  rmax = 0
+  r_tmp = []
+  s_tmp = []
+  if (np.median(ibpi) < np.median(initiation_burst)):
+    for size in (np.arange(max_num_bins, 5, -steps)):
+      counts, binEdges = np.histogram(ibpi, bins=size)
+      if len(np.where(counts==0)[0]) > 0:
+        first_min = np.where(counts==0)[0][0]
+        rmax_tmp = binEdges[first_min]
+        r_tmp.append(rmax_tmp)
+        s_tmp.append(size)
+        if (rmax_tmp > rmax) & (rmax_tmp < (mode(list(map(int, initiation_burst)))[0]*0.9)):
+          print(f"New Rmax found of {rmax_tmp} using {size} bin histogram")
+          rmax = rmax_tmp
+  return rmax
+
+hist_rmax = hist_find_rmax(ibpi, labels, steps=2)
+print(f"The calculated Rmax using histogram crawling was {hist_rmax} seconds.")
+```
+
+    New Rmax found of 0.5439549999999964 using 144 bin histogram
+    New Rmax found of 0.5486146478873204 using 142 bin histogram
+    New Rmax found of 0.553407428571425 using 140 bin histogram
+    New Rmax found of 0.558339130434779 using 138 bin histogram
+    New Rmax found of 0.5634158823529376 using 136 bin histogram
+    New Rmax found of 0.5686441791044741 using 134 bin histogram
+    New Rmax found of 0.5740309090909055 using 132 bin histogram
+    New Rmax found of 0.5795833846153811 using 130 bin histogram
+    New Rmax found of 0.5853093749999965 using 128 bin histogram
+    New Rmax found of 0.5912171428571393 using 126 bin histogram
+    New Rmax found of 0.5973154838709642 using 124 bin histogram
+    New Rmax found of 0.6036137704917997 using 122 bin histogram
+    New Rmax found of 0.6101219999999965 using 120 bin histogram
+    New Rmax found of 0.6168508474576235 using 118 bin histogram
+    New Rmax found of 1.3082979310344791 using 116 bin histogram
+    New Rmax found of 1.3275115789473648 using 114 bin histogram
+    New Rmax found of 1.347411428571425 using 112 bin histogram
+    New Rmax found of 1.3680349090909054 using 110 bin histogram
+    New Rmax found of 1.3894222222222186 using 108 bin histogram
+    New Rmax found of 1.4041259999999962 using 80 bin histogram
+    New Rmax found of 1.4346646153846117 using 78 bin histogram
+    New Rmax found of 1.4668105263157858 using 76 bin histogram
+    New Rmax found of 1.4937716129032221 using 62 bin histogram
+    New Rmax found of 1.5364599999999964 using 48 bin histogram
+    New Rmax found of 1.5939965217391268 using 46 bin histogram
+    New Rmax found of 1.6143035294117611 using 34 bin histogram
+    New Rmax found of 1.7018774999999964 using 32 bin histogram
+    New Rmax found of 2.595131999999996 using 20 bin histogram
+    New Rmax found of 2.8597999999999963 using 18 bin histogram
+    New Rmax found of 3.1906349999999963 using 16 bin histogram
+    The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
+
+
+As we can see here, the detected Rmax or the maximum IBPI between mini-bursts was found to be 3.19 seconds. Referring back to the histogram and raster plots seen above, it appears this is a pretty good estimate about the maximum mini-burst IBPI.
+
+## Rmax calculation (Simple overlap)
+
+
+```python
+def overlap_find_rmax(ibpi, labels):
+  initiation_bursts = ibpi[labels==0]
+  mini_bursts = ibpi[labels==1]
+
+  overlap_start = max(min(initiation_bursts), min(mini_bursts))
+  overlap_end = min(max(initiation_bursts), max(mini_bursts))
+
+  return overlap_start
+
+overlap_rmax = overlap_find_rmax(ibpi, labels)
+print(f"The calculated Rmax using min overlap was {overlap_rmax} seconds.")
+```
+
+    The calculated Rmax using min overlap was 2.4002399999999966 seconds.
+
+
+This is an alternative approach that is computationally cheaper and works as well.
+
+You can use these functions to also calculate Amax, or the maximum amplitude to be considered a mini-bursts.
+
+# Burst Detection Loop
+This part of the algorithm calculates the ordinary burst boundaries (regardless of RSB status). These burst boundaries will be merged in the next step.
+
+Recall, this is our spike density function. We are going to detect where the bursts start and end. Generally these line up when the first derivative peaks (i.e., begins to decline).
+
+
+```python
+plt.figure(figsize=(10,5))
+plt.rcParams.update({'font.size': 12})
+plt.rc('axes', linewidth=1)
+t = np.arange(0,duration,1/fs)
+plt.eventplot(raster, color='black', linelengths=0.5, linewidths=0.75, alpha=0.35);
+plt.plot(t,weighted_network_sdf, color='black')
+plt.xlim(146, 157)
+plt.ylabel("Firing Rate (Hz)")
+plt.xlabel("Time (s)")
+```
+
+
+
+
+    Text(0.5, 0, 'Time (s)')
+
+
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_68_1.png)
+    
+
+
+
+```python
+plt.plot(t[1:], np.diff(weighted_network_sdf), color='red')
+plt.xlim(146, 149)
+```
+
+
+
+
+    (146.0, 149.0)
+
+
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_69_1.png)
+    
+
+
+## Resample the signal
+
+However, as you can tell, because of the sampling frequency of the original signal (12.5kHz), the signal is too noisy. This will make detecting any local maxima or minima difficult.
+
+To address, we are going to downsample the original SDF. In hindsight, you could do this much earlier one when first generating your spike density function. It should be more appropriately placed in the "Signal Conditioning" section.
+
+
+```python
+RESAMPLE_FACTOR = 150
+ds_weighted_network_sdf = resample(weighted_network_sdf, int(len(weighted_network_sdf)/RESAMPLE_FACTOR))
+```
+
+Sanity check, but a resample factor of 150 seems to be good for us. Preserves enough.
+
+
+```python
+# Scale the arrays between 0 and 1 so that we can plot the SDF and the first
+# derivative together and see them both
+min_max_scaler = MinMaxScaler()
+scaled_ds_sdf = min_max_scaler.fit_transform(ds_weighted_network_sdf.reshape(-1,1))
+t = np.arange(0,duration,RESAMPLE_FACTOR/fs)
+first_deriv = np.diff(ds_weighted_network_sdf)
+
+scaled_first_deriv = min_max_scaler.fit_transform(first_deriv.reshape(-1,1))
+
+plt.figure(figsize=(10,5))
+plt.plot(t, scaled_ds_sdf.reshape(1,-1)[0], color='black')
+plt.plot(t[1:], scaled_first_deriv.reshape(1,-1)[0], color='red')
+plt.xlim(146, 157)
+```
+
+
+
+
+    (146.0, 157.0)
+
+
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_74_1.png)
+    
+
+
+Signal looks a lot smoother. Peaks of first derivative align with where burst starts and troughs align where burst generally end.
+
+## Detect the beginning and end based on the peaks and troughs of the first derivative
+
+
+```python
+# Resample spike density function
+ds_weighted_network_sdf = resample(weighted_network_sdf, int(len(weighted_network_sdf)/RESAMPLE_FACTOR))
+# Generate a new time array
+t = np.arange(0,duration,RESAMPLE_FACTOR/fs)
+
+# Detect positive peaks (representing when the rate of increase is just about to go negative)
+burst_start_ind,_ = find_peaks(np.diff(ds_weighted_network_sdf), prominence=0.1)
+# Detect positive peaks of negative SDF (representing when the rate of increase is just about to go positive)
+burst_end_ind,_ = find_peaks(-np.diff(ds_weighted_network_sdf), prominence=0.1)
+
+# Assign detected peaks a time
+burst_start = t[burst_start_ind]
+burst_end = t[burst_end_ind]
+
+# Check if the array length is the same. In some cases, it may not be and you
+# can either drop the extra value where the start and end do not alternate or you
+# can put a bit of work and find the value.
+print(f"Length of burst_start is {len(burst_start)} and burst_end is {len(burst_end)}")
+```
+
+    Length of burst_start is 177 and burst_end is 177
+
+
+### Visualize the above work
+
+
+```python
+plt.figure(figsize=(10,5))
+first_deriv = np.diff(ds_weighted_network_sdf)
+plt.plot(t[1:],first_deriv, color='black')
+plt.plot(burst_start, first_deriv[burst_start_ind], 'v', color='green')
+plt.plot(burst_end, first_deriv[burst_end_ind], '^', color='red')
+plt.xlim(146, 157)
+```
+
+
+
+
+    (146.0, 157.0)
+
+
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_79_1.png)
+    
+
+
+### Wrap the above into a function as we don't need to be doing this type of EDA (exploratory data analysis) every time.
+
+
+```python
+def detect_burst_boundaries(weighted_network_sdf, RESAMPLE_FACTOR=150):
+  ds_weighted_network_sdf = resample(weighted_network_sdf, int(len(weighted_network_sdf)/RESAMPLE_FACTOR))
+  t = np.arange(0,duration,RESAMPLE_FACTOR/fs)
+  burst_start_ind,_ = find_peaks(np.diff(ds_weighted_network_sdf), prominence=0.1)
+  burst_end_ind,_ = find_peaks(-np.diff(ds_weighted_network_sdf), prominence=0.1)
+  burst_start = t[burst_start_ind]
+  burst_end = t[burst_end_ind]
+  print(f"Length of burst_start is {len(burst_start)} and burst_end is {len(burst_end)}")
+  return burst_start, burst_end
+
+burst_start, burst_end = detect_burst_boundaries(weighted_network_sdf)
+```
+
+    Length of burst_start is 177 and burst_end is 177
+
+
+## Assign burst boundaries to the peaks that were detected (if possible)
+
+
+```python
+burst_borders = []
+for burst_peak in burst_peak_times:
+  closest_start_to_peak = burst_start[burst_start < burst_peak].max()
+  closest_end_to_peak = burst_end[burst_end > burst_peak].min()
+  burst_borders.append((closest_start_to_peak, closest_end_to_peak))
+```
+
+
+```python
+plt.figure(figsize=(10,5))
+plt.rcParams.update({'font.size': 12})
+plt.rc('axes', linewidth=1)
+t = np.arange(0,duration,1/fs)
+plt.eventplot(raster, color='black', linelengths=0.5, linewidths=0.75, alpha=0.35);
+plt.plot(t,weighted_network_sdf, color='black')
+plt.xlim(146, 157)
+for b in burst_borders:
+  plt.axvline(b[0], color='green')
+  plt.axvline(b[1], color='red')
+plt.ylabel("Firing Rate (Hz)")
+plt.xlabel("Time (s)")
+```
+
+
+
+
+    Text(0.5, 0, 'Time (s)')
+
+
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_84_1.png)
+    
+
+
+As you can see, the initiation burst isn't getting called as nicely as we want to. An additional step you can do is to check what the firing rate is at the end of the burst and make sure it has a maximum value. For example: Check if the firing rate of the end of the burst is below 10 Hz, if not, make the end the closest value between the burst peak and the start of the next burst that is at 10 Hz.
+
+# Reverberating Super Burst Reconstruction Loop
+Now that we have our Rmax (and if necessary, Amax) as well as our preliminary burst boundaries, we can now reconstructing the network events into reverberating super bursts if they meet the appropriate criteria. Do this only if "isReverb" is True.
+
+
+```python
+burst_peaks = burst_peak_times[1:] # Because we ignored the first burst above
+
+initiation_bursts = burst_peaks[labels==0]
+mini_bursts = burst_peaks[labels==1]
+
+t = np.arange(0,duration,1/12500)
+plt.plot(t,weighted_network_sdf, color='black')
+plt.plot(initiation_bursts, weighted_network_sdf[(initiation_bursts*fs).astype(int)], 'v', color='green')
+plt.plot(mini_bursts, weighted_network_sdf[(mini_bursts*fs).astype(int)], 'v', color='red')
+plt.xlim(146, 157)
+plt.ylabel("Firing Rate (Hz)")
+plt.xlabel("Time (s)")
+```
+
+
+
+
+    Text(0.5, 0, 'Time (s)')
+
+
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_87_1.png)
+    
+
+
+## Merge the burst boundaries of all possible bursts into larger, complex network events if they meet the criteria
+
+
+```python
+def merge_bursts_into_RSB(rmax, burst_borders, prime_burst_peak_times, burst_peak_times):
+  '''
+  Rmax: either hist_rmax or overlap_rmax
+  Burst borders: start and end tuple for each burst peak that we just recently calculated
+  Prime_burst_peak_times: a variable we calculated close to the top where the only peaks
+  would meet the criteria of a high prominence were detected
+  Burst_peak_times: all possible burst peaks
+  '''
+  ne_start = []
+  ne_end = []
+  nReverbs = []
+  r = 0
+  in_super_burst = False
+  initial_burst = False
+
+  for i in range(0, len(burst_borders)-1):
+    if (burst_peak_times[i] in prime_burst_peak_times) & (initial_burst == True):
+      initial_burst = False
+      ne_end.append(burst_borders[i-1][1])
+      nReverbs.append(r)
+      r = 0
+    if (burst_peak_times[i] in prime_burst_peak_times) & (initial_burst == False):
+      initial_burst = True
+      ne_start.append(burst_borders[i][0])
+    if ((burst_borders[i+1][0] - burst_borders[i][1]) <= rmax) & (initial_burst == True):
+      if in_super_burst:
+        r += 1
+      in_super_burst = True
+    elif ((burst_borders[i + 1][0] - burst_borders[i][1]) > rmax) & (initial_burst == True):
+      if in_super_burst:
+        r += 1
+        in_super_burst = False
+        initial_burst = False
+        ne_end.append(burst_borders[i][1])
+        nReverbs.append(r)
+        r = 0
+  if (burst_peak_times[len(burst_borders) - 1] in prime_burst_peak_times):
+   ne_start.append(burst_borders[i][0])
+   ne_end.append(burst_borders[i][1])
+  else:
+   ne_end.append(burst_borders[i][1])
+   nReverbs.append(r)
+  return ne_start, ne_end, nReverbs
+
+ne_start, ne_end, nReverbs = merge_bursts_into_RSB(overlap_rmax, burst_borders, prime_burst_peak_times, burst_peak_times)
+```
+
+### Visualize if the merging worked appropriately
+
+
+```python
+plt.figure(figsize=(10,5))
+plt.rcParams.update({'font.size': 12})
+plt.rc('axes', linewidth=1)
+t = np.arange(0,duration,1/fs)
+plt.eventplot(raster, color='black', linelengths=0.5, linewidths=0.75, alpha=0.35);
+plt.plot(t,weighted_network_sdf, color='black')
+for b in ne_start:
+  plt.axvline(b, color='green')
+for b in ne_end:
+  plt.axvline(b, color='red')
+plt.ylabel("Firing Rate (Hz)")
+plt.xlabel("Time (s)")
+```
+
+
+
+
+    Text(0.5, 0, 'Time (s)')
+
+
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_91_1.png)
+    
+
+
+
+```python
+plt.figure(figsize=(10,5))
+plt.rcParams.update({'font.size': 12})
+plt.rc('axes', linewidth=1)
+t = np.arange(0,duration,1/fs)
+plt.eventplot(raster, color='black', linelengths=0.5, linewidths=0.75, alpha=0.35);
+plt.plot(t,weighted_network_sdf, color='black')
+plt.xlim(136, 167)
+for b in ne_start:
+  plt.axvline(b, color='green')
+for b in ne_end:
+  plt.axvline(b, color='red')
+plt.ylabel("Firing Rate (Hz)")
+plt.xlabel("Time (s)")
+```
+
+
+
+
+    Text(0.5, 0, 'Time (s)')
+
+
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_92_1.png)
+    
+
+
+## and there you have it! 🎉🎉🎉 Detection of reverberating super bursts. Now that you have all the important information (start and end of network events as well as the number of mini-bursts included in each), you can start generating features.
+
+.
+
+.
+
+# Feature Calculation
+
+### Number of mini-bursts per reverberating super burst
+
+
+```python
+sns.histplot(data=nReverbs, binrange=(0,10), bins=10)
+plt.xlabel("Number of mini-bursts per RSB")
+plt.axvline(np.mean(nReverbs), color='black')
+plt.axvline(np.median(nReverbs), color='red')
+plt.legend([f"Mean ({np.mean(nReverbs)})",f"Median ({np.median(nReverbs)})"])
+sns.despine()
+```
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_98_0.png)
+    
+
+
+This network had a median number of 4 mini-bursts per reverberating super bursts. Quite the active one! In this case, not a single non-reverberating network event was seen.
+
+### Network Event Duration
+
+
+```python
+ne_duration = [ne_end[i]-ne_start[i] for i in range(len(ne_start))]
+
+sns.histplot(data=ne_duration, bins=10)
+plt.xlabel("Network Event Duration (s)")
+plt.axvline(np.mean(ne_duration), color='black')
+plt.axvline(np.median(ne_duration), color='red')
+plt.legend([f"Mean ({np.mean(ne_duration)})",f"Median ({np.median(ne_duration)})"])
+sns.despine()
+```
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_101_0.png)
+    
+
+
+On average, this network had a network event duration of approximately 2 seconds. Based on this duration, and the previously calculated number of mini-bursts, what is the mini-burst frequency per reverberating super burst?
+
+### Mini-burst Frequency
+
+
+```python
+mb_frequency = [nReverbs[b]/ne_duration[b] for b in range(len(ne_duration))]
+
+sns.histplot(data=mb_frequency, bins=10)
+plt.xlabel("Mini-burst frequency (Hz)")
+plt.axvline(np.mean(mb_frequency), color='black')
+plt.axvline(np.median(mb_frequency), color='red')
+plt.legend([f"Mean ({np.mean(mb_frequency)})",f"Median ({np.median(mb_frequency)})"])
+sns.despine()
+```
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_104_0.png)
+    
+
+
+The vast majority of reverberating super bursts had a mini-burst frequency between 1.5-2.1 Hz. Fairly consistent frequency.
+
+### Inter-Network-Event-Interval
+
+
+```python
+i_ne_i = [ne_start[i+1]-ne_end[i] for i in range(0,len(ne_start)-1)]
+
+sns.histplot(data=i_ne_i, bins=10)
+plt.xlabel("Inter-Network-Event-Interval (s)")
+sns.despine()
+```
+
+
+    
+![png](../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_107_0.png)
     
 
