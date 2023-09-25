@@ -1,6 +1,161 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-09-24T20:00:47-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">KARTIK PRADEEPAN</title><subtitle>personal description</subtitle><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><entry><title type="html">What is a PhD really like?</title><link href="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/" rel="alternate" type="text/html" title="What is a PhD really like?" /><published>2023-09-20T00:00:00-07:00</published><updated>2023-09-20T00:00:00-07:00</updated><id>http://localhost:4000/posts/2023/09/What-is-a-PhD-like</id><content type="html" xml:base="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/">&lt;h2 id=&quot;what-is-a-phd-really-like&quot;&gt;What is a PhD really like?&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-09-25T15:03:11-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">KARTIK PRADEEPAN</title><subtitle>personal description</subtitle><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><entry><title type="html">“Happiness only real when shared” - Christopher McCandless (aka Alexander Supertramp)</title><link href="http://localhost:4000/Into-the-wild/" rel="alternate" type="text/html" title="“Happiness only real when shared” - Christopher McCandless (aka Alexander Supertramp)" /><published>2023-09-25T00:00:00-07:00</published><updated>2023-09-25T00:00:00-07:00</updated><id>http://localhost:4000/Into-the-wild</id><content type="html" xml:base="http://localhost:4000/Into-the-wild/">&lt;p&gt;This was the conclusion Christopher McCandless (aka Alexander Supertramp) came to during his dying moments after accidentally eating a toxin caused malabsorption leading him to a slow starvation.&lt;/p&gt;
 
-&lt;p&gt;I recently read a post on /r/datascience that raised the question: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;why so many people with PhDs think that&apos;s an easy pass for data science?&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../images/Happiness%20when%20shared/Chris%20infront%20of%20bus.jpeg&quot; alt=&quot;Christopher McCandless infront of bus&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I watched “Into the Wild” back in 2019. It retold the story of a vagabond who decided to completely break away from society, including his family. He traveled throughout the south and west US coasts, into Canada, and finally towards his goal of Alaska over 112 days of travel.&lt;/p&gt;
+
+&lt;p&gt;Now, Chris was an interesting character - athletic and intelligent, but judged others against a strong moral code (moral absolutism).&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Moral absolutism asserts that there are certain universal moral principles by which all peoples’ actions may be judged &lt;a href=&quot;https://ethicsunwrapped.utexas.edu/glossary/moral-absolutism#:~:text=Moral%20absolutism%20asserts%20that%20there,correct%20and%20which%20are%20incorrect.&quot;&gt;[1]&lt;/a&gt;. That there there is an intrinsic right and wrong, regardless of the context or consequences &lt;a href=&quot;https://en.wikipedia.org/wiki/Moral_absolutism&quot;&gt;[2]&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;He lived minimally, rarely leaving his room unless needed, spending most of his time living in the books of Thoreau, Tolstoy, Emerson, and the likes.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/Happiness%20when%20shared/Thoreau%20quote.jpeg&quot; alt=&quot;Thoreau quote&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And after a series of failings around his upbringing, he began to reject the modern consumerist lifestyle and completely adopted an overly ideal and pantheistic philosophy.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Pantheism asserts that the universe and reality are manifestations of god/divinity/supreme being.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“You don’t need human relationships to be happy, God has placed it all around us.” - Christopher McCandless&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Watching Chris was particularly difficult because I had shared a lot of his worldview and vagabond desires at some point, albeit not quite as extreme.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;There is no greater joy than to have an endlessly changing horizon, for each day to have a new and different sun.” - Christopher McCandless&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Ultimate freedom. An extremist. An aesthetic voyager whose home is the road. Escaped from Atlanta. Thou shalt not return, ‘cause “the West is the best.” And now after two rambling years comes the final and greatest adventure, the climatic battle to kill the false being within and victoriously conclude the spiritual revolution. Ten days and nights of freight trains and hitchhiking bring him to the great white North. No longer to be poisoned by civilization he flees, and walks along upon the land to become lost in the wild.” - Christopher McCandless&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;While he made friends during his journey, many of whom grew attached to him for his aspiring yet bewildering passion (even wanting to adopt him), he was cruelly blunt with his philosophy that relationships and friendships weren’t necessary to living life to it’s fullest potential.&lt;/p&gt;
+
+&lt;p&gt;As smart as Chris apparently was, he made some idiotic judgements. He was an idealist who overly romaticized the “great Alaskan odyssey”, which left him very poorly prepared for when he was trapped along a trail due to an impassable river.&lt;/p&gt;
+
+&lt;p&gt;He had some good hunting days while stranded, but eventually degenerated into a frantic hypoglycemic delirium when food became scarce and he failed to preserve a moose before maggots.&lt;/p&gt;
+
+&lt;p&gt;He eventually resorted to seeds and berries until he accidentally took the wrong one, poisoning him.&lt;/p&gt;
+
+&lt;p&gt;During the final days, too weak to move, he realized his desire for solitary happiness in god’s gift of nature was a false ideal. Moments before zipping his weak body into his sleeping bag, he writes a single statement, “&lt;a href=&quot;https://www.youtube.com/watch?v=x2k-oo2TT-0&quot;&gt;Happiness only real when shared&lt;/a&gt;”.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/Happiness%20when%20shared/Happiness%20only%20real%20when%20shared.jpeg&quot; alt=&quot;Happiness only real when shared&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Chris’s story is a tragic one. Dying alone is everyone’s greatest fear. Happiness is distributed among the relationships you share and without them, life is empty. That said, compulsive oversharing deprives experiences of meaning as much as the faux happiness of solitary life.&lt;/p&gt;
+
+&lt;p&gt;Live a life well balanced.&lt;/p&gt;</content><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><category term="philosophy" /><category term="life" /><category term="movie" /><category term="based on true story" /><summary type="html">This was the conclusion Christopher McCandless (aka Alexander Supertramp) came to during his dying moments after accidentally eating a toxin caused malabsorption leading him to a slow starvation.</summary></entry><entry><title type="html">State Space Framework: Flexibility to dogmatic rules in biology</title><link href="http://localhost:4000/Flexibility-to-dogmatic-rules/" rel="alternate" type="text/html" title="State Space Framework: Flexibility to dogmatic rules in biology" /><published>2023-09-24T00:00:00-07:00</published><updated>2023-09-24T00:00:00-07:00</updated><id>http://localhost:4000/Flexibility-to-dogmatic-rules</id><content type="html" xml:base="http://localhost:4000/Flexibility-to-dogmatic-rules/">&lt;h3 id=&quot;reconciling-incongruent-rules-of-deterministic-decision-making&quot;&gt;Reconciling incongruent rules of deterministic decision making.&lt;/h3&gt;
+
+&lt;p&gt;In biology (and many other disciplines), linear logic pathways of causation (A-&amp;gt;B-&amp;gt;C) are often used to describe molecular pathways, cell fates, etc. However, these linear pathways are acutally embedded in complex networks.&lt;/p&gt;
+
+&lt;p&gt;With the influx of “omic” data, the conceptually simple idea of nested binary choices is beginning to be undermined. This comes with the realization of vastly more complicated molecular networks with many circular control loops which can be rarely explained through linear causal explanations.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;“Omic” data is data gathered from studies that investigate biological molecules. For example, gen&lt;strong&gt;omic&lt;/strong&gt; data is data related to the genes, transcript&lt;strong&gt;omics&lt;/strong&gt; is data related to RNA transcripts, metabol&lt;strong&gt;omics&lt;/strong&gt; is data related to metabolites, phen&lt;strong&gt;omics&lt;/strong&gt; is data related to phenotype, etc. There are multiple different kinds of “omic” data, but ultimately they function to give a more precise characterization of the phenomena at the scale of the “omic” data.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/State%20Space/circular%20loop.gif&quot; alt=&quot;Circular loops&quot; width=&quot;40%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The fundamental issue with networks of regulatory pathways is they fail to distinguish between network architecture and network dynamics. Network architecture is defined as a static collection of nodes (representing genes, proteins, etc) and arrows (representing interactions).&lt;/p&gt;
+
+&lt;p&gt;The architecture of genome-wide regulatory networks that encompass all genes is hardwired in the genomic sequence through interacting domains and regulatory proteins/elements.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/State%20Space/regulatory%20network.jpeg&quot; alt=&quot;Regulatory Network&quot; width=&quot;75%&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;source: &lt;a href=&quot;&quot;&gt;unknown at this moment&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;However, network dynamics is the concept that links network architecture and cell behaviour.&lt;/p&gt;
+
+&lt;p&gt;The idea of a state space framework aims to combine the far too simple and limiting pathway-based causality scheme with the dynamics of cellular activity to explain phenotype/behaviour. Arrows connecting genes still serve as symbols of causation, however, such linear interpretations of causal network connections fail to consider the context of the entire networks in which all these causal interactions are embedded.&lt;/p&gt;
+
+&lt;p&gt;One could theoretically follow the logic for the expression levels of gene X, however with thousands of genes involved that change their expression regarding a certain phenotype, it is very easy to quickly lose track.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/State%20Space/thinking.gif&quot; alt=&quot;Thinking hard&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The state space framework is a tool that allows us to understand these dynamics while preserving network architecture complexity. To visualize, a network state S(&lt;em&gt;t&lt;/em&gt;) at time &lt;em&gt;t&lt;/em&gt;, is defined by the expression leveos of all the genes in the network at that specific time (&lt;em&gt;t&lt;/em&gt;).&lt;/p&gt;
+
+&lt;p&gt;Think of it like a cartesian graph (akin to dimensionality reduction to find an underlying manifold), where each gene is a dimension. As we measure more variables, we increase the number of axes/dimensions (N). The state S(&lt;em&gt;t&lt;/em&gt;) is a single point in the continuous, N-dimensional space, the state space, which contains &lt;strong&gt;ALL POSSIBLE&lt;/strong&gt; states.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;A manifold is a lower-dimensional subspace underlying population activity that is generally embedded in a higher-dimensional state space. Generally, you do not need to preserve the original N-dimensional state space. Rather, you can reduce dimensions to capture uncorrelated (high variance explaining) information. A manifold can also be modelled on a euclidean space.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/State%20Space/SS%20cartesian.jpeg&quot; alt=&quot;Cartesian&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;source: &lt;a href=&quot;&quot;&gt;unknown at this moment&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If we have three genes (N=3), the expression pattern of these genes at a particular cell state at time (&lt;em&gt;t&lt;/em&gt;) for a behaviour, phenotype, etc is described described by the 3-variable coordinate position at that specific time (e.g., S(5 mins) = [4,3,2.5])&lt;/p&gt;
+
+&lt;p&gt;The dynamics come in when we execute all the regulatory interactions between the genes, defined by the network architecture (i.e., &lt;em&gt;let the cell do it’s natural thing&lt;/em&gt;), and observe how the N-dimensional gene expression profile changes in a coordinated manner across time.&lt;/p&gt;
+
+&lt;p&gt;Each state is represented by a position. As you continue to measure the same variables across time, the position changes. The state moves along a trajectoy in the state space as the genes exert their regulatory actions onto each other according to the network architecture. Thus, the genome, via the regulatory network it encodes, constrains the movement of the state of each cell.&lt;/p&gt;
+
+&lt;p&gt;The network architecture is a static entity, because the genome does not change much in a lifetime, that constrains the alterations in the expression values of the genes. Development, homeostasis, behaviour, etc. takes place within these constraints.&lt;/p&gt;
+
+&lt;p&gt;The idea gets interesting when you find states where trajectories in the state space environment seem to convert - called attractor states. Attractor states represent stable cell states like differentiated cell types. These attractor states are characterized by a stable gene-expression profile that are often robust to small perturbations since they would attract all unstable points in their neighbourhood (because of regulatory interactions).&lt;/p&gt;
+
+&lt;p&gt;Drugs, environment, etc. can cause a state to deviate transiently but if not too large, will return to the attractor state and re-establish the associated specific gene-expression profile.&lt;/p&gt;
+
+&lt;p&gt;Since various sets of initial states can end up in the same attractor state, there are many ways to reach an attractor (which is a hallmark of stability).&lt;/p&gt;
+
+&lt;p&gt;In real systems with noise, chaos contributing to random fluctuations, the state point (S) wiggles locally in the state space.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/State%20Space/coordinated%20change.jpg&quot; alt=&quot;Coordinated change&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;source: &lt;a href=&quot;10.1371/journal.pbio.1000380&quot;&gt;10.1371/journal.pbio.1000380&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;A big proponent of the state space framework/fitness landscape/combinatory phase space perspective is Stuart Kauffman. He showed that with a broad class of compelx networks with random architecture (wiring), you can produce “interesting cell behaviours”. Then with evolution, you’d need only to fine-tune the state space to optimize the developmental trajectories to ensure smooth descent into attractors of mature cell types and prevent getting stuck in unused attractors of immature regions of the state space (e.g., cancer).&lt;/p&gt;
+
+&lt;p&gt;The best part of this framework is that it can be used to describe any dynamical system (e.g., cognitive/motor processes, cell behaviours, telecommunications, weather, etc). Although the big limitations are acquiring enough of the continuous data and computational cost.&lt;/p&gt;
+
+&lt;p&gt;In science it is sometimes rare to find people competent in both the math/CS side of analysis while being able to understand the biology to make appropriate interpretations. This highlights the neccessity for cross-functional collaboration. With scientific big data and multi-omic big data on the rise, I hope to see this approach used more.&lt;/p&gt;
+
+&lt;h3 id=&quot;podcast-version&quot;&gt;Podcast version&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.audacy.com/podcast/incomplete-thoughts-5d7b8/episodes/ep2-state-space-a-multidimensional-approach-to-understanding-2faf8&quot;&gt;EP2: State Space - A multidimensional approach to understanding&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;for-more-reading-on-this-topic&quot;&gt;For more reading on this topic:&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2876052/&quot;&gt;Cell Lineage Determination in State Space: A Systems View Brings Flexibility to Dogmatic Canonical Rules&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.nature.com/articles/s41583-023-00693-x&quot;&gt;A unifying perspective on neural manifolds and circuits for cognition&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.nature.com/articles/s41467-018-06560-z&quot;&gt;Cortical population activity within a preserved neural manifold underlies multiple motor behaviors&lt;/a&gt;&lt;/p&gt;</content><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><category term="biology" /><category term="systems biology" /><category term="computation" /><summary type="html">Reconciling incongruent rules of deterministic decision making.</summary></entry><entry><title type="html">The cellular function of feed-forward loops (FFL) integration by OR gates</title><link href="http://localhost:4000/FFL-Systems-Biology/" rel="alternate" type="text/html" title="The cellular function of feed-forward loops (FFL) integration by OR gates" /><published>2023-09-22T00:00:00-07:00</published><updated>2023-09-22T00:00:00-07:00</updated><id>http://localhost:4000/FFL-Systems-Biology</id><content type="html" xml:base="http://localhost:4000/FFL-Systems-Biology/">&lt;p&gt;The feed-forward loop (FFL) motif is a common gene regulatory network found in many organisms. The simplest form requires three nodes (gene, protein, etc.) and three regulatory interactions.&lt;/p&gt;
+
+&lt;p&gt;Typically, a transciption factor X (TF-X) interacts with TF-Y in order to regulate gene Z but TF-X can also interact with the Z promoter to activate gene Z by itself. The former pathway is called the delay/indirect pathway while the latter is known as the direct pathway.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A transcription factor is a protein that binds to DNA at specific target sequences. It can function to make it easier (activator) or harder (repressor) for a gene to be transcribed.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/FFL/pathway.png&quot; alt=&quot;FFL pathway&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;TF-X and TF-Y often integrate at the Z promoter through either an AND gate (X* and Y* are &lt;strong&gt;BOTH&lt;/strong&gt; required) or an OR gate (X* or T* is sufficient).&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A promoter is a sequence of DNA ahead/upstream of the gene of interest where transcription factors (among other proteins) can bind to elicit an effect on transcription.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Both are seen in nature but confer &lt;strong&gt;VERY&lt;/strong&gt; distinct properties to a system.&lt;/p&gt;
+
+&lt;p&gt;FFLs using an AND gate (AND-FFL) builds a timed delay, where there is a delay in the ON step but no delay in the OFF step.&lt;/p&gt;
+
+&lt;p&gt;FFLs using an OR gate (OR-FFL) demonstrates the opposite behaviour. OR-FFL would allow for rapid activation of a process but inactivation would take a bit of time ebcause the system would need to wait for both inputs (X* and Y*) to decrease in order to turn off the output (Z).&lt;/p&gt;
+
+&lt;p&gt;The use of AND-FFL networks is often seen in differentiation because it allows the signal to be passed if and only if the input signals are steady and persistent. This prevents differentiation from starting when the cell is not ready.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Differentiation is a process by which a cell becomes a more specific cell type. Multiple signals are necessary for differentiation to proceed in a coordinated manner to create an organism.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;On the other hand, I would speculate that OR-FFL networks can be seen in systems that have inputs that fluctuate very rapidly. For example, environmental inputs or transient molecules in a cell that act as a stress input would most likely be involved in an OR-FFL network. Unlike AND-FFL, OR-FFL has no delay in the ON step. This allows the cell to respond rapidly and only stop responding when the stressors are detected to be absent for the duration of the delay.&lt;/p&gt;
+
+&lt;p&gt;In a study, &lt;em&gt;E. coli&lt;/em&gt; flagellar motor protein assembly was seen to display OR-FFL mechanism (&lt;a href=&quot;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1681456/&quot;&gt;Kalir et al., 2005&lt;/a&gt;). The researchers suggested that the inputs were governed by many environmental inputs such as temperature, osmotic stress, carbon starvation, etc., These factors all fluctuate rapidly and the OR-FFL allows &lt;em&gt;E. coli&lt;/em&gt; to quickly swim away and only stop swimming when the stress factors are absent for an extended period of time, signifying that the new environment is safe.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Flagella are tail-like structures that allow bacteria to move in it’s environment.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Well that’s it! This network motif is by far not the only one - just one of the simpler ones. There are plenty of others (e.g., NAR, molecular ratchets, oscillators, memory devices, etc). It’s just interesting to see biological systems described as computer parts (i.e., computation). In many ways they are the same, but in many ways they’re vastly more complex and dynamic. It’s fun to fantasize about the billions of brownian input in a cell’s interactome and then to scale up complexity.&lt;/p&gt;</content><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><category term="biology" /><category term="systems biology" /><category term="computation" /><summary type="html">The feed-forward loop (FFL) motif is a common gene regulatory network found in many organisms. The simplest form requires three nodes (gene, protein, etc.) and three regulatory interactions.</summary></entry><entry><title type="html">What is a PhD really like?</title><link href="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/" rel="alternate" type="text/html" title="What is a PhD really like?" /><published>2023-09-20T00:00:00-07:00</published><updated>2023-09-20T00:00:00-07:00</updated><id>http://localhost:4000/posts/2023/09/What-is-a-PhD-like</id><content type="html" xml:base="http://localhost:4000/posts/2023/09/What-is-a-PhD-like/">&lt;p&gt;I recently read a post on /r/datascience that raised the question: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;why so many people with PhDs think that&apos;s an easy pass for data science?&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;Initially, I found this question rather puzzling. The notion of a “PhD”, and as an “easy pass” is contradictory. Obtaining a PhD is anything but easy; it  often constitutes the most formidable intellectual challenge a person has to rise up to in their lifetime. Perhaps that is one source of confusion. So for now, I will attempt to describe &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;what does a PhD really require&lt;/code&gt; and I will be focusing on a STEM degree (although I believe this can be applied to some non-STEM programs).&lt;/p&gt;
 
@@ -38,7 +193,7 @@
 
 &lt;p&gt;Hopefully you can understand that a PhD is not something you should be willing to do unless you truly enjoy the pursuit of knowledge.&lt;/p&gt;
 
-&lt;p&gt;As to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;what makes people with PhDs more adept at data science right out of school?&lt;/code&gt;, I will address that question in a separate post.&lt;/p&gt;</content><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><category term="PhD" /><category term="self-reflection" /><category term="career" /><summary type="html">What is a PhD really like?</summary></entry><entry><title type="html">How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)</title><link href="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/" rel="alternate" type="text/html" title="How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)" /><published>2023-09-19T00:00:00-07:00</published><updated>2023-09-19T00:00:00-07:00</updated><id>http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll</id><content type="html" xml:base="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/">&lt;p&gt;Since creating this personal website, I’ve wanted to find a way to embed python notebook snippets to showcase my projects and hopefully eventually create tutorials that people can learn from. To do this, you need to convert python notebook files (.ipynb) into markdown (.md) along with all the embeded images.&lt;/p&gt;
+&lt;p&gt;As to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;what makes people with PhDs more adept at data science right out of school?&lt;/code&gt;, I will address that question in a separate post.&lt;/p&gt;</content><author><name>Kartik Pradeepan</name><email>kartikspradeepan@gmail.com</email></author><category term="PhD" /><category term="self-reflection" /><category term="career" /><summary type="html">I recently read a post on /r/datascience that raised the question: why so many people with PhDs think that&apos;s an easy pass for data science?</summary></entry><entry><title type="html">How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)</title><link href="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/" rel="alternate" type="text/html" title="How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)" /><published>2023-09-19T00:00:00-07:00</published><updated>2023-09-19T00:00:00-07:00</updated><id>http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll</id><content type="html" xml:base="http://localhost:4000/posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/">&lt;p&gt;Since creating this personal website, I’ve wanted to find a way to embed python notebook snippets to showcase my projects and hopefully eventually create tutorials that people can learn from. To do this, you need to convert python notebook files (.ipynb) into markdown (.md) along with all the embeded images.&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;Create a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_notebooks&lt;/code&gt; directory inside the master folder. This is where you should be putting your jupyter notebooks.&lt;/li&gt;

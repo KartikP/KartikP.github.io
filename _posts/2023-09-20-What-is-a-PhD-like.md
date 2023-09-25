@@ -7,8 +7,6 @@ tags:
   - self-reflection
   - career
 ---
-## What is a PhD really like?
-
 I recently read a post on /r/datascience that raised the question: `why so many people with PhDs think that's an easy pass for data science?`
 
 Initially, I found this question rather puzzling. The notion of a "PhD", and as an "easy pass" is contradictory. Obtaining a PhD is anything but easy; it  often constitutes the most formidable intellectual challenge a person has to rise up to in their lifetime. Perhaps that is one source of confusion. So for now, I will attempt to describe `what does a PhD really require` and I will be focusing on a STEM degree (although I believe this can be applied to some non-STEM programs).
