@@ -19,7 +19,7 @@
 
 
 
-<title>Tutorial: Reverberating Super Burst Detection Workflow - KARTIK PRADEEPAN</title>
+<title>Tutorial: Non-Reverberating (i.e., Network Burst) Detection Workflow - KARTIK PRADEEPAN</title>
 
 
 
@@ -29,15 +29,15 @@
 
 <meta property="og:locale" content="en-US">
 <meta property="og:site_name" content="KARTIK PRADEEPAN">
-<meta property="og:title" content="Tutorial: Reverberating Super Burst Detection Workflow">
+<meta property="og:title" content="Tutorial: Non-Reverberating (i.e., Network Burst) Detection Workflow">
 
 
-  <link rel="canonical" href="http://localhost:4000/portfolio/Reverberating_Super_Burst_Detection/">
-  <meta property="og:url" content="http://localhost:4000/portfolio/Reverberating_Super_Burst_Detection/">
+  <link rel="canonical" href="http://localhost:4000/portfolio/Non-Reverberating_Detection/">
+  <meta property="og:url" content="http://localhost:4000/portfolio/Non-Reverberating_Detection/">
 
 
 
-  <meta property="og:description" content="A breakdown of how RSB detection and analysis works.">
+  <meta property="og:description" content="A breakdown of how RSB detection code works on non-reverberating networks.">
 
 
 
@@ -258,15 +258,15 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Tutorial: Reverberating Super Burst Detection Workflow">
-    <meta itemprop="description" content="A breakdown of how RSB detection and analysis works.">
+    <meta itemprop="headline" content="Tutorial: Non-Reverberating (i.e., Network Burst) Detection Workflow">
+    <meta itemprop="description" content="A breakdown of how RSB detection code works on non-reverberating networks.">
     <meta itemprop="datePublished" content="September 24, 2023">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 class="page__title" itemprop="headline">Tutorial: Reverberating Super Burst Detection Workflow
+          <h1 class="page__title" itemprop="headline">Tutorial: Non-Reverberating (i.e., Network Burst) Detection Workflow
 </h1>
           
         
@@ -284,13 +284,15 @@
       <section class="page__content" itemprop="text">
         <p>This is a tutorial on how reverberating super bursts were detected in Pradeepan et al., 2023.</p>
 
+<p><strong>This is a non-reverberating network example</strong></p>
+
 <hr />
 
 <p>DISCLAIMER: The approach used in the manuscript relies upon the generation of spike density functions - to convert a discrete, analog signal (i.e., 1s and 0s) into a continuous one (i.e., spike density function). By doing so, we are theoretically changing the signal into something it is not. However, through careful interrogation, we have assured the questions we asked are not biased by this step.</p>
 
 <p>To navigate around this issue, I have also developed a different approach. This “secondary approach” avoids the convolution of a kernel and relies upon my implementation of the Max Interval Burst Detection algorithm combined with a histogram-based approach to detecting network events. By combining these two approaches, we’re able to cut the run time of the analysis by up to 95%, however the trade off is the accuracy of burst boundaries. Nonetheless, the results are still comparable. This secondary approach will be shared in this document as a hyperlink, including a separate tutorial at another time.</p>
 
-<p><a href="https://www.kartikpradeepan.com/portfolio/Non-Reverberating_Detection/">Click here to see how the code performs on non-reverberating networks (i.e., ordinary network bursts)</a></p>
+<p><a href="https://www.kartikpradeepan.com/portfolio/Reverberating_Super_Burst_Detection/">Click here to see how the code performs on reverberating networks (i.e., reverberating-super bursts)</a></p>
 
 <h2 id="install-necessary-packages">Install necessary packages</h2>
 
@@ -354,14 +356,14 @@
 <span class="n">spiketimes</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">organize_spikelist</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-3-2eeb288d4c56&gt;:3: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support regex separators (separators &gt; 1 char and different from '\s+' are interpreted as regex); you can avoid this warning by specifying engine='python'.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ipython-input-6-2eeb288d4c56&gt;:3: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support regex separators (separators &gt; 1 char and different from '\s+' are interpreted as regex); you can avoid this warning by specifying engine='python'.
   spikelist_file = pd.read_csv(filepath, sep='\r\n', header=None)
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">spiketimes</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
 </code></pre></div></div>
 
-<div id="df-320bd06f-04c2-4d7f-944a-099895dbfc8e" class="colab-df-container">
+<div id="df-774ba195-8454-4426-bd41-9a61dd31b1a4" class="colab-df-container">
     <div>
 <style scoped="">
     .dataframe tbody tr th:only-of-type {
@@ -428,7 +430,7 @@
     <div class="colab-df-buttons">
 
   <div class="colab-df-container">
-    <button class="colab-df-convert" onclick="convertToInteractive('df-320bd06f-04c2-4d7f-944a-099895dbfc8e')" title="Convert this dataframe to an interactive table." style="display:none;">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-774ba195-8454-4426-bd41-9a61dd31b1a4')" title="Convert this dataframe to an interactive table." style="display:none;">
 
   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
     <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z" />
@@ -478,12 +480,12 @@
 
     <script>
       const buttonEl =
-        document.querySelector('#df-320bd06f-04c2-4d7f-944a-099895dbfc8e button.colab-df-convert');
+        document.querySelector('#df-774ba195-8454-4426-bd41-9a61dd31b1a4 button.colab-df-convert');
       buttonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
 
       async function convertToInteractive(key) {
-        const element = document.querySelector('#df-320bd06f-04c2-4d7f-944a-099895dbfc8e');
+        const element = document.querySelector('#df-774ba195-8454-4426-bd41-9a61dd31b1a4');
         const dataTable =
           await google.colab.kernel.invokeFunction('convertToInteractive',
                                                     [key], {});
@@ -503,8 +505,8 @@
   </div>
 
 
-<div id="df-83e9c6f7-6f26-482d-b5f5-c64fb09efa26">
-  <button class="colab-df-quickchart" onclick="quickchart('df-83e9c6f7-6f26-482d-b5f5-c64fb09efa26')" title="Suggest charts." style="display:none;">
+<div id="df-f236a8fe-97bc-4023-9274-6bc2b02dd7b6">
+  <button class="colab-df-quickchart" onclick="quickchart('df-f236a8fe-97bc-4023-9274-6bc2b02dd7b6')" title="Suggest charts." style="display:none;">
 
 &lt;svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
      width="24px"&gt;
@@ -621,7 +623,7 @@
     }
     (() => {
       let quickchartButtonEl =
-        document.querySelector('#df-83e9c6f7-6f26-482d-b5f5-c64fb09efa26 button');
+        document.querySelector('#df-f236a8fe-97bc-4023-9274-6bc2b02dd7b6 button');
       quickchartButtonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
     })();
@@ -660,7 +662,7 @@
 <h2 id="select-a-well-to-analyze">Select a well to analyze</h2>
 <p>This is where you would start wrapping the below code into a loop that iterates through each well, each plate/recording.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">well_id</span> <span class="o">=</span> <span class="s">"A3"</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">well_id</span> <span class="o">=</span> <span class="s">"B1"</span>
 </code></pre></div></div>
 
 <h2 id="quick-look-at-the-network-activity">Quick look at the network activity</h2>
@@ -677,11 +679,11 @@
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 1.0, 'Sort of like a PSTH - representing network activity')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_16_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_16_1.png" alt="png" /></p>
 
-<p>It looks like there is some interesting network bursting activity! Are these reverberating super bursts (RSB) like the ones mentioned in Pradeepan et al., 2023? 😂</p>
+<p>It looks like this network is a non-reverberating network. Each large amplitude firing rate event does not appear to have a tail.</p>
 
-<p>Jokes aside, the code below will help identify whether this is or isn’t an RSB. But for now, we’ll plot a close up of a smaller window.</p>
+<p>We’ll plot a close up of a smaller window.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Definitely do not keep plotting histograms with large bin sizes if you want your code to run fast
 </span><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
@@ -690,13 +692,13 @@
 <span class="n">plt</span><span class="p">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">146</span><span class="p">,</span> <span class="mi">157</span><span class="p">)</span>
 <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Time (s)"</span><span class="p">)</span>
 <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Total number of spikes in network (Bin size:1s)"</span><span class="p">)</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Multiple peaks within a network event"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Single peak within a network event"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 1.0, 'Multiple peaks within a network event')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_18_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_18_1.png" alt="png" /></p>
 
 <h2 id="sort-data-frame-containing-mixed-bag-of-electrode-and-spike-times-based-on-channel-name">Sort data frame containing mixed-bag of electrode and spike times based on channel name</h2>
 
@@ -752,7 +754,7 @@ The above produces the following:
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 0, 'Time (s)')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_22_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_22_1.png" alt="png" /></p>
 
 <p>We did it with the histogram, might as well do it with the raster. 🤷</p>
 
@@ -768,7 +770,7 @@ The above produces the following:
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 0, 'Time (s)')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_24_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_24_1.png" alt="png" /></p>
 
 <h1 id="signal-conditioning">Signal Conditioning</h1>
 
@@ -850,10 +852,10 @@ Each cell will contain either a 0 or 1 depending on whether a spike was found i.
 <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="s">"Network SDF"</span><span class="p">,</span> <span class="s">"Weighted Network SDF"</span><span class="p">])</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x7ed80051fbe0&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x7b94503f2560&gt;
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_37_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_37_1.png" alt="png" /></p>
 
 <p>As you can see, the general shape of the spike density function (which is an estimate of the network’s instantaneous firing rate) is the same between the non-maxFR-weighted SDF and the maxFR-weighted SDF. You can use whichever one, but I prefer to use the maxFR-weighted SDF because it helps improve signal:noise for subsequent analysis.</p>
 
@@ -873,7 +875,7 @@ Each cell will contain either a 0 or 1 depending on whether a spike was found i.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 0, 'Time (s)')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_40_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_40_1.png" alt="png" /></p>
 
 <p>As you can see, generally the spike density function does a really good job of representing the average activity across the network. You may notice that the “ramp-up” prior to each network burst starts before activity has truly started. This is largely an artifact of the gaussian kernel. To avoid this, you can use an alpha function or any function that you feel represents the probability of an action potential the best. For this example, and generally most purposes, a gaussian kernel will suffice.</p>
 
@@ -912,7 +914,7 @@ Each cell will contain either a 0 or 1 depending on whether a spike was found i.
 <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Detected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">burst_peak_times</span><span class="p">)</span><span class="si">}</span><span class="s"> potential network bursts and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prime_burst_peak_times</span><span class="p">)</span><span class="si">}</span><span class="s"> likely initiation bursts."</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Detected 145 potential network bursts and 30 likely initiation bursts.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Detected 104 potential network bursts and 97 likely initiation bursts.
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
@@ -929,10 +931,10 @@ Each cell will contain either a 0 or 1 depending on whether a spike was found i.
 <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">burst_peak_times</span><span class="p">,</span> <span class="n">weighted_network_sdf</span><span class="p">[(</span><span class="n">burst_peak_times</span><span class="o">*</span><span class="n">fs</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)],</span> <span class="s">'v'</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[&lt;matplotlib.lines.Line2D at 0x7ed7ee9285b0&gt;]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[&lt;matplotlib.lines.Line2D at 0x7b9455b5d6f0&gt;]
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_48_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_48_1.png" alt="png" /></p>
 
 <p>As you can see, our really basic peak detection was able to identify the location of all the network bursts in this recording. Depending on how noisy your activity is, you may need a more complicated approach.</p>
 
@@ -951,9 +953,11 @@ Each cell will contain either a 0 or 1 depending on whether a spike was found i.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0, 0.5, 'Firing rate (Hz)')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_52_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_52_1.png" alt="png" /></p>
 
-<p>This approach ignores the first burst. We can deal with that later. But the important thing is that there appears to be two main clusters where expected.</p>
+<p>This approach ignores the first burst. We can deal with that later.</p>
+
+<p>Importantly, this network detected small amplitude bursts that have a similar rate as mini-bursts. The important distinction is a strong overlap in the IBPI dimension. We will quantify that in the next step.</p>
 
 <h3 id="k-means-clustering">K-means clustering</h3>
 
@@ -1007,11 +1011,17 @@ Each cell will contain either a 0 or 1 depending on whether a spike was found i.
     <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"The well is probably not reverberating strongly if at all"</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">kmeans</span><span class="p">.</span><span class="n">labels_</span>
   <span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"The well is probably reverberating"</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">kmeans</span><span class="p">.</span><span class="n">labels_</span>
 
 
 <span class="n">isReverb</span><span class="p">,</span> <span class="n">cluster_x</span><span class="p">,</span> <span class="n">cluster_y</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">k_means</span><span class="p">(</span><span class="n">ibpi</span><span class="p">,</span> <span class="n">fr</span><span class="p">)</span>
 </code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The well is probably not reverberating strongly if at all
+</code></pre></div></div>
+
+<p>K-means used percent overlap along the IBPI dimension as well as the total number of labeled “mini-bursts” to initiation burst. Generally, there should be as much or more mini-bursts to initiation bursts.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sns</span><span class="p">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">cluster_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">cluster_y</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
 <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Inter-burst-peak-interval (s)"</span><span class="p">)</span>
@@ -1020,7 +1030,7 @@ Each cell will contain either a 0 or 1 depending on whether a spike was found i.
 <span class="n">sns</span><span class="p">.</span><span class="n">despine</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_56_0.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_57_0.png" alt="png" /></p>
 
 <h3 id="inter-burst-peak-interval-skewness">Inter-burst-peak-interval skewness</h3>
 
@@ -1037,9 +1047,11 @@ Each cell will contain either a 0 or 1 depending on whether a spike was found i.
 <span class="n">sns</span><span class="p">.</span><span class="n">despine</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_58_0.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_59_0.png" alt="png" /></p>
 
 <h2 id="rmax-calculation-crawling-the-histogram">Rmax calculation (Crawling the histogram)</h2>
+
+<p><strong>NOTE: For a non-reverberating network, we can skip this step entirely.</strong></p>
 
 <p>There are a number of different approaches to find the local minimum between a distribution. I initially attempted using Hartigan’s Dip Test (via Unidip package) but found that depending on the frequency of network events, it would struggle to detect the local minimum. The approach that I found first that worked best was trying to replicate how my visual detection worked. In essence, I would plot histograms with varying bin sizes/ number of bins and see if there was a point where there was a 0 count bin between the two clear peaks. That approach worked most of the time. The issue with it is that it goes with the first bin that has a 0 count, which may result in certain RSBs being missed. This did a good enough job to be the main approach for Pradeepan et al., 2023.</p>
 
@@ -1066,40 +1078,28 @@ Each cell will contain either a 0 or 1 depending on whether a spike was found i.
 <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"The calculated Rmax using histogram crawling was </span><span class="si">{</span><span class="n">hist_rmax</span><span class="si">}</span><span class="s"> seconds."</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>New Rmax found of 0.5439549999999964 using 144 bin histogram
-New Rmax found of 0.5486146478873204 using 142 bin histogram
-New Rmax found of 0.553407428571425 using 140 bin histogram
-New Rmax found of 0.558339130434779 using 138 bin histogram
-New Rmax found of 0.5634158823529376 using 136 bin histogram
-New Rmax found of 0.5686441791044741 using 134 bin histogram
-New Rmax found of 0.5740309090909055 using 132 bin histogram
-New Rmax found of 0.5795833846153811 using 130 bin histogram
-New Rmax found of 0.5853093749999965 using 128 bin histogram
-New Rmax found of 0.5912171428571393 using 126 bin histogram
-New Rmax found of 0.5973154838709642 using 124 bin histogram
-New Rmax found of 0.6036137704917997 using 122 bin histogram
-New Rmax found of 0.6101219999999965 using 120 bin histogram
-New Rmax found of 0.6168508474576235 using 118 bin histogram
-New Rmax found of 1.3082979310344791 using 116 bin histogram
-New Rmax found of 1.3275115789473648 using 114 bin histogram
-New Rmax found of 1.347411428571425 using 112 bin histogram
-New Rmax found of 1.3680349090909054 using 110 bin histogram
-New Rmax found of 1.3894222222222186 using 108 bin histogram
-New Rmax found of 1.4041259999999962 using 80 bin histogram
-New Rmax found of 1.4346646153846117 using 78 bin histogram
-New Rmax found of 1.4668105263157858 using 76 bin histogram
-New Rmax found of 1.4937716129032221 using 62 bin histogram
-New Rmax found of 1.5364599999999964 using 48 bin histogram
-New Rmax found of 1.5939965217391268 using 46 bin histogram
-New Rmax found of 1.6143035294117611 using 34 bin histogram
-New Rmax found of 1.7018774999999964 using 32 bin histogram
-New Rmax found of 2.595131999999996 using 20 bin histogram
-New Rmax found of 2.8597999999999963 using 18 bin histogram
-New Rmax found of 3.1906349999999963 using 16 bin histogram
-The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>New Rmax found of 1.299259029126173 using 103 bin histogram
+New Rmax found of 1.302605940594019 using 101 bin histogram
+New Rmax found of 1.3060880808080402 using 99 bin histogram
+New Rmax found of 1.3097138144329492 using 97 bin histogram
+New Rmax found of 1.3134922105262754 using 95 bin histogram
+New Rmax found of 1.3141374647886919 using 71 bin histogram
+New Rmax found of 1.3194678260869162 using 69 bin histogram
+New Rmax found of 1.3251164179104074 using 67 bin histogram
+New Rmax found of 1.3311126153845751 using 65 bin histogram
+New Rmax found of 1.3374895238094835 using 63 bin histogram
+New Rmax found of 1.3425443902438623 using 41 bin histogram
+New Rmax found of 1.3534317948717547 using 39 bin histogram
+New Rmax found of 1.3654962162161761 using 37 bin histogram
+New Rmax found of 1.3789394285713887 using 35 bin histogram
+New Rmax found of 1.3940121212120813 using 33 bin histogram
+New Rmax found of 1.4203893333332938 using 15 bin histogram
+New Rmax found of 1.465027692307653 using 13 bin histogram
+New Rmax found of 1.5258981818181432 using 11 bin histogram
+The calculated Rmax using histogram crawling was 1.5258981818181432 seconds.
 </code></pre></div></div>
 
-<p>As we can see here, the detected Rmax or the maximum IBPI between mini-bursts was found to be 3.19 seconds. Referring back to the histogram and raster plots seen above, it appears this is a pretty good estimate about the maximum mini-burst IBPI.</p>
+<p>Because there are two clusters, Rmax calculation attempted to find a minimum. This would give us false boundaries. That is why in the burst reconstruction loop, “isReverb” needs to be true to use Rmax.</p>
 
 <h2 id="rmax-calculation-simple-overlap">Rmax calculation (Simple overlap)</h2>
 
@@ -1116,7 +1116,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"The calculated Rmax using min overlap was </span><span class="si">{</span><span class="n">overlap_rmax</span><span class="si">}</span><span class="s"> seconds."</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The calculated Rmax using min overlap was 2.4002399999999966 seconds.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The calculated Rmax using min overlap was 1.9411200000000122 seconds.
 </code></pre></div></div>
 
 <p>This is an alternative approach that is computationally cheaper and works as well.</p>
@@ -1142,7 +1142,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 0, 'Time (s)')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_68_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_69_1.png" alt="png" /></p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">np</span><span class="p">.</span><span class="n">diff</span><span class="p">(</span><span class="n">weighted_network_sdf</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s">'red'</span><span class="p">)</span>
 <span class="n">plt</span><span class="p">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">146</span><span class="p">,</span> <span class="mi">149</span><span class="p">)</span>
@@ -1151,7 +1151,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(146.0, 149.0)
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_69_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_70_1.png" alt="png" /></p>
 
 <h2 id="resample-the-signal">Resample the signal</h2>
 
@@ -1183,7 +1183,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(146.0, 157.0)
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_74_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_75_1.png" alt="png" /></p>
 
 <p>Signal looks a lot smoother. Peaks of first derivative align with where burst starts and troughs align where burst generally end.</p>
 
@@ -1209,7 +1209,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 </span><span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Length of burst_start is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">burst_start</span><span class="p">)</span><span class="si">}</span><span class="s"> and burst_end is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">burst_end</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Length of burst_start is 177 and burst_end is 177
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Length of burst_start is 100 and burst_end is 100
 </code></pre></div></div>
 
 <h3 id="visualize-the-above-work">Visualize the above work</h3>
@@ -1225,7 +1225,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(146.0, 157.0)
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_79_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_80_1.png" alt="png" /></p>
 
 <h3 id="wrap-the-above-into-a-function-as-we-dont-need-to-be-doing-this-type-of-eda-exploratory-data-analysis-every-time">Wrap the above into a function as we don’t need to be doing this type of EDA (exploratory data analysis) every time.</h3>
 
@@ -1242,7 +1242,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <span class="n">burst_start</span><span class="p">,</span> <span class="n">burst_end</span> <span class="o">=</span> <span class="n">detect_burst_boundaries</span><span class="p">(</span><span class="n">weighted_network_sdf</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Length of burst_start is 177 and burst_end is 177
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Length of burst_start is 100 and burst_end is 100
 </code></pre></div></div>
 
 <h2 id="assign-burst-boundaries-to-the-peaks-that-were-detected-if-possible">Assign burst boundaries to the peaks that were detected (if possible)</h2>
@@ -1271,12 +1271,14 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 0, 'Time (s)')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_84_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_85_1.png" alt="png" /></p>
 
-<p>As you can see, the initiation burst isn’t getting called as nicely as we want to. An additional step you can do is to check what the firing rate is at the end of the burst and make sure it has a maximum value. For example: Check if the firing rate of the end of the burst is below 10 Hz, if not, make the end the closest value between the burst peak and the start of the next burst that is at 10 Hz.</p>
+<p>First derivative burst detection does a decent job. In this case, the network bursts may be terminating a bit too quickly. You can adjust this if you’d like but we’ll keep going. Importantly, there are no nested mini-bursts.</p>
 
 <h1 id="reverberating-super-burst-reconstruction-loop">Reverberating Super Burst Reconstruction Loop</h1>
 <p>Now that we have our Rmax (and if necessary, Amax) as well as our preliminary burst boundaries, we can now reconstructing the network events into reverberating super bursts if they meet the appropriate criteria. Do this only if “isReverb” is True.</p>
+
+<p><strong>In this example, isReverb is false and therefore we will not proceed with reconstruction. Instead we will assign network event variables (ne_start, ne_end) as the burst boundaries we calculated just above.</strong></p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">burst_peaks</span> <span class="o">=</span> <span class="n">burst_peak_times</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c1"># Because we ignored the first burst above
 </span>
@@ -1295,7 +1297,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 0, 'Time (s)')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_87_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_88_1.png" alt="png" /></p>
 
 <h2 id="merge-the-burst-boundaries-of-all-possible-bursts-into-larger-complex-network-events-if-they-meet-the-criteria">Merge the burst boundaries of all possible bursts into larger, complex network events if they meet the criteria</h2>
 
@@ -1343,7 +1345,12 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
    <span class="n">nReverbs</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
   <span class="k">return</span> <span class="n">ne_start</span><span class="p">,</span> <span class="n">ne_end</span><span class="p">,</span> <span class="n">nReverbs</span>
 
-<span class="n">ne_start</span><span class="p">,</span> <span class="n">ne_end</span><span class="p">,</span> <span class="n">nReverbs</span> <span class="o">=</span> <span class="n">merge_bursts_into_RSB</span><span class="p">(</span><span class="n">overlap_rmax</span><span class="p">,</span> <span class="n">burst_borders</span><span class="p">,</span> <span class="n">prime_burst_peak_times</span><span class="p">,</span> <span class="n">burst_peak_times</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">isReverb</span><span class="o">==</span><span class="bp">True</span><span class="p">:</span>
+  <span class="n">ne_start</span><span class="p">,</span> <span class="n">ne_end</span><span class="p">,</span> <span class="n">nReverbs</span> <span class="o">=</span> <span class="n">merge_bursts_into_RSB</span><span class="p">(</span><span class="n">overlap_rmax</span><span class="p">,</span> <span class="n">burst_borders</span><span class="p">,</span> <span class="n">prime_burst_peak_times</span><span class="p">,</span> <span class="n">burst_peak_times</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="n">ne_start</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">burst_borders</span><span class="p">]</span>
+  <span class="n">ne_end</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">burst_borders</span><span class="p">]</span>
+  <span class="n">nReverbs</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">burst_borders</span><span class="p">))</span>
 </code></pre></div></div>
 
 <h3 id="visualize-if-the-merging-worked-appropriately">Visualize if the merging worked appropriately</h3>
@@ -1365,7 +1372,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 0, 'Time (s)')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_91_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_92_1.png" alt="png" /></p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="p">.</span><span class="n">rcParams</span><span class="p">.</span><span class="n">update</span><span class="p">({</span><span class="s">'font.size'</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
@@ -1385,9 +1392,9 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5, 0, 'Time (s)')
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_92_1.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_93_1.png" alt="png" /></p>
 
-<h2 id="and-there-you-have-it--detection-of-reverberating-super-bursts-now-that-you-have-all-the-important-information-start-and-end-of-network-events-as-well-as-the-number-of-mini-bursts-included-in-each-you-can-start-generating-features">and there you have it! 🎉🎉🎉 Detection of reverberating super bursts. Now that you have all the important information (start and end of network events as well as the number of mini-bursts included in each), you can start generating features.</h2>
+<h2 id="and-there-you-have-it--detection-of-network-events-using-the-same-code-as-the-reverberating-super-burst-detection-you-can-similarily-proceed-with-calculating-features-however-reverberating-super-burst-specific-features-will-not-be-informative">and there you have it! 🎉🎉🎉 Detection of network events using the same code as the reverberating super burst detection. You can similarily proceed with calculating features however reverberating super burst specific features will not be informative.</h2>
 
 <p>.</p>
 
@@ -1405,7 +1412,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <span class="n">sns</span><span class="p">.</span><span class="n">despine</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_98_0.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_99_0.png" alt="png" /></p>
 
 <p>This network had a median number of 4 mini-bursts per reverberating super bursts. Quite the active one! In this case, not a single non-reverberating network event was seen.</p>
 
@@ -1421,7 +1428,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <span class="n">sns</span><span class="p">.</span><span class="n">despine</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_101_0.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_102_0.png" alt="png" /></p>
 
 <p>On average, this network had a network event duration of approximately 2 seconds. Based on this duration, and the previously calculated number of mini-bursts, what is the mini-burst frequency per reverberating super burst?</p>
 
@@ -1437,7 +1444,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <span class="n">sns</span><span class="p">.</span><span class="n">despine</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_104_0.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_105_0.png" alt="png" /></p>
 
 <p>The vast majority of reverberating super bursts had a mini-burst frequency between 1.5-2.1 Hz. Fairly consistent frequency.</p>
 
@@ -1450,7 +1457,7 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 <span class="n">sns</span><span class="p">.</span><span class="n">despine</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="../Reverberating_Super_Burst_Detection_files/Reverberating_Super_Burst_Detection_107_0.png" alt="png" /></p>
+<p><img src="../Non-Reverberating_Detection_files/Non-Reverberating_Detection_108_0.png" alt="png" /></p>
 
 
         
@@ -1472,11 +1479,11 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
     <h4 class="page__share-title">Share on</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/portfolio/Reverberating_Super_Burst_Detection/" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/portfolio/Non-Reverberating_Detection/" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/portfolio/Reverberating_Super_Burst_Detection/" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/portfolio/Non-Reverberating_Detection/" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/portfolio/Reverberating_Super_Burst_Detection/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/portfolio/Non-Reverberating_Detection/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
       
@@ -1484,11 +1491,12 @@ The calculated Rmax using histogram crawling was 3.1906349999999963 seconds.
 
   <nav class="pagination">
     
-      <a href="http://localhost:4000/portfolio/Non-Reverberating_Detection/" class="pagination--pager" title="Tutorial: Non-Reverberating (i.e., Network Burst) Detection Workflow
+      <a href="http://localhost:4000/portfolio/Spike%20Time%20Tiling%20Coefficient/" class="pagination--pager" title="Spiking Time Tiling Coefficient - Pairwise correlations between spike trains
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="http://localhost:4000/portfolio/Reverberating_Super_Burst_Detection/" class="pagination--pager" title="Tutorial: Reverberating Super Burst Detection Workflow
+">Next</a>
     
   </nav>
 
