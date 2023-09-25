@@ -15,7 +15,7 @@ DISCLAIMER: The approach used in the manuscript relies upon the generation of sp
 
 To navigate around this issue, I have also developed a different approach. This "secondary approach" avoids the convolution of a kernel and relies upon my implementation of the Max Interval Burst Detection algorithm combined with a histogram-based approach to detecting network events. By combining these two approaches, we're able to cut the run time of the analysis by up to 95%, however the trade off is the accuracy of burst boundaries. Nonetheless, the results are still comparable. This secondary approach will be shared in this document as a hyperlink, including a separate tutorial at another time.
 
-[Click here to see how the code performs on non-reverberating networks (i.e., ordinary network bursts)](https://www.kartikpradeepan.com/portfolio/Non-Reverberating_Detection/)
+[Click here to see how the code performs on non-reverberating networks (i.e., ordinary network bursts)](/portfolio/Non-Reverberating_Detection/)
 
 
 ## Install necessary packages
