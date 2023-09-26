@@ -16,9 +16,11 @@
 
   a {
     text-decoration: underline;
+    color: #000;
 
     &:hover {
       text-decoration: underline;
+      color: #5b47f6;
 
       img {
         box-shadow: 0 0 10px rgba(#000, 0.25);
