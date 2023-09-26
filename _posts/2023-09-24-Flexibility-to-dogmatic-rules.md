@@ -5,6 +5,7 @@ tags:
   - biology
   - systems biology
   - computation
+  - developmental biology
 ---
 
 ### Reconciling incongruent rules of deterministic decision making.
