@@ -30,14 +30,14 @@ All this is generally done with a certain level of autonomy that is alien to the
 
 **Throughout their journey as a PhD student, they will encounter numerous challenges:**
 1. Experiments will fail, 
-2. Inter-personal conflicts between supervisors, lab members, collaborators (or their animal model 🤣) will develop, 
+2. Inter-personal conflicts between supervisors, lab members, or collaborators (or their animal model 🤣) will develop, 
 3. Manuscripts will get rejected,
 4. Projects will hit dead-ends, 
 5. They will feel like quitting.
 
 Yet some how, they must overcome all this and succeed. 
 
-Then, at the end of their degree, they will compile all their findings into a 200-page(ish) thesis that will be sent to experts in their field. They hope they get the *opportunity* to stand in front of them and defend every decision they made over the last X years. Of the course of a 2 hour defense, you will look like you haven't slept in 2 days. Jokes aside, I guarantee you that every STEM PhD holder has gone through this. A PhD is grueling, frustrating, anything but easy, yet often rewarding in retrospect (see [type 2 fun](https://www.rei.com/blog/climb/fun-scale))
+Then, at the end of their degree, they will compile all their findings into a 200-page(ish) thesis that will be sent to experts in their field. They will hope they get the *opportunity* to stand in front of them and defend all the decisions they made over the last X years. Over the course of a 2 hour defense, they will look like they haven't slept in 2 days. Jokes aside, I guarantee you that every STEM PhD holder has gone through this. A PhD is grueling, frustrating, anything but easy, yet often rewarding in retrospect (see [type 2 fun](https://www.rei.com/blog/climb/fun-scale)).
 
 Hopefully you can understand that a PhD is not something you should be willing to do unless you truly enjoy the pursuit of knowledge. 
 
