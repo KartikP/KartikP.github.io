@@ -20,7 +20,7 @@ Professional experience
 ======
 Completed a Bachelor of Science with an Honours Double Major in Genetics and Physiology at Western University with an emphasis on Neurophysiology.
 
-Currently a **Computational Neuroscience doctoral student** at Western University. My research investigates the developmental trajectory of neuronal networks using  multielectrode arrays. Specifically, I am looking at how MECP2 mutations (that cause Rett Syndrome) produce abberant network circuitry in monolayer cultures as well as how Alzheimer's disease presents itself in astrocyte-enriched cerebral organoids.
+Currently a **Computational Neuroscience doctoral candidate** at Western University. My research investigates the developmental trajectory of neuronal networks using  multielectrode arrays. Specifically, I am looking at how MECP2 mutations (that cause Rett Syndrome) produce abberant network circuitry in monolayer cultures as well as how Alzheimer's disease presents itself in astrocyte-enriched cerebral organoids. I am an expert in in vitro multielectrode array disease modelling with a focus on electrophysiological analysis.
 
 Outside of my research, I have been involved in pro-bono **management consulting** for non-profit organizations in both the US and Canada.
 
