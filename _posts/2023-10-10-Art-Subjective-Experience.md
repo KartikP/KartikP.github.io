@@ -13,7 +13,7 @@ I think it's easy to dismiss certain arts as garbage, especially if it's somethi
 
 Daniel Tammet has Asperger's syndrome (a form of high-functioning autism spectrum disorder; ASD), as well as savant syndrome. He possesses undreamed of numerical and linguistic abilities. He is unique as a savant because he has well-developed social skills. 
 
-People with ASD sometimes have synesthesia, a condition where sensory and cognitive pathways are interlinked. For Daniel Tammet, he is able to see words as colours and numbers as not only colours but also in different shapes and sizes. A great example of of this is when he describes the number pi (i.e., 3.141592653...) He sees the decimals of pi as mountain landscapes consisting of a series of differently coloured numbers. While I struggle to see how this picture resembles pi, I am in awe that such an experience goes on in his head.
+People with ASD sometimes have synesthesia, a condition where sensory and cognitive pathways are interlinked. For Daniel Tammet, he is able to see words as colours and numbers as not only colours but also in different shapes and sizes. A great example of this is when he describes the number pi (i.e., 3.141592653...) He sees the decimals of pi as mountain landscapes consisting of a series of differently coloured numbers. While I struggle to see how this picture resembles pi, I am in awe that such an experience goes on in his head.
 
 <img src="../images/Art%20Subjective%20Experience/pi.jpg" alt="Picasso Progression" width="75%"/>
 
