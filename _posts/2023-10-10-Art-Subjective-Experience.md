@@ -33,6 +33,6 @@ What I find mystifying is Dr. P's artistic progression through his life followed
 
 source: [A Reddit Post](https://www.reddit.com/r/Damnthatsinteresting/comments/z0rm5t/the_evolution_of_picassos_style/)
 
-Dr. P's story is a tragically beautiful case of pairting artistic style to stages of a neurlogical disorder. From realism to non-representational and finally abstract, "the paintings were a tragic pathological exhibit, which belonged to neurology, not art."
+Dr. P's story is a tragically beautiful case of pairting artistic style to stages of a neurological disorder. From realism to non-representational and finally abstract, "the paintings were a tragic pathological exhibit, which belonged to neurology, not art."
 
 *How much of art is just a reflection of the artist's pathological development?* Perhaps not pathological but just a standard deviation or 3 away from the norm.
