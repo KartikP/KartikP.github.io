@@ -19,7 +19,7 @@ People with ASD sometimes have synesthesia, a condition where sensory and cognit
 
 source: [Daniel Tammet](http://www.danieltammet.net/artwork.php)
 
-Another great example is Dr. P described in Oliver Sacks' "The Man Who Mistook His Wife For A Hat". Dr. P, a patient of Oliver Sacks, was diagnosed with a case of total visual agnosia - a condition where the patient can see but cannot recognize or interpret visual information. Specifically, Dr. P had an inability to represent objects with multiple parts as well as trouble representing parts of objects. He would often mistake inanimate objects for people and struggled to recognize people by their face.
+Another great example is Dr. P described in Oliver Sacks' "The Man Who Mistook His Wife For A Hat". Dr. P, a patient of Oliver Sacks, was diagnosed with a case of total visual agnosia - a condition where the patient can see but cannot recognize or interpret visual information. Specifically, Dr. P had an inability to represent objects with multiple parts as well as trouble representing parts of objects. He would often mistake inanimate objects for people and struggled to recognizing people by their face.
 
 Typically, when we recognize someone, we look at their face as a whole. Dr. P could no longer do this and had learned to compensate by analyzing specific features of the person, recognize people by their nose or their hair. This inability to perceive more than one object at a time, and thus unable to form a whole understanding was not limited to faces but most of his visual system. He was "lost in a world of lifeless abstractions". What was absolutely perplexing was that he was completely unaware of his problem.
 
