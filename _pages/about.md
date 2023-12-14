@@ -30,5 +30,5 @@ Hobbies
 💪🏽 [Lifting heavy things](https://www.youtube.com/watch?v=GuIlVmL0KBc&list=PLTjllZp4uE3l5TqwPOoGT_XvSBVgp2JEO)\
 🚲 Cycling my way towards an Iron Man\
 📚 Constantly learning (currently reading Bernoulli's Fallacy by Aubrey Clayton)\
-🍰 Making the World's Best Tiramisu (yes, I know...but there's no tiramisu emoji)\
+🍰 Making the [World's Best Tiramisu](blog/2023/Worlds-Best-Tiramisu/)\
 😁 Keeping up with the adventures of [Luffy](https://www.youtube.com/watch?v=AfZmNBonIeI)

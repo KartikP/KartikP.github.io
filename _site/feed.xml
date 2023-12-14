@@ -1,5 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-12-14T13:44:00-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-</subtitle><entry><title type="html">Art is a way to take a snapshot of consciousness</title><link href="http://localhost:4000/blog/2023/Art-Subjective-Experience/" rel="alternate" type="text/html" title="Art is a way to take a snapshot of consciousness" /><published>2023-10-10T00:00:00-04:00</published><updated>2023-10-10T00:00:00-04:00</updated><id>http://localhost:4000/blog/2023/Art-Subjective-Experience</id><content type="html" xml:base="http://localhost:4000/blog/2023/Art-Subjective-Experience/"><![CDATA[<p>For me, that is where the beauty comes from. Being able to peer into the mind of an artist’s subjective experience. We all like to think we experience the world the same, but art is evidence that we do not.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-12-14T16:40:07-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+</subtitle><entry><title type="html">The World’s Best Tiramisu Recipe</title><link href="http://localhost:4000/blog/2023/Worlds-Best-Tiramisu/" rel="alternate" type="text/html" title="The World’s Best Tiramisu Recipe" /><published>2023-12-14T00:00:00-05:00</published><updated>2023-12-14T00:00:00-05:00</updated><id>http://localhost:4000/blog/2023/Worlds-Best-Tiramisu</id><content type="html" xml:base="http://localhost:4000/blog/2023/Worlds-Best-Tiramisu/"><![CDATA[<p>Okay, so maybe by now you’ve probably seen that I make the <code class="language-plaintext highlighter-rouge">World's Best Tiramisu</code> (see under hobbies). This is in fact a self-proclaimed title <strong>however</strong> I do think I make a mighty fine tiramisu.</p>
+
+<p>By popular request, I have decided to bless the world with my recipe.</p>
+
+<h3 id="equipment">Equipment</h3>
+<ul>
+  <li>electric whisker</li>
+  <li>manual whisker</li>
+  <li>espresso machine (or buy some strong coffee)</li>
+  <li>1 pot</li>
+  <li>3 metal bowls (helps if one of them is rimmed and as large as the pot)</li>
+  <li>1 small bowl</li>
+  <li>silicon spatula</li>
+  <li>tea strainer</li>
+  <li>approximately 9x13 inch casserole dish</li>
+</ul>
+
+<h3 id="ingredients">Ingredients</h3>
+<ul>
+  <li>2 cups of espresso brought to room temperature</li>
+  <li>100 milliliters of Tia Maria</li>
+  <li>a bag of at least 40 ladyfingers (always good to have a bit more)</li>
+  <li>16 oz mascarpone fresh from the fridge (i.e., cold)</li>
+  <li>6 egg yolks</li>
+  <li>2 cups heavy whipping cream fresh from the fridge (i.e., cold)</li>
+  <li>3/4 cup granulated sugar</li>
+  <li>unsweetened cocoa powder</li>
+</ul>
+
+<h3 id="instructions">Instructions</h3>
+<ol>
+  <li>In the small bowl, stir 2 cups of room temperature espresso with 50 milliliters of Tia Maria.</li>
+  <li>Add water to pot, place on stove, turn to medium-high heat.</li>
+  <li>In the rimmed bowl, whisk together the yolks and granulated sugar. Whisk until there are clumps of sugar.</li>
+  <li>Move rimmed bowl over pot (that should be steaming by now). Continue whisking over steam for 10 minutes, remove bowl from heat while whisking to cool down, place over steam again. Repeat until the yolk and sugar together until the mixture colour becomes lighter. This may take 15-20 minutes. A common test when it’s ready is to rub the mixture between your fingers and making sure it is not grainy. You may still feel some sugar but as long as it’s not very course. Remove from heat, and whisk for a few minutes to help cooldown the mixture. Set aside.</li>
+  <li>In a separate metal bowl, beat together all of the mascarpone and the remaining 50 millileters of Tia Maria until well incorporated.</li>
+  <li>Slowly introduce the cooled down yolk and sugar mixture into the mascarpone and beat with an electric mixer until well incorporated.</li>
+  <li>In the third bowl, beat the cold heavy whipping cream until stiff peaks form.</li>
+  <li>Using a spatula, fold 1/3 of the whipped cream into the mascarpone and yolk mix. Gently fold until incorporated. Repeat two more times for the remaining 2/3 of the whipped cream. Fold until the colours mix otherwise the mixture will become grainy.</li>
+  <li>Dip the ladyfingers one by one quickly in the espresso Tia Maria mixture and arrange in as a single layer in a casserole dish. Spread the cream over the layer. Dip and arrange the remaining lady fingers overtop the cream layer. Spread the remaining cream overtop the second layer. Make sure that the lady fingers are completely covered.</li>
+  <li>Refrigerate for at least 6 hours. The longer the better.</li>
+  <li>Using the tea strainer as a duster, sprinkle as much or as little cocoa overtop your piece of the tiramisu.</li>
+</ol>
+
+<p>What makes this the best tiramisu probably comes down to technique - the ladyfingers end up being so perfectly moist that it’s like a gentle gush of coffee with every bite. Try it and let me know (or don’t).</p>
+
+<p><img src="../../../assets/img/tiramisu.JPG" alt="Tiramisu" width="40%" /></p>]]></content><author><name></name></author><category term="tutorial" /><category term="recipe" /><category term="food" /><category term="recipe" /><summary type="html"><![CDATA[Okay, so maybe by now you’ve probably seen that I make the World's Best Tiramisu (see under hobbies). This is in fact a self-proclaimed title however I do think I make a mighty fine tiramisu.]]></summary></entry><entry><title type="html">Art is a way to take a snapshot of consciousness</title><link href="http://localhost:4000/blog/2023/Art-Subjective-Experience/" rel="alternate" type="text/html" title="Art is a way to take a snapshot of consciousness" /><published>2023-10-10T00:00:00-04:00</published><updated>2023-10-10T00:00:00-04:00</updated><id>http://localhost:4000/blog/2023/Art-Subjective-Experience</id><content type="html" xml:base="http://localhost:4000/blog/2023/Art-Subjective-Experience/"><![CDATA[<p>For me, that is where the beauty comes from. Being able to peer into the mind of an artist’s subjective experience. We all like to think we experience the world the same, but art is evidence that we do not.</p>
 
 <p>I think it’s easy to dismiss certain arts as garbage, especially if it’s something that feels alien to us. But being able to understand the artist’s attempt to capture what they experience gives us a clue in how their mind works and is itself another form of beauty.</p>
 
