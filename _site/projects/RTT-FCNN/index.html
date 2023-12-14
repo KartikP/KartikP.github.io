@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Deep Learning for the Diagnosis and Classification of Rett Syndrome | Kartik  Pradeepan</title>
+    <meta name="author" content="Kartik  Pradeepan">
+    <meta name="description" content="Classification of stem cell derived Rett syndrome neuronal networks.">
+    <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
+
+
+    <!-- Bootstrap & MDB -->
+    <link rel="stylesheet" href="/KartikP2/assets/css/bootstrap.min.css?a4b3f509e79c54a512b890d73235ef04">
+    <!-- <link rel="stylesheet" href="/KartikP2/assets/css/mdb.min.css?62a43d1430ddb46fc4886f9d0e3b49b8"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous">
+
+    <!-- Bootstrap Table -->
+    <link defer rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="/KartikP2/assets/css/academicons.min.css?f0b7046b84e425c55f3463ac249818f5">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="/KartikP2/assets/css/jekyll-pygments-themes-github.css?19f3075a2d19613090fe9e16b564e1fe" media="" id="highlight_theme_light">
+
+    
+
+    <!-- Styles -->
+    
+    <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
+    
+    <link rel="stylesheet" href="/KartikP2/assets/css/main.css?d41d8cd98f00b204e9800998ecf8427e">
+    <link rel="canonical" href="http://localhost:4000/KartikP2/projects/RTT-FCNN/">
+
+    <!-- Dark Mode -->
+    
+    <link rel="stylesheet" href="/KartikP2/assets/css/jekyll-pygments-themes-native.css?e74e74bf055e5729d44a7d031a5ca6a5" media="none" id="highlight_theme_dark">
+    <script src="/KartikP2/assets/js/theme.js?96d6b3e1c3604aca8b6134c7afdd5db6"></script>
+    <script src="/KartikP2/assets/js/dark_mode.js?9b17307bb950ffa2e34be0227f53558f"></script>
+    
+
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav ">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title font-weight-lighter" href="/KartikP2/"><span class="font-weight-bold">Kartik </span>Pradeepan</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/">about</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/blog/">posts</a>
+              </li>
+              <!-- Notebook -->
+              <li class="nav-item"><a class="nav-link" href="https://kartikp.github.io/Notebook" rel="external nofollow noopener" target="_blank">notebook</a></li> 
+             <!-- Other pages -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/publications/">publications</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/projects/">projects</a>
+              </li>
+<!-- CV/Resume -->
+               <li class="nav-item"><a class="nav-link" href="../assets/pdf/Kartik_Pradeepan_CV.pdf">cv</a></li>
+               <li class="nav-item"><a class="nav-link" href="../assets/pdf/Kartik_Pradeepan_resume.pdf">resume</a></li>
+
+              <!-- Toogle theme mode -->
+              <li class="toggle-container">
+                <button id="light-toggle" title="Change theme">
+                  <i class="fa-solid fa-moon"></i>
+                  <i class="fa-solid fa-sun"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Scrolling Progress Bar -->
+      <progress id="progress" value="0">
+        <div class="progress-container">
+          <span class="progress-bar"></span>
+        </div>
+      </progress>
+    </header>
+
+
+    <!-- Content -->
+    <div class="container mt-5">
+      
+        <!-- page.html -->
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Deep Learning for the Diagnosis and Classification of Rett Syndrome</h1>
+    <p class="post-description">Classification of stem cell derived Rett syndrome neuronal networks.</p>
+  </header>
+
+  <article>
+    <p><a href="https://github.com/KartikP/BIOPHYS9709B-FCNN/blob/main/Pradeepan_Kartik_Final_Code.ipynb" rel="external nofollow noopener" target="_blank">Project link</a></p>
+
+<h3>INTRODUCTION</h3>
+<p>Rett Syndrome (RTT) is a rare neurodevelopmental disorder that is caused by a single heterozygous loss-of-function mutation in the gene methyl-CpG-binding protein 2 (MECP2). Recent human cell work has shown that iPSC-derived cortical neurons harboring the MECP2 mutation had smaller cell bodies, shorter dendrites with less branching, as well as a decrease in frequency of spontaneous excitatory post-synaptic currents, suggesting these neurons are not receiving as many inputs. Taken together, neurons that had the MECP2 mutations had morphological and functional hypoconnectivity at a single neuron level. Based on this, I hypothesized that this apparent hypoconnectivity between MECP2-mutant neurons will result in altered network development and function, and these changes will be detectable at early stages of network development. Additionally, based on these functional network-level electrophysiological properties, I am interested in whether these excitatory neuronal cultures can be classified as either wildtype (WT) or Rett syndrome (RTT), and if it is possible identify the developmental stage.</p>
+
+<h3>METHODS</h3>
+<p><strong>Format and source:</strong> Excitatory neuronal cultures were grown on Axion Biosystem’s 12-well Maestro multielectrode array (MEA) system. Within each plate of 12 isolated wells, a grid of 64 electrodes (8 by 8) measured the extracellular activity. Every week for 6 weeks of development, the neuronal cultures were recorded for 5-minutes. The format of the dataset was initially stored as .raw files that contained the 5-minute raw voltage signals from each channel within the well. Additionally, my dataset contained 10 total plates as biological replicates. In total, the initial dataset contained the raw voltage signal from 46, 080 channels (10 plates x 12 wells x 6 weekly recordings x 64 channels). The dataset was produced by my collaborators in the Dr. James Ellis Molecular Genetics Lab at Sick Kids Hospital (in affiliation with University of Toronto). While the .raw voltage signals can be useful, their massive size (~300 Gb) makes any analysis very slow. Using a spike detection algorithm, I detected multi-unit action potentials (channel x spike times) and stored the data in a tabular format (.csv file). This decreased the dataset size from 300 Gb to only 1.5 Gb. While the waveforms were lost in the process, with respect to the research question, they were not as crucial as the spike times. Because I was interested in the network properties of my neuronal cultures, I calculated 53 feature statistics (e.g. Number of active electrodes, Mean ISI within bursts, ISI Coefficient of variation, etc) that reflected the aggregate population-level activity within each isolated well. This further reduced my dataset size from 1.5 Gb to a mere 419 Kb.</p>
+
+<p><strong>Data Curation and Representation:</strong> No data curation from multiple sources was performed as the dataset was sufficiently large to use in the neural network. Furthermore, this type of data for Rett Syndrome is rare as only recently have researchers begun using multielectrode array (MEA) technology to investigate neurodevelopmental disorders. Due to this, a major drawback of this dataset is the lack of representation. The cell cultures within the dataset were produced only from two individuals, which provided the stem cell lines to generate 60 replicates for both RTT and wildtype (WT). As more data is collected, I hope to generate cell lines from numerous individuals, each with varying background genomes, to make the model more generalizable.</p>
+
+<p><strong>Data Augmentation:</strong> No data augmentation was performed because the dataset is quite sensitive to variability, because the electrophysiological differences between WT and RTT are already similar across most of the features, except for only a handful (notably network burst frequency, burst duration, and number of active electrodes).</p>
+
+<p><strong>Allocation:</strong> The dataset was divided into 25% testing, 7.5% validation, 67.5% training sets. These ratios were chosen based on trial-and-error on what produced the greatest accuracy across multiple runs of the data.</p>
+
+<p><strong>Activation functions, loss functions, gradient descent, and hyper-parameters:</strong> For most of the neural network, the <strong>rectified linear activation function (ReLU)</strong> was used. This activation function was appropriate because my inputs were standardized to a mean of 0 and STD of 1. Surprisingly, normalizing the inputs to [0 1] resulted in dramatically slower learning. For my output layer, a <strong>softmax activation function</strong> was used because of the multi-class nature of my classification problem. The loss function I used was <strong>categorical cross-entrop</strong>. This loss was chosen because the network was trying to solve a multi-class problem. This was chosen over a sparse categorical cross-entropy loss function because I did not have many classes to choose from (i.e. not in the thousands), which sparse categorical cross-entropy excels in. I used <strong>mini batch gradient descent</strong> because it is a good compromise between batch and stochastic gradient descent. My dataset is not large enough to warrant stochastic gradient descent and when I used batch gradient descent, training took more than 2000 epochs to get similar performance to mini batch gradient descent with only 250 epochs. The learning rate and batch size were chosen based on trial-and-error, producing networks that had good enough accuracy before over-fitting, and performed relatively quickly.</p>
+
+<p><strong>Regularization:</strong> Additionally, I employed both <strong>drop-out</strong> and <strong>early stopping regularization</strong> because occasionally the neural network tended to overfit the data, and plateau at approximately 70% accuracy. Employing drop-out after each layer was able to improve accuracy by 20%, capturing more randomness. However, despite this improvement in accuracy, after ~250 epochs, most runs of the model would continue to over-fit the training data, represented by an increase in the validation loss function. To deal with this, I used early stopping with a patience hyper-parameter of 40 which describes the number of epochs without improvement in the validation loss before the model is stopped. This not only solved the over-fitting problem, but also shortened the run time of the model.</p>
+
+<p><img width="100%" alt="image" src="https://user-images.githubusercontent.com/2040394/192342359-aaf91951-9406-45ab-83d2-bcd44dfe7bf2.png"></p>
+
+<h3>RESULTS</h3>
+<p>According to the calculated F1 score, the network performs quite well in classifying RTT vs WT as well as developmental stage (Table 1). I opted to use the F1 error metric because it considers the precision and recall for each class. Based on the confusion matrix, for both WT and RTT, the model sometimes confused the middle and late stages with each other, however had good performance distinguishing between WT and RTT as well as the early stages of development (Figure 2).</p>
+
+<p><img width="100%" alt="image" src="https://user-images.githubusercontent.com/2040394/192342216-7216e36b-58b8-4965-932b-e49101ac19e6.png"></p>
+
+<p><img width="100%" alt="image" src="https://user-images.githubusercontent.com/2040394/192342266-a53b418b-bc03-4cf0-9a25-490cff83b5b1.png"></p>
+
+<h3>DISCUSSION</h3>
+<p>The study objective was to classify electrophysiological features derived from developing neuronal cultures into wildtype or Rett Syndrome and then classify into developmental stages. The fully- connected neural network performed incredibly well based on the limited data I have. One of the reasons why I chose to use three developmental stages (i.e. early, middle, and late) is because the initial culturing of the neurons into the MEA wells are based on morphological maturity and the first time point in one plate may not necessarily equate to the first time point on another plate. By aggregating two weeks of data into one developmental stage, we’re able to take this into consideration.</p>
+
+<p>One of the biggest strengths of this model is that because of the nature of the data and the neural network, training and then testing the model does not take very long. I was able to modulate a variety of hyperparameters, without having to subsample the population to expedite the process. However, while the model is highly accurate and quick, one of the biggest limitations is the dependency on feature statistic generation to create the dataset. This step, although not talked about earlier in the report, is in fact incredibly time consuming. To generate the feature statistics for the 10 plates in the current dataset took over 2 weeks to run. While this step only needs to be done once, it is a bottleneck. To possibly address this limitation of a pre-processing bottleneck, a Long Short Term Memory (LSTM) Recurrent Neural Network may be used on the raw voltage time series data from each of the electrodes contained in a well or even an aggregate/ weighted average signal. A recent paper by Aghasfari et al developed a LSTM architecture to classify and translate observations from cardiac activity of in vitro iPSC- cardiomyocytes to predict corresponding adult ventricular myocyte cardiac activity.</p>
+
+<p>While RTT is diagnosable by identification of mutations in the gene, MECP2, Autism Spectrum Disorders (ASD), a related disorder with many overlapping behavioural symptoms, is not as easily diagnosable. This RTT neural network is serving as a preliminary study/ proof-of-concept showing that it is feasible to potentially diagnose SHANK2- related ASD by using electrophysiological features of neurons derived from easily accessibly adult cells (through induced pluripotent stem cells) of a patient. The significance of this study is that it is the first to classify iPSC-derived neuronal cultures based on extracellular electrophysiological properties measured via high-throughput multielectrode arrays.</p>
+
+  </article>
+</div>
+
+      
+    </div>
+
+    <!-- Footer -->    
+    <footer class="fixed-bottom">
+      <div class="container mt-0">
+        © Copyright 2023 Kartik  Pradeepan. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme.
+
+      </div>
+    </footer>
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="/KartikP2/assets/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="/KartikP2/assets/js/mdb.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Masonry & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/KartikP2/assets/js/masonry.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script defer src="/KartikP2/assets/js/zoom.js?7b30caa5023af4af8408a472dc4e1ebb"></script>
+
+  <!-- Bootstrap Table -->
+  <script defer src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
+
+  <!-- Load Common JS -->
+  <script src="/KartikP2/assets/js/no_defer.js?d633890033921b33e0ceb13d22340a9c"></script>
+  <script defer src="/KartikP2/assets/js/common.js?acdb9690d7641b2f8d40529018c71a01"></script>
+  <script defer src="/KartikP2/assets/js/copy_code.js?07b8786bab9b4abe90d10e61f7d12ff7" type="text/javascript"></script>
+
+    
+  <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <script async src="https://badge.dimensions.ai/badge.js"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    
+    
+
+<!-- Scrolling Progress Bar -->
+<script type="text/javascript">
+  /*
+   * This JavaScript code has been adapted from the article 
+   * https://css-tricks.com/reading-position-indicator/ authored by Pankaj Parashar, 
+   * published on the website https://css-tricks.com on the 7th of May, 2014.
+   * Couple of changes were made to the original code to make it compatible 
+   * with the `al-foio` theme.
+   */
+  const progressBar = $("#progress");
+  /*
+   * We set up the bar after all elements are done loading.
+   * In some cases, if the images in the page are larger than the intended
+   * size they'll have on the page, they'll be resized via CSS to accomodate
+   * the desired size. This mistake, however, breaks the computations as the
+   * scroll size is computed as soon as the elements finish loading.
+   * To account for this, a minimal delay was introduced before computing the
+   * values.
+   */
+  window.onload = function () {
+    setTimeout(progressBarSetup, 50);
+  };
+  /*
+   * We set up the bar according to the browser.
+   * If the browser supports the progress element we use that.
+   * Otherwise, we resize the bar thru CSS styling
+   */
+  function progressBarSetup() {
+    if ("max" in document.createElement("progress")) {
+      initializeProgressElement();
+      $(document).on("scroll", function() {
+        progressBar.attr({ value: getCurrentScrollPosition() });
+      });
+      $(window).on("resize", initializeProgressElement);
+    } else {
+      resizeProgressBar();
+      $(document).on("scroll", resizeProgressBar);
+      $(window).on("resize", resizeProgressBar);
+    }
+  }
+  /*
+   * The vertical scroll position is the same as the number of pixels that
+   * are hidden from view above the scrollable area. Thus, a value > 0 is
+   * how much the user has scrolled from the top
+   */
+  function getCurrentScrollPosition() {
+    return $(window).scrollTop();
+  }
+
+  function initializeProgressElement() {
+    let navbarHeight = $("#navbar").outerHeight(true);
+    $("body").css({ "padding-top": navbarHeight });
+    $("progress-container").css({ "padding-top": navbarHeight });
+    progressBar.css({ top: navbarHeight });
+    progressBar.attr({
+      max: getDistanceToScroll(),
+      value: getCurrentScrollPosition(),
+    });
+  }
+  /*
+   * The offset between the html document height and the browser viewport
+   * height will be greater than zero if vertical scroll is possible.
+   * This is the distance the user can scroll
+   */
+  function getDistanceToScroll() {
+    return $(document).height() - $(window).height();
+  }
+
+  function resizeProgressBar() {
+    progressBar.css({ width: getWidthPercentage() + "%" });
+  }
+  // The scroll ratio equals the percentage to resize the bar
+  function getWidthPercentage() {
+    return (getCurrentScrollPosition() / getDistanceToScroll()) * 100;
+  }
+</script>
+
+    
+  </body>
+</html>

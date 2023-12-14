@@ -1,6 +1,11 @@
 ---
 title: "Art is a way to take a snapshot of consciousness"
 date: 2023-10-10
+layout: post
+description:
+categories: commentary
+giscus_comments: false
+related_posts: true
 tags:
   - philosophy
   - art
@@ -15,7 +20,7 @@ Daniel Tammet has Asperger's syndrome (a form of high-functioning autism spectru
 
 People with ASD sometimes have synesthesia, a condition where sensory and cognitive pathways are interlinked. For Daniel Tammet, he is able to see words as colours and numbers as not only colours but also in different shapes and sizes. A great example of this is when he describes the number pi (i.e., 3.141592653...) He sees the decimals of pi as mountain landscapes consisting of a series of differently coloured numbers. While I struggle to see how this picture resembles pi, I am in awe that such an experience goes on in his head.
 
-<img src="../images/Art%20Subjective%20Experience/pi.jpg" alt="Picasso Progression" width="75%"/>
+<img src="../../../assets/img/Art Subjective Experience/pi.jpg" alt="Picasso Progression" width="75%"/>
 
 source: [Daniel Tammet](http://www.danieltammet.net/artwork.php)
 
@@ -29,7 +34,7 @@ The reason why I bring up Dr. P is Oliver Sacks noticed something. Dr. P was a l
 
 What I find mystifying is Dr. P's artistic progression through his life followed a similar progression of Picasso. *Makes you wonder what might have been going on in Picasso's brain.*
 
-<img src="../images/Art%20Subjective%20Experience/Picasso%20Progression.jpg" alt="Picasso Progression" width="75%"/>
+<img src="../../../assets/img/Art%20Subjective%20Experience/Picasso%20Progression.jpg" alt="Picasso Progression" width="75%"/>
 
 source: [A Reddit Post](https://www.reddit.com/r/Damnthatsinteresting/comments/z0rm5t/the_evolution_of_picassos_style/)
 

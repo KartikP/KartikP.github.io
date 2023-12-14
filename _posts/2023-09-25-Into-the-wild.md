@@ -1,6 +1,11 @@
 ---
 title: '"Happiness only real when shared" - Christopher McCandless (aka Alexander Supertramp)'
 date: 2023-09-25
+layout: post
+description:
+categories: commentary
+giscus_comments: false
+related_posts: true
 tags:
   - philosophy
   - life
@@ -10,7 +15,7 @@ tags:
 
 This was the conclusion Christopher McCandless (aka Alexander Supertramp) came to during his dying moments after accidentally eating a toxin caused malabsorption leading him to a slow starvation.
 
-![Christopher McCandless infront of bus](../images/Happiness%20when%20shared/Chris%20infront%20of%20bus.jpeg)
+![Christopher McCandless infront of bus](../../../assets/img/Happiness%20when%20shared/Chris%20infront%20of%20bus.jpeg)
 
 I watched "Into the Wild" back in 2019. It retold the story of a vagabond who decided to completely break away from society, including his family. He traveled throughout the south and west US coasts, into Canada, and finally towards his goal of Alaska over 112 days of travel.
 
@@ -19,7 +24,7 @@ Now, Chris was an interesting character - athletic and intelligent, but judged o
 
 He lived minimally, rarely leaving his room unless needed, spending most of his time living in the books of Thoreau, Tolstoy, Emerson, and the likes.
 
-![Thoreau quote](../images/Happiness%20when%20shared/Thoreau%20quote.jpeg)
+![Thoreau quote](../../../assets/img/Happiness%20when%20shared/Thoreau%20quote.jpeg)
 
 And after a series of failings around his upbringing, he began to reject the modern consumerist lifestyle and completely adopted an overly ideal and pantheistic philosophy.
 
@@ -43,7 +48,7 @@ He eventually resorted to seeds and berries until he accidentally took the wrong
 
 During the final days, too weak to move, he realized his desire for solitary happiness in god's gift of nature was a false ideal. Moments before zipping his weak body into his sleeping bag, he writes a single statement, "[Happiness only real when shared](https://www.youtube.com/watch?v=x2k-oo2TT-0)".
 
-![Happiness only real when shared](../images/Happiness%20when%20shared/Happiness%20only%20real%20when%20shared.jpeg)
+![Happiness only real when shared](../../../assets/img/Happiness%20when%20shared/Happiness%20only%20real%20when%20shared.jpeg)
 
 Chris's story is a tragic one. Dying alone is everyone's greatest fear. Happiness is distributed among the relationships you share and without them, life is empty. That said, compulsive oversharing deprives experiences of meaning as much as the faux happiness of solitary life.
 

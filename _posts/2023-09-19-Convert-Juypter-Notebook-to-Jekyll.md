@@ -2,6 +2,11 @@
 title: 'How to embed Jupyter Notebooks (.ipynb) into Jekyll (AcademicPages)'
 date: 2023-09-19
 permalink: /posts/2023/09/Convert-Juypter-Notebook-to-Jekyll/
+layout: post
+description:
+categories: tutorial
+giscus_comments: false
+related_posts: true
 tags:
   - data science
   - python

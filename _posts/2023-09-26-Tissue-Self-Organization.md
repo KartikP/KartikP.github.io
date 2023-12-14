@@ -1,6 +1,11 @@
 ---
 title: 'Self-organization of tissue'
 date: 2023-09-26
+layout: post
+description:
+categories: tutorial
+giscus_comments: false
+related_posts: true
 tags:
   - biology
   - systems biology
@@ -16,7 +21,7 @@ Anyone familiar with developmental biology is probably comfortable with the idea
 
 In biology, tissue self-organization, unlike non-living matter, involve stigmergy - a history dependency. This causes rules of interactions between elements to be dynamic and evolve in time and space in a history-dependent manner.
 
-<img src="../images/Self%20Organization/morphogen%20gradient.jpg" alt="Morphogen gradient" width="75%"/>
+<img src="../../../assets/img/Self%20Organization/morphogen%20gradient.jpg" alt="Morphogen gradient" width="75%"/>
 
 source: [10.1002/wdev.271](https://doi.org/10.1002/wdev.271)
 
@@ -29,7 +34,7 @@ These three occur concurrently during development and are not necessarily indepe
 
 **Self-assembly** is time-evolving control of relative cellular positions due to local rules. Cells move relative to each other based on their local environment. The rules can be simple or complex.
 
-**Self-Pattterning** is the spatiotemporal control of cell status by local rules without external cues. Self-assembly can contribute to this. This explains how complex tissue patterns spontaneously appear from homogenous cell populations.
+**Self-Patterning** is the spatiotemporal control of cell status by local rules without external cues. Self-assembly can contribute to this. This explains how complex tissue patterns spontaneously appear from homogenous cell populations.
 
 The most common example of self-patterning in developmental biology is symmetry breaking. Often the result of stochastic processes that are stabilized by **inter**cellular mechanisms, e.g., the sperm entry point on the egg determines a break in symmetry.
 

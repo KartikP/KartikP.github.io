@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Burst Reverberation Toolbox | Kartik  Pradeepan</title>
+    <meta name="author" content="Kartik  Pradeepan">
+    <meta name="description" content="Production implementation of burst reverberation toolbox. Packages a data pipeline (that applies unsupervised learning, regression techniques, and feature generators) into a desktop GUI for use by non-coding research scientists.">
+    <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
+
+
+    <!-- Bootstrap & MDB -->
+    <link rel="stylesheet" href="/KartikP2/assets/css/bootstrap.min.css?a4b3f509e79c54a512b890d73235ef04">
+    <!-- <link rel="stylesheet" href="/KartikP2/assets/css/mdb.min.css?62a43d1430ddb46fc4886f9d0e3b49b8"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous">
+
+    <!-- Bootstrap Table -->
+    <link defer rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="/KartikP2/assets/css/academicons.min.css?f0b7046b84e425c55f3463ac249818f5">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="/KartikP2/assets/css/jekyll-pygments-themes-github.css?19f3075a2d19613090fe9e16b564e1fe" media="" id="highlight_theme_light">
+
+    
+
+    <!-- Styles -->
+    
+    <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
+    
+    <link rel="stylesheet" href="/KartikP2/assets/css/main.css?d41d8cd98f00b204e9800998ecf8427e">
+    <link rel="canonical" href="http://localhost:4000/KartikP2/projects/BRT/">
+
+    <!-- Dark Mode -->
+    
+    <link rel="stylesheet" href="/KartikP2/assets/css/jekyll-pygments-themes-native.css?e74e74bf055e5729d44a7d031a5ca6a5" media="none" id="highlight_theme_dark">
+    <script src="/KartikP2/assets/js/theme.js?96d6b3e1c3604aca8b6134c7afdd5db6"></script>
+    <script src="/KartikP2/assets/js/dark_mode.js?9b17307bb950ffa2e34be0227f53558f"></script>
+    
+
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav ">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title font-weight-lighter" href="/KartikP2/"><span class="font-weight-bold">Kartik </span>Pradeepan</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/">about</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/blog/">posts</a>
+              </li>
+              <!-- Notebook -->
+              <li class="nav-item"><a class="nav-link" href="https://kartikp.github.io/Notebook" rel="external nofollow noopener" target="_blank">notebook</a></li> 
+             <!-- Other pages -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/publications/">publications</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/projects/">projects</a>
+              </li>
+<!-- CV/Resume -->
+               <li class="nav-item"><a class="nav-link" href="../assets/pdf/Kartik_Pradeepan_CV.pdf">cv</a></li>
+               <li class="nav-item"><a class="nav-link" href="../assets/pdf/Kartik_Pradeepan_resume.pdf">resume</a></li>
+
+              <!-- Toogle theme mode -->
+              <li class="toggle-container">
+                <button id="light-toggle" title="Change theme">
+                  <i class="fa-solid fa-moon"></i>
+                  <i class="fa-solid fa-sun"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Scrolling Progress Bar -->
+      <progress id="progress" value="0">
+        <div class="progress-container">
+          <span class="progress-bar"></span>
+        </div>
+      </progress>
+    </header>
+
+
+    <!-- Content -->
+    <div class="container mt-5">
+      
+        <!-- page.html -->
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Burst Reverberation Toolbox</h1>
+    <p class="post-description">Production implementation of burst reverberation toolbox. Packages a data pipeline (that applies unsupervised learning, regression techniques, and feature generators) into a desktop GUI for use by non-coding research scientists.</p>
+  </header>
+
+  <article>
+    <p><a href="https://github.com/KartikP/Burst-Reverberation-Toolbox" rel="external nofollow noopener" target="_blank">Project Link</a></p>
+
+<p>The Burst Reverberation Toolbox (BRT) is a project that introduces a powerful electrophysiological tool designed to detect and analyze nested patterned bursts. These bursts, which arise from neuronal networks, represent a complex form of spontaneous activity characterized by a rapid succession of action potentials above a baseline firing rate. In the context of network development, synchronized bursts among neurons indicate the wiring and connectivity of the network.</p>
+
+<p>In the field of stem cell derived disease models, accurate and consistent detection of bursts is of utmost importance. However, currently available “off-the-shelf” burst detection algorithms provided by in vitro multielectrode array (MEA) systems are overly simplistic and lack the necessary control to effectively detect diverse patterning, particularly nested (oscillatory) bursts. Consequently, this limitation can have significant implications on the analysis of phenotypic endpoints for rescue experiments.</p>
+
+<p>The primary objective of the BRT project is to address these concerns by offering a flexible and transparent burst detection solution specifically tailored for temporally complex MEA data. The BRT will provide researchers with enhanced control over burst detection algorithms, allowing for improved accuracy and adaptability to diverse burst patterns. By overcoming the limitations of existing approaches, the BRT will empower researchers to conduct more comprehensive analyses, leading to a deeper understanding of neural network behavior in stem cell derived disease models.</p>
+
+<p>GUI made with CustomTkinter/Tkinter and packaged with Pyinstaller.</p>
+
+<p><img width="100%" alt="image" src="https://github.com/KartikP/Burst-Reverberation-Toolbox/assets/2040394/a347bc99-d9be-411e-9f25-dbe08f8fb147"></p>
+
+<blockquote>
+  <p>Simple and straight forward user interface</p>
+</blockquote>
+
+<p><img width="100%" alt="image" src="https://github.com/KartikP/Burst-Reverberation-Toolbox/assets/2040394/3e810021-dac3-436f-83c9-33caaf05ec6b"></p>
+
+<blockquote>
+  <p>Batch processing of all wells within a plate</p>
+</blockquote>
+
+<p><img width="100%" alt="image" src="https://github.com/KartikP/Burst-Reverberation-Toolbox/assets/2040394/c3931d53-bf26-472d-8e8c-cee6b653bc1f"></p>
+
+<blockquote>
+  <p>Interactive plots</p>
+</blockquote>
+
+<p><img width="50%" alt="image" src="https://github.com/KartikP/Burst-Reverberation-Toolbox/assets/2040394/779433ed-174e-4815-a130-f6c7f6964dea"></p>
+
+<blockquote>
+  <p>Settings to give users flexibility in burst detection</p>
+</blockquote>
+
+<h1 id="algorithm-workflow">Algorithm Workflow</h1>
+<p><img width="100%" alt="BRT Block Diagram" src="https://github.com/KartikP/Burst-Reverberation-Toolbox/assets/2040394/2497e0aa-1116-4275-868b-de457a65531c"></p>
+
+
+  </article>
+  <h2>References</h2>
+  <div class="publications">
+    <h2 class="bibliography">2023</h2>
+<ol class="bibliography"><li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+<!-- Entry bib key -->
+        <div id="Pradeepan2023.09.12.557388" class="col-sm-10">
+        <!-- Title -->
+        <div class="title">Hyperexcitability in human MECP2 null neuronal networks manifests as calcium-dependent reverberating super bursts</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Kartik S Pradeepan, Fraser P McCready, Wei Wei, Milad Khaki, and
+          <span class="more-authors" title="click to view 4 more authors" onclick="
+                var element = $(this);
+                element.attr('title', '');
+                var more_authors_text = element.text() == '4 more authors' ? 'Wenbo Zhang, Michael W Salter, James Ellis, Julio Martinez-Trujillo' : '4 more authors';
+                var cursorPosition = 0;
+                var textAdder = setInterval(function(){
+                  element.text(more_authors_text.substring(0, cursorPosition + 1));
+                  if (++cursorPosition == more_authors_text.length){
+                    clearInterval(textAdder);
+                  }
+              }, '5');
+              ">4 more authors</span>
+</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>bioRxiv</em>, 2023
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+            <a class="abstract btn btn-sm z-depth-0" role="button">Abs</a>
+            <a href="http://arxiv.org/abs/https://www.biorxiv.org/content/early/2023/09/13/2023.09.12.557388.full.pdf" class="btn btn-sm z-depth-0" role="button" rel="external nofollow noopener" target="_blank">arXiv</a>
+          </div>
+          
+          
+          
+          
+
+          <!-- Hidden abstract block -->
+          <div class="abstract hidden">
+            <p>Rett syndrome (RTT) patients show abnormal developmental trajectories including loss of language and repetitive hand movements but also have signs of cortical hyperexcitability such as seizures. RTT is predominantly caused by mutations in MECP2 and can be modelled in vitro using human stem cell-derived neurons. MECP2 null excitatory neurons are smaller in soma size and have reduced synaptic connectivity but are also hyperexcitable, due to higher input resistance, which increases the chance to evoke action potentials with a given depolarized current. Few studies examine how single neuron activity integrates into neuronal networks during human development. Paradoxically, networks of MECP2 null neurons show a decrease in the frequency of bursting patterns consistent with synaptic hypoconnectivity, but no hyperexcitable network events have been reported. Here, we show that MECP2 null neurons have an increase in the frequency of a network event described as reverberating super bursts (RSBs) relative to isogenic controls. RSBs can be mistakenly called as a single long duration burst by standard burst detection algorithms. However, close examination revealed an initial large amplitude network burst followed by high frequency repetitive low amplitude mini-bursts. Using a custom burst detection algorithm, we unfolded the multi-burst structure of RSBs revealing that MECP2 null networks increased the total number of bursts relative to isogenic controls. Application of the Ca2+ chelator EGTA-AM selectively eliminated RSBs and rescued the network burst phenotype relative to the isogenic controls. Our results indicate that during early development, MECP2 null neurons are hyperexcitable and produce hyperexcitable networks. This may predispose them to the emergence of hyper-synchronic states that potentially translate into seizures. Network hyperexcitability is dependent on asynchronous neurotransmitter release driven by pre-synaptic Ca2+ and can be rescued by EGTA-AM to restore typical network dynamics.Reverberating super-bursts (RSBs) follow a stereotypic form of a large initial network burst followed by several smaller amplitude high-frequency mini-bursts.RSBs occur more often in MECP2 null excitatory networks.MECP2 null excitatory networks with increased RSBs show a hyperexcitable network burst phenotype relative to isogenic controls.The calcium chelator, EGTA-AM, decreases RSBs and rescues the dynamics of MECP2 null hyperexcitable networks.</p>
+          </div>
+        </div>
+      </div>
+</li></ol>
+  </div>
+</div>
+
+      
+    </div>
+
+    <!-- Footer -->    
+    <footer class="fixed-bottom">
+      <div class="container mt-0">
+        © Copyright 2023 Kartik  Pradeepan. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme.
+
+      </div>
+    </footer>
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="/KartikP2/assets/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="/KartikP2/assets/js/mdb.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Masonry & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/KartikP2/assets/js/masonry.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script defer src="/KartikP2/assets/js/zoom.js?7b30caa5023af4af8408a472dc4e1ebb"></script>
+
+  <!-- Bootstrap Table -->
+  <script defer src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
+
+  <!-- Load Common JS -->
+  <script src="/KartikP2/assets/js/no_defer.js?d633890033921b33e0ceb13d22340a9c"></script>
+  <script defer src="/KartikP2/assets/js/common.js?acdb9690d7641b2f8d40529018c71a01"></script>
+  <script defer src="/KartikP2/assets/js/copy_code.js?07b8786bab9b4abe90d10e61f7d12ff7" type="text/javascript"></script>
+
+    
+  <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <script async src="https://badge.dimensions.ai/badge.js"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    
+    
+
+<!-- Scrolling Progress Bar -->
+<script type="text/javascript">
+  /*
+   * This JavaScript code has been adapted from the article 
+   * https://css-tricks.com/reading-position-indicator/ authored by Pankaj Parashar, 
+   * published on the website https://css-tricks.com on the 7th of May, 2014.
+   * Couple of changes were made to the original code to make it compatible 
+   * with the `al-foio` theme.
+   */
+  const progressBar = $("#progress");
+  /*
+   * We set up the bar after all elements are done loading.
+   * In some cases, if the images in the page are larger than the intended
+   * size they'll have on the page, they'll be resized via CSS to accomodate
+   * the desired size. This mistake, however, breaks the computations as the
+   * scroll size is computed as soon as the elements finish loading.
+   * To account for this, a minimal delay was introduced before computing the
+   * values.
+   */
+  window.onload = function () {
+    setTimeout(progressBarSetup, 50);
+  };
+  /*
+   * We set up the bar according to the browser.
+   * If the browser supports the progress element we use that.
+   * Otherwise, we resize the bar thru CSS styling
+   */
+  function progressBarSetup() {
+    if ("max" in document.createElement("progress")) {
+      initializeProgressElement();
+      $(document).on("scroll", function() {
+        progressBar.attr({ value: getCurrentScrollPosition() });
+      });
+      $(window).on("resize", initializeProgressElement);
+    } else {
+      resizeProgressBar();
+      $(document).on("scroll", resizeProgressBar);
+      $(window).on("resize", resizeProgressBar);
+    }
+  }
+  /*
+   * The vertical scroll position is the same as the number of pixels that
+   * are hidden from view above the scrollable area. Thus, a value > 0 is
+   * how much the user has scrolled from the top
+   */
+  function getCurrentScrollPosition() {
+    return $(window).scrollTop();
+  }
+
+  function initializeProgressElement() {
+    let navbarHeight = $("#navbar").outerHeight(true);
+    $("body").css({ "padding-top": navbarHeight });
+    $("progress-container").css({ "padding-top": navbarHeight });
+    progressBar.css({ top: navbarHeight });
+    progressBar.attr({
+      max: getDistanceToScroll(),
+      value: getCurrentScrollPosition(),
+    });
+  }
+  /*
+   * The offset between the html document height and the browser viewport
+   * height will be greater than zero if vertical scroll is possible.
+   * This is the distance the user can scroll
+   */
+  function getDistanceToScroll() {
+    return $(document).height() - $(window).height();
+  }
+
+  function resizeProgressBar() {
+    progressBar.css({ width: getWidthPercentage() + "%" });
+  }
+  // The scroll ratio equals the percentage to resize the bar
+  function getWidthPercentage() {
+    return (getCurrentScrollPosition() / getDistanceToScroll()) * 100;
+  }
+</script>
+
+    
+  </body>
+</html>

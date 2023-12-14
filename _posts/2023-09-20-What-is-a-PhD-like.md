@@ -1,7 +1,12 @@
 ---
 title:  'What is a PhD really like?'
 date: 2023-09-20
-permalink: /posts/2023/09/What-is-a-PhD-like/
+#permalink: /posts/2023/09/What-is-a-PhD-like/
+layout: post
+description:
+categories: personal
+giscus_comments: false
+related_posts: true
 tags:
   - PhD
   - self-reflection

@@ -1,6 +1,11 @@
 ---
 title: 'State Space Framework: Flexibility to dogmatic rules in biology'
 date: 2023-09-24
+layout: post
+description:
+categories: tutorial commentary
+giscus_comments: false
+related_posts: true
 tags:
   - biology
   - systems biology
@@ -15,13 +20,13 @@ In biology (and many other disciplines), linear logic pathways of causation (A->
 With the influx of "omic" data, the conceptually simple idea of nested binary choices is beginning to be undermined. This comes with the realization of vastly more complicated molecular networks with many circular control loops which can be rarely explained through linear causal explanations.
 > "Omic" data is data gathered from studies that investigate biological molecules. For example, gen**omic** data is data related to the genes, transcript**omics** is data related to RNA transcripts, metabol**omics** is data related to metabolites, phen**omics** is data related to phenotype, etc. There are multiple different kinds of "omic" data, but ultimately they function to give a more precise characterization of the phenomena at the scale of the "omic" data.
 
-<img src="../images/State%20Space/circular%20loop.gif" alt="Circular loops" width="40%"/>
+<img src="../../../assets/img/State%20Space/circular%20loop.gif" alt="Circular loops" width="40%"/>
 
 The fundamental issue with networks of regulatory pathways is they fail to distinguish between network architecture and network dynamics. Network architecture is defined as a static collection of nodes (representing genes, proteins, etc) and arrows (representing interactions).
 
 The architecture of genome-wide regulatory networks that encompass all genes is hardwired in the genomic sequence through interacting domains and regulatory proteins/elements.
 
-<img src="../images/State%20Space/regulatory%20network.jpeg" alt="Regulatory Network" width="75%"/>
+<img src="../../../assets/img/State%20Space/regulatory%20network.jpeg" alt="Regulatory Network" width="75%"/>
 
 source: [unknown at this moment]()
 
@@ -31,14 +36,14 @@ The idea of a state space framework aims to combine the far too simple and limit
 
 One could theoretically follow the logic for the expression levels of gene X, however with thousands of genes involved that change their expression regarding a certain phenotype, it is very easy to quickly lose track.
 
-![Thinking hard](../images/State%20Space/thinking.gif)
+![Thinking hard](../../../assets/img/State%20Space/thinking.gif)
 
 The state space framework is a tool that allows us to understand these dynamics while preserving network architecture complexity. To visualize, a network state S(*t*) at time *t*, is defined by the expression leveos of all the genes in the network at that specific time (*t*). 
 
 Think of it like a cartesian graph (akin to dimensionality reduction to find an underlying manifold), where each gene is a dimension. As we measure more variables, we increase the number of axes/dimensions (N). The state S(*t*) is a single point in the continuous, N-dimensional space, the state space, which contains **ALL POSSIBLE** states.
 > A manifold is a lower-dimensional subspace underlying population activity that is generally embedded in a higher-dimensional state space. Generally, you do not need to preserve the original N-dimensional state space. Rather, you can reduce dimensions to capture uncorrelated (high variance explaining) information. A manifold can also be modelled on a euclidean space.
 
-![Cartesian](../images/State%20Space/SS%20cartesian.jpeg)
+<img src="../../../assets/img/State%20Space/SS%20cartesian.jpeg" alt="Cartesian" width="75%"/>
 
 source: [unknown at this moment]()
 
@@ -58,7 +63,7 @@ Since various sets of initial states can end up in the same attractor state, the
 
 In real systems with noise, chaos contributing to random fluctuations, the state point (S) wiggles locally in the state space.
 
-![Coordinated change](../images/State%20Space/coordinated%20change.jpg)
+![Coordinated change](../../../assets/img/State%20Space/coordinated%20change.jpg)
 
 source: [10.1371/journal.pbio.1000380](10.1371/journal.pbio.1000380)
 
@@ -71,7 +76,7 @@ In science it is sometimes rare to find people competent in both the math/CS sid
 ### Podcast version
 [EP2: State Space - A multidimensional approach to understanding](https://www.audacy.com/podcast/incomplete-thoughts-5d7b8/episodes/ep2-state-space-a-multidimensional-approach-to-understanding-2faf8)
 
-### For more reading on this topic:
+### For scientific articles on this topic:
 [Cell Lineage Determination in State Space: A Systems View Brings Flexibility to Dogmatic Canonical Rules](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2876052/)
 
 [A unifying perspective on neural manifolds and circuits for cognition](https://www.nature.com/articles/s41583-023-00693-x)

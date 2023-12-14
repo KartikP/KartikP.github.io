@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>State Space Framework: Flexibility to dogmatic rules in biology | Kartik  Pradeepan</title>
+    <meta name="author" content="Kartik  Pradeepan">
+    <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+">
+    <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
+
+
+    <!-- Bootstrap & MDB -->
+    <link rel="stylesheet" href="/KartikP2/assets/css/bootstrap.min.css?a4b3f509e79c54a512b890d73235ef04">
+    <!-- <link rel="stylesheet" href="/KartikP2/assets/css/mdb.min.css?62a43d1430ddb46fc4886f9d0e3b49b8"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous">
+
+    <!-- Bootstrap Table -->
+    <link defer rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="/KartikP2/assets/css/academicons.min.css?f0b7046b84e425c55f3463ac249818f5">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="/KartikP2/assets/css/jekyll-pygments-themes-github.css?19f3075a2d19613090fe9e16b564e1fe" media="" id="highlight_theme_light">
+
+    
+
+    <!-- Styles -->
+    
+    <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
+    
+    <link rel="stylesheet" href="/KartikP2/assets/css/main.css?d41d8cd98f00b204e9800998ecf8427e">
+    <link rel="canonical" href="http://localhost:4000/KartikP2/blog/2023/Flexibility-to-dogmatic-rules/">
+
+    <!-- Dark Mode -->
+    
+    <link rel="stylesheet" href="/KartikP2/assets/css/jekyll-pygments-themes-native.css?e74e74bf055e5729d44a7d031a5ca6a5" media="none" id="highlight_theme_dark">
+    <script src="/KartikP2/assets/js/theme.js?96d6b3e1c3604aca8b6134c7afdd5db6"></script>
+    <script src="/KartikP2/assets/js/dark_mode.js?9b17307bb950ffa2e34be0227f53558f"></script>
+    
+
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav ">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title font-weight-lighter" href="/KartikP2/"><span class="font-weight-bold">Kartik </span>Pradeepan</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/">about</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item active">
+                <a class="nav-link" href="/KartikP2/blog/">posts<span class="sr-only">(current)</span></a>
+              </li>
+              <!-- Notebook -->
+              <li class="nav-item"><a class="nav-link" href="https://kartikp.github.io/Notebook" rel="external nofollow noopener" target="_blank">notebook</a></li> 
+             <!-- Other pages -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/publications/">publications</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/KartikP2/projects/">projects</a>
+              </li>
+<!-- CV/Resume -->
+               <li class="nav-item"><a class="nav-link" href="../assets/pdf/Kartik_Pradeepan_CV.pdf">cv</a></li>
+               <li class="nav-item"><a class="nav-link" href="../assets/pdf/Kartik_Pradeepan_resume.pdf">resume</a></li>
+
+              <!-- Toogle theme mode -->
+              <li class="toggle-container">
+                <button id="light-toggle" title="Change theme">
+                  <i class="fa-solid fa-moon"></i>
+                  <i class="fa-solid fa-sun"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Scrolling Progress Bar -->
+      <progress id="progress" value="0">
+        <div class="progress-container">
+          <span class="progress-bar"></span>
+        </div>
+      </progress>
+    </header>
+
+
+    <!-- Content -->
+    <div class="container mt-5">
+      
+        <!-- _layouts/post.html -->
+
+
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">State Space Framework: Flexibility to dogmatic rules in biology</h1>
+    <p class="post-meta">September 24, 2023</p>
+    <p class="post-tags">
+      <a href="/KartikP2/blog/2023"> <i class="fa-solid fa-calendar fa-sm"></i> 2023 </a>
+      
+        ·  
+        <a href="/KartikP2/blog/tag/biology"> <i class="fa-solid fa-hashtag fa-sm"></i> biology</a>  
+          
+
+          <a href="/KartikP2/blog/tag/systems-biology"> <i class="fa-solid fa-hashtag fa-sm"></i> systems biology</a>  
+          
+
+          <a href="/KartikP2/blog/tag/computation"> <i class="fa-solid fa-hashtag fa-sm"></i> computation</a>  
+          
+
+          <a href="/KartikP2/blog/tag/developmental-biology"> <i class="fa-solid fa-hashtag fa-sm"></i> developmental biology</a>  
+          
+
+          
+        ·  
+        <a href="/KartikP2/blog/category/tutorial"> <i class="fa-solid fa-tag fa-sm"></i> tutorial</a>  
+          
+        <a href="/KartikP2/blog/category/commentary"> <i class="fa-solid fa-tag fa-sm"></i> commentary</a>  
+          
+        
+
+    </p>
+  </header>
+
+  <article class="post-content">
+    
+    <div id="markdown-content">
+      <h3 id="reconciling-incongruent-rules-of-deterministic-decision-making">Reconciling incongruent rules of deterministic decision making.</h3>
+
+<p>In biology (and many other disciplines), linear logic pathways of causation (A-&gt;B-&gt;C) are often used to describe molecular pathways, cell fates, etc. However, these linear pathways are acutally embedded in complex networks.</p>
+
+<p>With the influx of “omic” data, the conceptually simple idea of nested binary choices is beginning to be undermined. This comes with the realization of vastly more complicated molecular networks with many circular control loops which can be rarely explained through linear causal explanations.</p>
+<blockquote>
+  <p>“Omic” data is data gathered from studies that investigate biological molecules. For example, gen<strong>omic</strong> data is data related to the genes, transcript<strong>omics</strong> is data related to RNA transcripts, metabol<strong>omics</strong> is data related to metabolites, phen<strong>omics</strong> is data related to phenotype, etc. There are multiple different kinds of “omic” data, but ultimately they function to give a more precise characterization of the phenomena at the scale of the “omic” data.</p>
+</blockquote>
+
+<p><img src="../../../assets/img/State%20Space/circular%20loop.gif" alt="Circular loops" width="40%"></p>
+
+<p>The fundamental issue with networks of regulatory pathways is they fail to distinguish between network architecture and network dynamics. Network architecture is defined as a static collection of nodes (representing genes, proteins, etc) and arrows (representing interactions).</p>
+
+<p>The architecture of genome-wide regulatory networks that encompass all genes is hardwired in the genomic sequence through interacting domains and regulatory proteins/elements.</p>
+
+<p><img src="../../../assets/img/State%20Space/regulatory%20network.jpeg" alt="Regulatory Network" width="75%"></p>
+
+<p>source: <a href="">unknown at this moment</a></p>
+
+<p>However, network dynamics is the concept that links network architecture and cell behaviour.</p>
+
+<p>The idea of a state space framework aims to combine the far too simple and limiting pathway-based causality scheme with the dynamics of cellular activity to explain phenotype/behaviour. Arrows connecting genes still serve as symbols of causation, however, such linear interpretations of causal network connections fail to consider the context of the entire networks in which all these causal interactions are embedded.</p>
+
+<p>One could theoretically follow the logic for the expression levels of gene X, however with thousands of genes involved that change their expression regarding a certain phenotype, it is very easy to quickly lose track.</p>
+
+<p><img src="../../../assets/img/State%20Space/thinking.gif" alt="Thinking hard"></p>
+
+<p>The state space framework is a tool that allows us to understand these dynamics while preserving network architecture complexity. To visualize, a network state S(<em>t</em>) at time <em>t</em>, is defined by the expression leveos of all the genes in the network at that specific time (<em>t</em>).</p>
+
+<p>Think of it like a cartesian graph (akin to dimensionality reduction to find an underlying manifold), where each gene is a dimension. As we measure more variables, we increase the number of axes/dimensions (N). The state S(<em>t</em>) is a single point in the continuous, N-dimensional space, the state space, which contains <strong>ALL POSSIBLE</strong> states.</p>
+<blockquote>
+  <p>A manifold is a lower-dimensional subspace underlying population activity that is generally embedded in a higher-dimensional state space. Generally, you do not need to preserve the original N-dimensional state space. Rather, you can reduce dimensions to capture uncorrelated (high variance explaining) information. A manifold can also be modelled on a euclidean space.</p>
+</blockquote>
+
+<p><img src="../../../assets/img/State%20Space/SS%20cartesian.jpeg" alt="Cartesian" width="75%"></p>
+
+<p>source: <a href="">unknown at this moment</a></p>
+
+<p>If we have three genes (N=3), the expression pattern of these genes at a particular cell state at time (<em>t</em>) for a behaviour, phenotype, etc is described described by the 3-variable coordinate position at that specific time (e.g., S(5 mins) = [4,3,2.5])</p>
+
+<p>The dynamics come in when we execute all the regulatory interactions between the genes, defined by the network architecture (i.e., <em>let the cell do it’s natural thing</em>), and observe how the N-dimensional gene expression profile changes in a coordinated manner across time.</p>
+
+<p>Each state is represented by a position. As you continue to measure the same variables across time, the position changes. The state moves along a trajectoy in the state space as the genes exert their regulatory actions onto each other according to the network architecture. Thus, the genome, via the regulatory network it encodes, constrains the movement of the state of each cell.</p>
+
+<p>The network architecture is a static entity, because the genome does not change much in a lifetime, that constrains the alterations in the expression values of the genes. Development, homeostasis, behaviour, etc. takes place within these constraints.</p>
+
+<p>The idea gets interesting when you find states where trajectories in the state space environment seem to convert - called attractor states. Attractor states represent stable cell states like differentiated cell types. These attractor states are characterized by a stable gene-expression profile that are often robust to small perturbations since they would attract all unstable points in their neighbourhood (because of regulatory interactions).</p>
+
+<p>Drugs, environment, etc. can cause a state to deviate transiently but if not too large, will return to the attractor state and re-establish the associated specific gene-expression profile.</p>
+
+<p>Since various sets of initial states can end up in the same attractor state, there are many ways to reach an attractor (which is a hallmark of stability).</p>
+
+<p>In real systems with noise, chaos contributing to random fluctuations, the state point (S) wiggles locally in the state space.</p>
+
+<p><img src="../../../assets/img/State%20Space/coordinated%20change.jpg" alt="Coordinated change"></p>
+
+<p>source: <a href="10.1371/journal.pbio.1000380">10.1371/journal.pbio.1000380</a></p>
+
+<p>A big proponent of the state space framework/fitness landscape/combinatory phase space perspective is Stuart Kauffman. He showed that with a broad class of compelx networks with random architecture (wiring), you can produce “interesting cell behaviours”. Then with evolution, you’d need only to fine-tune the state space to optimize the developmental trajectories to ensure smooth descent into attractors of mature cell types and prevent getting stuck in unused attractors of immature regions of the state space (e.g., cancer).</p>
+
+<p>The best part of this framework is that it can be used to describe any dynamical system (e.g., cognitive/motor processes, cell behaviours, telecommunications, weather, etc). Although the big limitations are acquiring enough of the continuous data and computational cost.</p>
+
+<p>In science it is sometimes rare to find people competent in both the math/CS side of analysis while being able to understand the biology to make appropriate interpretations. This highlights the neccessity for cross-functional collaboration. With scientific big data and multi-omic big data on the rise, I hope to see this approach used more.</p>
+
+<h3 id="podcast-version">Podcast version</h3>
+<p><a href="https://www.audacy.com/podcast/incomplete-thoughts-5d7b8/episodes/ep2-state-space-a-multidimensional-approach-to-understanding-2faf8" rel="external nofollow noopener" target="_blank">EP2: State Space - A multidimensional approach to understanding</a></p>
+
+<h3 id="for-scientific-articles-on-this-topic">For scientific articles on this topic:</h3>
+<p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2876052/" rel="external nofollow noopener" target="_blank">Cell Lineage Determination in State Space: A Systems View Brings Flexibility to Dogmatic Canonical Rules</a></p>
+
+<p><a href="https://www.nature.com/articles/s41583-023-00693-x" rel="external nofollow noopener" target="_blank">A unifying perspective on neural manifolds and circuits for cognition</a></p>
+
+<p><a href="https://www.nature.com/articles/s41467-018-06560-z" rel="external nofollow noopener" target="_blank">Cortical population activity within a preserved neural manifold underlies multiple motor behaviors</a></p>
+
+    </div>
+  </article>
+
+
+  
+    
+    <br>
+    <hr>
+    <br>
+    <ul class="list-disc pl-8"></ul>
+
+    <!-- Adds related posts to the end of an article -->
+    <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2>
+    <p class="mb-2">Here are some more articles you might like to read next:</p>
+  
+
+  <li class="my-2">
+    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/KartikP2/blog/2023/Art-Subjective-Experience/">Art is a way to take a snapshot of consciousness</a>
+  </li>
+
+  
+
+  <li class="my-2">
+    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/KartikP2/blog/2023/Tissue-Self-Organization/">Self-organization of tissue</a>
+  </li>
+
+  
+
+  <li class="my-2">
+    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/KartikP2/blog/2023/Into-the-wild/">"Happiness only real when shared" - Christopher McCandless (aka Alexander Supertramp)</a>
+  </li>
+
+  
+
+  <li class="my-2">
+    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/KartikP2/blog/2023/FFL-Systems-Biology/">The cellular function of feed-forward loops (FFL) integration by OR gates</a>
+  </li>
+
+  
+
+  <li class="my-2">
+    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/KartikP2/blog/2023/What-is-a-PhD-like/">What is a PhD really like?</a>
+  </li>
+
+</div>
+
+      
+    </div>
+
+    <!-- Footer -->    
+    <footer class="fixed-bottom">
+      <div class="container mt-0">
+        © Copyright 2023 Kartik  Pradeepan. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme.
+
+      </div>
+    </footer>
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="/KartikP2/assets/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="/KartikP2/assets/js/mdb.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Masonry & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/KartikP2/assets/js/masonry.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script defer src="/KartikP2/assets/js/zoom.js?7b30caa5023af4af8408a472dc4e1ebb"></script>
+
+  <!-- Bootstrap Table -->
+  <script defer src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
+
+  <!-- Load Common JS -->
+  <script src="/KartikP2/assets/js/no_defer.js?d633890033921b33e0ceb13d22340a9c"></script>
+  <script defer src="/KartikP2/assets/js/common.js?acdb9690d7641b2f8d40529018c71a01"></script>
+  <script defer src="/KartikP2/assets/js/copy_code.js?07b8786bab9b4abe90d10e61f7d12ff7" type="text/javascript"></script>
+
+    
+  <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <script async src="https://badge.dimensions.ai/badge.js"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    
+    
+
+<!-- Scrolling Progress Bar -->
+<script type="text/javascript">
+  /*
+   * This JavaScript code has been adapted from the article 
+   * https://css-tricks.com/reading-position-indicator/ authored by Pankaj Parashar, 
+   * published on the website https://css-tricks.com on the 7th of May, 2014.
+   * Couple of changes were made to the original code to make it compatible 
+   * with the `al-foio` theme.
+   */
+  const progressBar = $("#progress");
+  /*
+   * We set up the bar after all elements are done loading.
+   * In some cases, if the images in the page are larger than the intended
+   * size they'll have on the page, they'll be resized via CSS to accomodate
+   * the desired size. This mistake, however, breaks the computations as the
+   * scroll size is computed as soon as the elements finish loading.
+   * To account for this, a minimal delay was introduced before computing the
+   * values.
+   */
+  window.onload = function () {
+    setTimeout(progressBarSetup, 50);
+  };
+  /*
+   * We set up the bar according to the browser.
+   * If the browser supports the progress element we use that.
+   * Otherwise, we resize the bar thru CSS styling
+   */
+  function progressBarSetup() {
+    if ("max" in document.createElement("progress")) {
+      initializeProgressElement();
+      $(document).on("scroll", function() {
+        progressBar.attr({ value: getCurrentScrollPosition() });
+      });
+      $(window).on("resize", initializeProgressElement);
+    } else {
+      resizeProgressBar();
+      $(document).on("scroll", resizeProgressBar);
+      $(window).on("resize", resizeProgressBar);
+    }
+  }
+  /*
+   * The vertical scroll position is the same as the number of pixels that
+   * are hidden from view above the scrollable area. Thus, a value > 0 is
+   * how much the user has scrolled from the top
+   */
+  function getCurrentScrollPosition() {
+    return $(window).scrollTop();
+  }
+
+  function initializeProgressElement() {
+    let navbarHeight = $("#navbar").outerHeight(true);
+    $("body").css({ "padding-top": navbarHeight });
+    $("progress-container").css({ "padding-top": navbarHeight });
+    progressBar.css({ top: navbarHeight });
+    progressBar.attr({
+      max: getDistanceToScroll(),
+      value: getCurrentScrollPosition(),
+    });
+  }
+  /*
+   * The offset between the html document height and the browser viewport
+   * height will be greater than zero if vertical scroll is possible.
+   * This is the distance the user can scroll
+   */
+  function getDistanceToScroll() {
+    return $(document).height() - $(window).height();
+  }
+
+  function resizeProgressBar() {
+    progressBar.css({ width: getWidthPercentage() + "%" });
+  }
+  // The scroll ratio equals the percentage to resize the bar
+  function getWidthPercentage() {
+    return (getCurrentScrollPosition() / getDistanceToScroll()) * 100;
+  }
+</script>
+
+    
+  </body>
+</html>

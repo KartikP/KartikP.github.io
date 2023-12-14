@@ -1,6 +1,11 @@
 ---
 title: 'The cellular function of feed-forward loops (FFL) integration by OR gates'
 date: 2023-09-22
+layout: post
+description:
+categories: tutorial
+giscus_comments: false
+related_posts: true
 tags:
   - biology
   - systems biology
@@ -12,7 +17,7 @@ Typically, a transciption factor X (TF-X) interacts with TF-Y in order to regula
 
 > A transcription factor is a protein that binds to DNA at specific target sequences. It can function to make it easier (activator) or harder (repressor) for a gene to be transcribed.
 
-![FFL pathway](../images/FFL/pathway.png)
+![FFL pathway](../../../assets/img/FFL/pathway.png)
 
 
 TF-X and TF-Y often integrate at the Z promoter through either an AND gate (X* and Y* are **BOTH** required) or an OR gate (X* or T* is sufficient).
