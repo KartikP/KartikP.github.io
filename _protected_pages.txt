@@ -1,1 +1,1 @@
-/_site/blog/2023/2023-Annual-Letter annualletter
+/_site/blog/2023/2023-Annual-Letter/index.html annualletter
