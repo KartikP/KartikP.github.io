@@ -50,7 +50,7 @@
 </url>
 <url>
 <loc>http://localhost:4000/blog/2024/My-Brain/</loc>
-<lastmod>2024-01-14T00:00:00-05:00</lastmod>
+<lastmod>2024-01-15T00:00:00-05:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/projects/RTT-FCNN/</loc>
@@ -83,6 +83,10 @@
 <url>
 <loc>http://localhost:4000/projects/Neurocyte%20Database%20Pipeline/</loc>
 <lastmod>2024-01-13T00:00:00-05:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/projects/PlotBrainOBJ/</loc>
+<lastmod>2024-01-15T00:00:00-05:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/</loc>

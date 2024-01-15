@@ -27,7 +27,7 @@ To navigate around this issue, I have also developed a different approach. This 
 ---
 
 
-[Click here to see how the code performs on non-reverberating networks (i.e., ordinary network bursts)](/portfolio/Non-Reverberating_Detection/)
+[Click here to see how the code performs on non-reverberating networks (i.e., ordinary network bursts)](/projects/Non-Reverberating_Detection/)
 
 
 ## Install necessary packages
