@@ -5,7 +5,7 @@ permalink: /projects/
 description: A growing collection of projects
 nav: true
 nav_order: 2
-display_categories: [neuroscience, work, fun]
+display_categories: [data, neuroscience, fun]
 horizontal: true
 ---
 

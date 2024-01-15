@@ -48,7 +48,7 @@ from scipy.stats import pearsonr
 ## Load Data
 
 
-```python
+```highlightpython
 well_data = pd.read_csv("/content/drive/MyDrive/Colab Notebooks/Well_data.csv")
 ```
 
