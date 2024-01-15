@@ -22,7 +22,7 @@
         volumes: [
             {
             type: "nifti1",
-            nii_url: "http://kartikpradeepan.com/assets/brain/7T.nii",
+            nii_url: "https://www.kartikpradeepan.com/assets/brain/7T.nii",
             template: {
                 element_id: "volume-ui-template",
                 viewer_insert_class: "volume-viewer-display"
