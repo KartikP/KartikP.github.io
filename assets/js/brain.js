@@ -22,8 +22,7 @@
         volumes: [
             {
             type: "nifti1",
-            nii_file: document.getElementById("../../../assets/brain/3T_1.nii"),
-            header_file: document.getElementById("raw-data-file"),
+            nii_url: "http://kartikpradeepan.com/assets/brain/7T.nii",
             template: {
                 element_id: "volume-ui-template",
                 viewer_insert_class: "volume-viewer-display"
