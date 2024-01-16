@@ -1,12 +1,12 @@
 ---
 layout: page
 title: NDD-ePhys-dB development pipeline
-description: How to create your own Allen Institute-style open access database
+description: Not available - How to create your own Allen Institute-style open access database
 img: 
 category: data
 related_publications: 
 url: 
-date: 2024-01-13
+date: 2025-01-13
 ---
 
 Over the next couple of months, I'll be working on a *greenfield* data project. This kind of project is built from scratch, from the ground up, without any constraints from prior work. Here, I will provide the motivation and a high-level overview of how this project will be accomplished.
@@ -103,3 +103,5 @@ As shown in the pipeline, once the initial data is stored on S3, AWS Glue via Py
 Theoretically, each file should be only requested once by AWS Glue.
 
 The total number of GET requests will be approximately 580 (for the total number of files). GET/SELECT requests are $0.0004 per 1000 requests. Therefore, this one time cost during initialization will be $0.0004.
+
+**TO BE COMPLETED**
