@@ -13,7 +13,7 @@ tags:
   - developmental biology
 ---
 
-Self-organization is the spontaneous formation of overall ordered patterns and structures from the local interactions of elements in a population that have minimal patterns. Self-organization is often associated with emergence - the spotaneous appearance of an ordered property of the whole that cannot be explained by the sum of its elements.
+Self-organization is the spontaneous formation of overall ordered patterns and structures from the local interactions of elements in a population that have minimal patterns. Self-organization is often associated with emergence - the spontaneous appearance of an ordered property of the whole that cannot be explained by the sum of its elements.
 
 Anyone familiar with developmental biology is probably comfortable with the idea of cytokine gradients and symmetry breaking. That cells can radically change along the axes of the chemical gradients that change in a distance-sensitive fashion.
 > Cytokines are signaling molecules that are secreted by one cell to have an effect on another cell. Cytokine gradients are formed due to a diffusion gradient. The cytokine is found in greater concentration the more close to the release cell and decreases with distance. Different cells can respond more/less to specific concentrations of the cytokine, which elicit different effects.

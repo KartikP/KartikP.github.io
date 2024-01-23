@@ -38,7 +38,7 @@ One could theoretically follow the logic for the expression levels of gene X, ho
 
 ![Thinking hard](../../../assets/img/State%20Space/thinking.gif)
 
-The state space framework is a tool that allows us to understand these dynamics while preserving network architecture complexity. To visualize, a network state S(*t*) at time *t*, is defined by the expression leveos of all the genes in the network at that specific time (*t*). 
+The state space framework is a tool that allows us to understand these dynamics while preserving network architecture complexity. To visualize, a network state S(*t*) at time *t*, is defined by the expression levels of all the genes in the network at that specific time (*t*). 
 
 Think of it like a cartesian graph (akin to dimensionality reduction to find an underlying manifold), where each gene is a dimension. As we measure more variables, we increase the number of axes/dimensions (N). The state S(*t*) is a single point in the continuous, N-dimensional space, the state space, which contains **ALL POSSIBLE** states.
 > A manifold is a lower-dimensional subspace underlying population activity that is generally embedded in a higher-dimensional state space. Generally, you do not need to preserve the original N-dimensional state space. Rather, you can reduce dimensions to capture uncorrelated (high variance explaining) information. A manifold can also be modelled on a euclidean space.
@@ -55,7 +55,7 @@ Each state is represented by a position. As you continue to measure the same var
 
 The network architecture is a static entity, because the genome does not change much in a lifetime, that constrains the alterations in the expression values of the genes. Development, homeostasis, behaviour, etc. takes place within these constraints.
 
-The idea gets interesting when you find states where trajectories in the state space environment seem to convert - called attractor states. Attractor states represent stable cell states like differentiated cell types. These attractor states are characterized by a stable gene-expression profile that are often robust to small perturbations since they would attract all unstable points in their neighbourhood (because of regulatory interactions).
+The idea gets interesting when you find states where trajectories in the state space environment seem to converge - called attractor states. Attractor states represent stable cell states like differentiated cell types. These attractor states are characterized by a stable gene-expression profile that are often robust to small perturbations since they would attract all unstable points in their neighbourhood (because of regulatory interactions).
 
 Drugs, environment, etc. can cause a state to deviate transiently but if not too large, will return to the attractor state and re-establish the associated specific gene-expression profile.
 
@@ -67,7 +67,7 @@ In real systems with noise, chaos contributing to random fluctuations, the state
 
 source: [10.1371/journal.pbio.1000380](10.1371/journal.pbio.1000380)
 
-A big proponent of the state space framework/fitness landscape/combinatory phase space perspective is Stuart Kauffman. He showed that with a broad class of compelx networks with random architecture (wiring), you can produce "interesting cell behaviours". Then with evolution, you'd need only to fine-tune the state space to optimize the developmental trajectories to ensure smooth descent into attractors of mature cell types and prevent getting stuck in unused attractors of immature regions of the state space (e.g., cancer).
+A big proponent of the state space framework/fitness landscape/combinatory phase space perspective is Stuart Kauffman. He showed that with a broad class of complex networks with random architecture (wiring), you can produce "interesting cell behaviours". Then with evolution, you'd need only to fine-tune the state space to optimize the developmental trajectories to ensure smooth descent into attractors of mature cell types and prevent getting stuck in unused attractors of immature regions of the state space (e.g., cancer).
 
 The best part of this framework is that it can be used to describe any dynamical system (e.g., cognitive/motor processes, cell behaviours, telecommunications, weather, etc). Although the big limitations are acquiring enough of the continuous data and computational cost.
 
