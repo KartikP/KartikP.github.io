@@ -6,6 +6,7 @@ description:
 categories: tutorial commentary
 giscus_comments: false
 related_posts: true
+featured: true
 tags:
   - biology
   - systems biology
