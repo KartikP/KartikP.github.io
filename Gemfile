@@ -3,9 +3,11 @@ source 'https://rubygems.org'
 # Add rake at the top level
 gem 'rake'
 
+# Lock Jekyll version
+gem 'jekyll', '~> 4.2.0'
+
 group :jekyll_plugins do
     gem 'classifier-reborn'
-    gem 'jekyll'
     gem 'jekyll-archives'
     gem 'jekyll-diagrams'
     gem 'jekyll-email-protect'
@@ -26,6 +28,7 @@ group :jekyll_plugins do
     gem 'webrick'
     gem 'csv'
 end
+
 group :other_plugins do
     gem 'feedjira'
     gem 'httparty'
