@@ -3,8 +3,9 @@ source 'https://rubygems.org'
 # Add rake at the top level
 gem 'rake'
 
-# Lock Jekyll version
+# Lock Jekyll and Ruby version
 gem 'jekyll', '~> 4.2.0'
+ruby '~> 3.4.1'
 
 group :jekyll_plugins do
     gem 'classifier-reborn'

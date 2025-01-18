@@ -136,11 +136,11 @@
 
 <p><a href="https://github.com/rordenlab/nii2meshWeb" rel="external nofollow noopener" target="_blank">To convert .nii files quickly to .obj without Freesurfer processing</a></p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">plotly.graph_objects</span> <span class="k">as</span> <span class="n">go</span>
-<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="n">go</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">brain</span> <span class="o">=</span> <span class="sh">"</span><span class="s">/content/drive/MyDrive/Data Science/MRI/brain.obj</span><span class="sh">"</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">brain</span> <span class="o">=</span> <span class="s">"/content/drive/MyDrive/Data Science/MRI/brain.obj"</span>
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Function to read the .obj file
@@ -148,18 +148,18 @@
     <span class="n">vertices</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="sh">'</span><span class="s">r</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">file</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">'</span><span class="s">v </span><span class="sh">'</span><span class="p">):</span>
-                <span class="n">vertices</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="nf">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">().</span><span class="nf">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])))</span>
-            <span class="k">elif</span> <span class="n">line</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">'</span><span class="s">f</span><span class="sh">'</span><span class="p">):</span>
-                <span class="n">face</span> <span class="o">=</span> <span class="p">[</span><span class="nf">int</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">().</span><span class="nf">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]]</span>
-                <span class="n">faces</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'v '</span><span class="p">):</span>
+                <span class="n">vertices</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">().</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])))</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'f'</span><span class="p">):</span>
+                <span class="n">face</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">'/'</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">().</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]]</span>
+                <span class="n">faces</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="nf">read_obj</span><span class="p">(</span><span class="n">brain</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">read_obj</span><span class="p">(</span><span class="n">brain</span><span class="p">)</span>
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vertices</span>
@@ -187,9 +187,9 @@
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a mesh object
-</span><span class="n">pl_mygrey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="sh">'</span><span class="s">rgb(153, 153, 153)</span><span class="sh">'</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="sh">'</span><span class="s">rgb(255,255,255)</span><span class="sh">'</span><span class="p">]</span>
+</span><span class="n">pl_mygrey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s">'rgb(153, 153, 153)'</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="s">'rgb(255,255,255)'</span><span class="p">]</span>
 
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="nc">Mesh3d</span><span class="p">(</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="n">Mesh3d</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">y</span><span class="o">=</span><span class="n">vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">z</span><span class="o">=</span><span class="n">vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span>
@@ -200,15 +200,15 @@
     <span class="n">colorscale</span><span class="o">=</span><span class="n">pl_mygrey</span><span class="p">,</span>
     <span class="n">showscale</span><span class="o">=</span><span class="bp">False</span>
 <span class="p">)</span>
-<span class="n">mesh</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mi">7</span><span class="p">,</span>
-               <span class="n">lighting</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
+<span class="n">mesh</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mi">7</span><span class="p">,</span>
+               <span class="n">lighting</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
                              <span class="n">diffuse</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">fresnel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
                              <span class="n">specular</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">roughness</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
                              <span class="n">facenormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
                              <span class="n">vertexnormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">),</span>
-               <span class="n">lightposition</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+               <span class="n">lightposition</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                   <span class="n">y</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
                                   <span class="n">z</span><span class="o">=</span><span class="mi">0</span>
                                  <span class="p">)</span>
@@ -217,62 +217,62 @@
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a figure and add the mesh object to it
-</span><span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="nc">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">mesh</span><span class="p">])</span>
-<span class="n">camera</span> <span class="o">=</span> <span class="nf">dict</span><span class="p">(</span>
-    <span class="n">eye</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Adjust these values as needed
+</span><span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">mesh</span><span class="p">])</span>
+<span class="n">camera</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">eye</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Adjust these values as needed
 </span><span class="p">)</span>
-<span class="n">fig</span><span class="p">.</span><span class="nf">update_layout</span><span class="p">(</span>
-    <span class="n">scene</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span>
-        <span class="n">xaxis</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">scene</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">showbackground</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">showgrid</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">zeroline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">showticklabels</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">showline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="sh">''</span>  <span class="c1"># Remove the x-axis label
+            <span class="n">title</span><span class="o">=</span><span class="s">''</span>  <span class="c1"># Remove the x-axis label
 </span>        <span class="p">),</span>
-        <span class="n">yaxis</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span>
+        <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">showbackground</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">showgrid</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">zeroline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">showticklabels</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">showline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="sh">''</span>
+            <span class="n">title</span><span class="o">=</span><span class="s">''</span>
         <span class="p">),</span>
-        <span class="n">zaxis</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span>
+        <span class="n">zaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">showbackground</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">showgrid</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">zeroline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">showticklabels</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
             <span class="n">showline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="sh">''</span>
+            <span class="n">title</span><span class="o">=</span><span class="s">''</span>
         <span class="p">),</span>
         <span class="n">camera</span><span class="o">=</span><span class="n">camera</span>
     <span class="p">),</span>
-    <span class="n">margin</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>  <span class="c1"># Removes white margins around the plot
-</span>    <span class="n">paper_bgcolor</span><span class="o">=</span><span class="sh">'</span><span class="s">rgba(0,0,0,0)</span><span class="sh">'</span><span class="p">,</span>  <span class="c1"># Set the background color of the paper to transparent
-</span>    <span class="n">plot_bgcolor</span><span class="o">=</span><span class="sh">'</span><span class="s">rgba(0,0,0,0)</span><span class="sh">'</span>    <span class="c1"># Set the background color of the plot to transparent
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>  <span class="c1"># Removes white margins around the plot
+</span>    <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s">'rgba(0,0,0,0)'</span><span class="p">,</span>  <span class="c1"># Set the background color of the paper to transparent
+</span>    <span class="n">plot_bgcolor</span><span class="o">=</span><span class="s">'rgba(0,0,0,0)'</span>    <span class="c1"># Set the background color of the plot to transparent
 </span><span class="p">)</span>
-<span class="n">fig</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
-<span class="n">fig</span><span class="p">.</span><span class="nf">write_html</span><span class="p">(</span><span class="sh">'</span><span class="s">/content/drive/MyDrive/Data Science/MRI/brain.html</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">write_html</span><span class="p">(</span><span class="s">'/content/drive/MyDrive/Data Science/MRI/brain.html'</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h2 id="subplots-containing-a-variety-of-different-views-of-the-nii-to-obj-conversion">Subplots containing a variety of different views of the .nii to .obj conversion.</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">plotly.graph_objects</span> <span class="k">as</span> <span class="n">go</span>
-<span class="kn">from</span> <span class="n">plotly.subplots</span> <span class="kn">import</span> <span class="n">make_subplots</span>
-<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="n">go</span>
+<span class="kn">from</span> <span class="nn">plotly.subplots</span> <span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">face</span> <span class="o">=</span> <span class="sh">"</span><span class="s">/content/drive/MyDrive/Data Science/MRI/nii2mesh_sub-009_T1w.obj</span><span class="sh">"</span>
-<span class="n">T7_raw</span> <span class="o">=</span> <span class="sh">"</span><span class="s">/content/drive/MyDrive/Data Science/MRI/nii2mesh_7T.obj</span><span class="sh">"</span>
-<span class="n">T7_white</span> <span class="o">=</span> <span class="sh">"</span><span class="s">/content/drive/MyDrive/Data Science/MRI/nii2mesh_c2_KP_anatomical.obj</span><span class="sh">"</span>
-<span class="n">T7_gray</span> <span class="o">=</span> <span class="sh">"</span><span class="s">/content/drive/MyDrive/Data Science/MRI/nii2mesh_c1_KP_anatomical.obj</span><span class="sh">"</span>
-<span class="n">T7_csf</span> <span class="o">=</span> <span class="sh">"</span><span class="s">/content/drive/MyDrive/Data Science/MRI/nii2mesh_c3_KP_anatomical.obj</span><span class="sh">"</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">face</span> <span class="o">=</span> <span class="s">"/content/drive/MyDrive/Data Science/MRI/nii2mesh_sub-009_T1w.obj"</span>
+<span class="n">T7_raw</span> <span class="o">=</span> <span class="s">"/content/drive/MyDrive/Data Science/MRI/nii2mesh_7T.obj"</span>
+<span class="n">T7_white</span> <span class="o">=</span> <span class="s">"/content/drive/MyDrive/Data Science/MRI/nii2mesh_c2_KP_anatomical.obj"</span>
+<span class="n">T7_gray</span> <span class="o">=</span> <span class="s">"/content/drive/MyDrive/Data Science/MRI/nii2mesh_c1_KP_anatomical.obj"</span>
+<span class="n">T7_csf</span> <span class="o">=</span> <span class="s">"/content/drive/MyDrive/Data Science/MRI/nii2mesh_c3_KP_anatomical.obj"</span>
 
 <span class="c1"># Default camera settings
-</span><span class="n">camera</span> <span class="o">=</span> <span class="nf">dict</span><span class="p">(</span>
-    <span class="n">eye</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Adjust these values as needed
+</span><span class="n">camera</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">eye</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Adjust these values as needed
 </span><span class="p">)</span>
 </code></pre></div></div>
 
@@ -281,25 +281,25 @@
     <span class="n">vertices</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="sh">'</span><span class="s">r</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">file</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">'</span><span class="s">v </span><span class="sh">'</span><span class="p">):</span>
-                <span class="n">vertices</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="nf">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">().</span><span class="nf">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])))</span>
-            <span class="k">elif</span> <span class="n">line</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">'</span><span class="s">f</span><span class="sh">'</span><span class="p">):</span>
-                <span class="n">face</span> <span class="o">=</span> <span class="p">[</span><span class="nf">int</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">().</span><span class="nf">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]]</span>
-                <span class="n">faces</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'v '</span><span class="p">):</span>
+                <span class="n">vertices</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">().</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])))</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'f'</span><span class="p">):</span>
+                <span class="n">face</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">'/'</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">().</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]]</span>
+                <span class="n">faces</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h2 id="3t-face-and-7t-raw">3T Face and 7T raw</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">face_vertices</span><span class="p">,</span> <span class="n">face_faces</span> <span class="o">=</span> <span class="nf">read_obj</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
-<span class="n">T7_raw_vertices</span><span class="p">,</span> <span class="n">T7_raw_faces</span> <span class="o">=</span> <span class="nf">read_obj</span><span class="p">(</span><span class="n">T7_raw</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">face_vertices</span><span class="p">,</span> <span class="n">face_faces</span> <span class="o">=</span> <span class="n">read_obj</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
+<span class="n">T7_raw_vertices</span><span class="p">,</span> <span class="n">T7_raw_faces</span> <span class="o">=</span> <span class="n">read_obj</span><span class="p">(</span><span class="n">T7_raw</span><span class="p">)</span>
 <span class="c1"># Create a mesh object
-</span><span class="n">pl_mygrey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="sh">'</span><span class="s">rgb(153, 153, 153)</span><span class="sh">'</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="sh">'</span><span class="s">rgb(255,255,255)</span><span class="sh">'</span><span class="p">]</span>
+</span><span class="n">pl_mygrey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s">'rgb(153, 153, 153)'</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="s">'rgb(255,255,255)'</span><span class="p">]</span>
 
-<span class="n">face_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="nc">Mesh3d</span><span class="p">(</span>
+<span class="n">face_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="n">Mesh3d</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">face_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">y</span><span class="o">=</span><span class="n">face_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">z</span><span class="o">=</span><span class="n">face_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span>
@@ -310,7 +310,7 @@
     <span class="n">colorscale</span><span class="o">=</span><span class="n">pl_mygrey</span><span class="p">,</span>
     <span class="n">showscale</span><span class="o">=</span><span class="bp">False</span>
 <span class="p">)</span>
-<span class="n">T7_raw_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="nc">Mesh3d</span><span class="p">(</span>
+<span class="n">T7_raw_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="n">Mesh3d</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">T7_raw_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">y</span><span class="o">=</span><span class="n">T7_raw_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">z</span><span class="o">=</span><span class="n">T7_raw_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span>
@@ -322,28 +322,28 @@
     <span class="n">showscale</span><span class="o">=</span><span class="bp">False</span>
 <span class="p">)</span>
 
-<span class="n">face_mesh</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.3109</span><span class="p">,</span>
-               <span class="n">lighting</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
+<span class="n">face_mesh</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.3109</span><span class="p">,</span>
+               <span class="n">lighting</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
                              <span class="n">diffuse</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">fresnel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
                              <span class="n">specular</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">roughness</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
                              <span class="n">facenormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
                              <span class="n">vertexnormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">),</span>
-               <span class="n">lightposition</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+               <span class="n">lightposition</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                   <span class="n">y</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
                                   <span class="n">z</span><span class="o">=</span><span class="mi">0</span>
                                  <span class="p">)</span>
                       <span class="p">);</span>
-<span class="n">T7_raw_mesh</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.31909</span><span class="p">,</span>
-               <span class="n">lighting</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
+<span class="n">T7_raw_mesh</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.31909</span><span class="p">,</span>
+               <span class="n">lighting</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
                              <span class="n">diffuse</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">fresnel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
                              <span class="n">specular</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">roughness</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
                              <span class="n">facenormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
                              <span class="n">vertexnormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">),</span>
-               <span class="n">lightposition</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+               <span class="n">lightposition</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                   <span class="n">y</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
                                   <span class="n">z</span><span class="o">=</span><span class="mi">0</span>
                                  <span class="p">)</span>
@@ -351,75 +351,75 @@
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a figure and add the mesh object to it
-</span><span class="n">fig</span> <span class="o">=</span> <span class="nf">make_subplots</span><span class="p">(</span>
+</span><span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span>
     <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">specs</span><span class="o">=</span><span class="p">[[{</span><span class="sh">'</span><span class="s">type</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">mesh3d</span><span class="sh">'</span><span class="p">},</span> <span class="p">{</span><span class="sh">'</span><span class="s">type</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">mesh3d</span><span class="sh">'</span><span class="p">}]],</span>
+    <span class="n">specs</span><span class="o">=</span><span class="p">[[{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'mesh3d'</span><span class="p">},</span> <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'mesh3d'</span><span class="p">}]],</span>
     <span class="n">horizontal_spacing</span><span class="o">=</span><span class="mf">0.02</span>  <span class="c1"># Adjust the spacing as needed
 </span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">face_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">T7_raw_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">face_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">T7_raw_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 
-<span class="n">axis_settings</span> <span class="o">=</span> <span class="nf">dict</span><span class="p">(</span>
+<span class="n">axis_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">showbackground</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
     <span class="n">showgrid</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
     <span class="n">zeroline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
     <span class="n">showticklabels</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
     <span class="n">showline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="sh">""</span>
+    <span class="n">title</span><span class="o">=</span><span class="s">""</span>
 <span class="p">)</span>
 
 <span class="c1"># Add titles as 3D text
-</span><span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="nc">Scatter3d</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">face_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
-    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">face_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
-    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">max</span><span class="p">(</span><span class="n">face_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
-</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">Face (from separate 3T)</span><span class="sh">"</span><span class="p">],</span>
-    <span class="n">mode</span><span class="o">=</span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">,</span>
+</span><span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">face_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
+    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">face_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
+    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">face_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
+</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="s">"Face (from separate 3T)"</span><span class="p">],</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s">"text"</span><span class="p">,</span>
 <span class="p">),</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="nc">Scatter3d</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">T7_raw_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
-    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">T7_raw_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
-    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">max</span><span class="p">(</span><span class="n">T7_raw_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
-</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">Skulled stripped (7T)</span><span class="sh">"</span><span class="p">],</span>
-    <span class="n">mode</span><span class="o">=</span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">,</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">T7_raw_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
+    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">T7_raw_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
+    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">T7_raw_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
+</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="s">"Skulled stripped (7T)"</span><span class="p">],</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s">"text"</span><span class="p">,</span>
 <span class="p">),</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">.</span><span class="nf">update_layout</span><span class="p">(</span>
-    <span class="n">scene</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">scene</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
         <span class="n">xaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">yaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">zaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">camera</span><span class="o">=</span><span class="n">camera</span>
     <span class="p">),</span>
-    <span class="n">scene2</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span>
+    <span class="n">scene2</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
         <span class="n">xaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">yaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">zaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">camera</span><span class="o">=</span><span class="n">camera</span>
     <span class="p">),</span>
-    <span class="n">margin</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-    <span class="n">paper_bgcolor</span><span class="o">=</span><span class="sh">'</span><span class="s">rgba(0,0,0,0)</span><span class="sh">'</span><span class="p">,</span>
-    <span class="n">plot_bgcolor</span><span class="o">=</span><span class="sh">'</span><span class="s">rgba(0,0,0,0)</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s">'rgba(0,0,0,0)'</span><span class="p">,</span>
+    <span class="n">plot_bgcolor</span><span class="o">=</span><span class="s">'rgba(0,0,0,0)'</span><span class="p">,</span>
     <span class="n">showlegend</span><span class="o">=</span><span class="bp">False</span>
 <span class="p">)</span>
 
-<span class="n">fig</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
-<span class="n">fig</span><span class="p">.</span><span class="nf">write_html</span><span class="p">(</span><span class="sh">'</span><span class="s">/content/drive/MyDrive/Data Science/MRI/face_raw.html</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">write_html</span><span class="p">(</span><span class="s">'/content/drive/MyDrive/Data Science/MRI/face_raw.html'</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h2 id="7t-white-and-gray-matter-and-csf">7T white and gray matter, and CSF</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">white_vertices</span><span class="p">,</span> <span class="n">white_faces</span> <span class="o">=</span> <span class="nf">read_obj</span><span class="p">(</span><span class="n">T7_white</span><span class="p">)</span>
-<span class="n">gray_vertices</span><span class="p">,</span> <span class="n">gray_faces</span> <span class="o">=</span> <span class="nf">read_obj</span><span class="p">(</span><span class="n">T7_gray</span><span class="p">)</span>
-<span class="n">csf_vertices</span><span class="p">,</span> <span class="n">csf_faces</span> <span class="o">=</span> <span class="nf">read_obj</span><span class="p">(</span><span class="n">T7_csf</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">white_vertices</span><span class="p">,</span> <span class="n">white_faces</span> <span class="o">=</span> <span class="n">read_obj</span><span class="p">(</span><span class="n">T7_white</span><span class="p">)</span>
+<span class="n">gray_vertices</span><span class="p">,</span> <span class="n">gray_faces</span> <span class="o">=</span> <span class="n">read_obj</span><span class="p">(</span><span class="n">T7_gray</span><span class="p">)</span>
+<span class="n">csf_vertices</span><span class="p">,</span> <span class="n">csf_faces</span> <span class="o">=</span> <span class="n">read_obj</span><span class="p">(</span><span class="n">T7_csf</span><span class="p">)</span>
 
 <span class="c1"># Create a mesh object
-</span><span class="n">pl_mygrey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="sh">'</span><span class="s">rgb(153, 153, 153)</span><span class="sh">'</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="sh">'</span><span class="s">rgb(255,255,255)</span><span class="sh">'</span><span class="p">]</span>
+</span><span class="n">pl_mygrey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s">'rgb(153, 153, 153)'</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="s">'rgb(255,255,255)'</span><span class="p">]</span>
 
-<span class="n">white_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="nc">Mesh3d</span><span class="p">(</span>
+<span class="n">white_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="n">Mesh3d</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">white_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">y</span><span class="o">=</span><span class="n">white_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">z</span><span class="o">=</span><span class="n">white_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span>
@@ -430,7 +430,7 @@
     <span class="n">colorscale</span><span class="o">=</span><span class="n">pl_mygrey</span><span class="p">,</span>
     <span class="n">showscale</span><span class="o">=</span><span class="bp">False</span>
 <span class="p">)</span>
-<span class="n">gray_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="nc">Mesh3d</span><span class="p">(</span>
+<span class="n">gray_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="n">Mesh3d</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">gray_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">y</span><span class="o">=</span><span class="n">gray_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">z</span><span class="o">=</span><span class="n">gray_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span>
@@ -441,7 +441,7 @@
     <span class="n">colorscale</span><span class="o">=</span><span class="n">pl_mygrey</span><span class="p">,</span>
     <span class="n">showscale</span><span class="o">=</span><span class="bp">False</span>
 <span class="p">)</span>
-<span class="n">csf_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="nc">Mesh3d</span><span class="p">(</span>
+<span class="n">csf_mesh</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="n">Mesh3d</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">csf_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">y</span><span class="o">=</span><span class="n">csf_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">z</span><span class="o">=</span><span class="n">csf_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span>
@@ -453,41 +453,41 @@
     <span class="n">showscale</span><span class="o">=</span><span class="bp">False</span>
 <span class="p">)</span>
 
-<span class="n">white_mesh</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.3109</span><span class="p">,</span>
-               <span class="n">lighting</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
+<span class="n">white_mesh</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.3109</span><span class="p">,</span>
+               <span class="n">lighting</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
                              <span class="n">diffuse</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">fresnel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
                              <span class="n">specular</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">roughness</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
                              <span class="n">facenormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
                              <span class="n">vertexnormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">),</span>
-               <span class="n">lightposition</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+               <span class="n">lightposition</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                   <span class="n">y</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
                                   <span class="n">z</span><span class="o">=</span><span class="mi">0</span>
                                  <span class="p">)</span>
                       <span class="p">);</span>
-<span class="n">gray_mesh</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.31909</span><span class="p">,</span>
-               <span class="n">lighting</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
+<span class="n">gray_mesh</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.31909</span><span class="p">,</span>
+               <span class="n">lighting</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
                              <span class="n">diffuse</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">fresnel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
                              <span class="n">specular</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">roughness</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
                              <span class="n">facenormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
                              <span class="n">vertexnormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">),</span>
-               <span class="n">lightposition</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+               <span class="n">lightposition</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                   <span class="n">y</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
                                   <span class="n">z</span><span class="o">=</span><span class="mi">0</span>
                                  <span class="p">)</span>
                       <span class="p">);</span>
-<span class="n">csf_mesh</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.31909</span><span class="p">,</span>
-               <span class="n">lighting</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
+<span class="n">csf_mesh</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">cmin</span><span class="o">=-</span><span class="mf">3.31909</span><span class="p">,</span>
+               <span class="n">lighting</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ambient</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
                              <span class="n">diffuse</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">fresnel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
                              <span class="n">specular</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">roughness</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
                              <span class="n">facenormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span>
                              <span class="n">vertexnormalsepsilon</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">),</span>
-               <span class="n">lightposition</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+               <span class="n">lightposition</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                                   <span class="n">y</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
                                   <span class="n">z</span><span class="o">=</span><span class="mi">0</span>
                                  <span class="p">)</span>
@@ -495,78 +495,78 @@
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a figure and add the mesh object to it
-</span><span class="n">fig</span> <span class="o">=</span> <span class="nf">make_subplots</span><span class="p">(</span>
+</span><span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span>
     <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">specs</span><span class="o">=</span><span class="p">[[{</span><span class="sh">'</span><span class="s">type</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">mesh3d</span><span class="sh">'</span><span class="p">},</span> <span class="p">{</span><span class="sh">'</span><span class="s">type</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">mesh3d</span><span class="sh">'</span><span class="p">},</span> <span class="p">{</span><span class="sh">'</span><span class="s">type</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">mesh3d</span><span class="sh">'</span><span class="p">}]],</span>
+    <span class="n">specs</span><span class="o">=</span><span class="p">[[{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'mesh3d'</span><span class="p">},</span> <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'mesh3d'</span><span class="p">},</span> <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'mesh3d'</span><span class="p">}]],</span>
     <span class="n">horizontal_spacing</span><span class="o">=</span><span class="mf">0.02</span>  <span class="c1"># Adjust the spacing as needed
 </span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">white_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">gray_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">csf_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">white_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">gray_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">csf_mesh</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
 
-<span class="n">axis_settings</span> <span class="o">=</span> <span class="nf">dict</span><span class="p">(</span>
+<span class="n">axis_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">showbackground</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
     <span class="n">showgrid</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
     <span class="n">zeroline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
     <span class="n">showticklabels</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
     <span class="n">showline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="sh">""</span>
+    <span class="n">title</span><span class="o">=</span><span class="s">""</span>
 <span class="p">)</span>
 
 <span class="c1"># Add titles as 3D text
-</span><span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="nc">Scatter3d</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">white_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
-    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">white_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
-    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">max</span><span class="p">(</span><span class="n">white_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
-</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">White matter (7T)</span><span class="sh">"</span><span class="p">],</span>
-    <span class="n">mode</span><span class="o">=</span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">,</span>
+</span><span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">white_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
+    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">white_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
+    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">white_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
+</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="s">"White matter (7T)"</span><span class="p">],</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s">"text"</span><span class="p">,</span>
 <span class="p">),</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="nc">Scatter3d</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">gray_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
-    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">gray_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
-    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">max</span><span class="p">(</span><span class="n">gray_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
-</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">Gray matter (7T)</span><span class="sh">"</span><span class="p">],</span>
-    <span class="n">mode</span><span class="o">=</span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">,</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gray_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
+    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gray_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
+    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">gray_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
+</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="s">"Gray matter (7T)"</span><span class="p">],</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s">"text"</span><span class="p">,</span>
 <span class="p">),</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">.</span><span class="nf">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="nc">Scatter3d</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">csf_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
-    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">mean</span><span class="p">(</span><span class="n">csf_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
-    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nf">max</span><span class="p">(</span><span class="n">csf_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
-</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">CSF (7T)</span><span class="sh">"</span><span class="p">],</span>
-    <span class="n">mode</span><span class="o">=</span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">,</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">csf_vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])],</span>
+    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">csf_vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])],</span>
+    <span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">csf_vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">],</span>  <span class="c1"># Position above the highest point of the mesh
+</span>    <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="s">"CSF (7T)"</span><span class="p">],</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s">"text"</span><span class="p">,</span>
 <span class="p">),</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">.</span><span class="nf">update_layout</span><span class="p">(</span>
-    <span class="n">scene</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">scene</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
         <span class="n">xaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">yaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">zaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">camera</span><span class="o">=</span><span class="n">camera</span>
     <span class="p">),</span>
-    <span class="n">scene2</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span>
+    <span class="n">scene2</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
         <span class="n">xaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">yaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">zaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">camera</span><span class="o">=</span><span class="n">camera</span>
     <span class="p">),</span>
-      <span class="n">scene3</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span>
+      <span class="n">scene3</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
         <span class="n">xaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">yaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">zaxis</span><span class="o">=</span><span class="n">axis_settings</span><span class="p">,</span>
         <span class="n">camera</span><span class="o">=</span><span class="n">camera</span>
     <span class="p">),</span>
-    <span class="n">margin</span><span class="o">=</span><span class="nf">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-    <span class="n">paper_bgcolor</span><span class="o">=</span><span class="sh">'</span><span class="s">rgba(0,0,0,0)</span><span class="sh">'</span><span class="p">,</span>
-    <span class="n">plot_bgcolor</span><span class="o">=</span><span class="sh">'</span><span class="s">rgba(0,0,0,0)</span><span class="sh">'</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s">'rgba(0,0,0,0)'</span><span class="p">,</span>
+    <span class="n">plot_bgcolor</span><span class="o">=</span><span class="s">'rgba(0,0,0,0)'</span><span class="p">,</span>
     <span class="n">showlegend</span><span class="o">=</span><span class="bp">False</span>
 <span class="p">)</span>
 
-<span class="n">fig</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
-<span class="n">fig</span><span class="p">.</span><span class="nf">write_html</span><span class="p">(</span><span class="sh">'</span><span class="s">/content/drive/MyDrive/Data Science/MRI/white_gray_csf.html</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">.</span><span class="n">write_html</span><span class="p">(</span><span class="s">'/content/drive/MyDrive/Data Science/MRI/white_gray_csf.html'</span><span class="p">)</span>
 </code></pre></div></div>
 
   </article>
