@@ -20,8 +20,10 @@ group :jekyll_plugins do
     gem 'mini_racer'
     gem 'unicode_utils'
     gem 'webrick'
+    gem 'csv'
 end
 group :other_plugins do
     gem 'feedjira'
     gem 'httparty'
+    gem 'observer'  
 end

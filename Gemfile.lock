@@ -14,8 +14,9 @@ GEM
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     base64 (0.2.0)
-    bibtex-ruby (6.0.0)
+    bibtex-ruby (6.1.0)
       latex-decode (~> 0.0)
+      racc (~> 1.7)
     bigdecimal (3.1.4)
     citeproc (1.0.10)
       namae (~> 1.0)
@@ -35,6 +36,7 @@ GEM
     csl-styles (1.0.1.11)
       csl (~> 1.0)
     cssminify2 (2.0.1)
+    csv (3.3.2)
     deep_merge (1.2.2)
     drb (2.2.0)
       ruby2_keywords
@@ -50,8 +52,7 @@ GEM
     ffi (1.16.3)
     forwardable-extended (2.6.0)
     gemoji (4.1.0)
-    google-protobuf (3.25.1-arm64-darwin)
-    google-protobuf (3.25.1-x86_64-linux)
+    google-protobuf (3.25.1)
     html-pipeline (2.14.3)
       activesupport (>= 2)
       nokogiri (>= 1.4)
@@ -140,16 +141,17 @@ GEM
     matrix (0.4.2)
     mercenary (0.4.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.8)
     mini_racer (0.8.0)
       libv8-node (~> 18.16.0.0)
     minitest (5.20.0)
     multi_xml (0.6.0)
     mutex_m (0.2.0)
     namae (1.1.1)
-    nokogiri (1.15.5-arm64-darwin)
+    nokogiri (1.15.5)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.15.5-x86_64-linux)
-      racc (~> 1.4)
+    observer (0.1.2)
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
     public_suffix (5.0.4)
@@ -178,10 +180,12 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  arm64-darwin-24
   x86_64-linux
 
 DEPENDENCIES
   classifier-reborn
+  csv
   feedjira
   httparty
   jekyll
@@ -201,6 +205,7 @@ DEPENDENCIES
   jekyll-twitter-plugin
   jemoji
   mini_racer
+  observer
   unicode_utils
   webrick
 
