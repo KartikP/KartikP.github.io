@@ -1,4 +1,8 @@
 source 'https://rubygems.org'
+
+# Add rake at the top level
+gem 'rake'
+
 group :jekyll_plugins do
     gem 'classifier-reborn'
     gem 'jekyll'
