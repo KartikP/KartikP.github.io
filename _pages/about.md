@@ -7,7 +7,7 @@ subtitle: NeuroAI Research Scientist @ MIT Quest for Intelligence
 profile:
   align: right
   image: about_picture/site-logo.png
-  image_circular: false # crops the image to make it circular
+  image_circular: true # crops the image to make it circular
 
 
 news: false  # includes a list of news items
