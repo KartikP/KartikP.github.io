@@ -18,7 +18,7 @@ social: false  # includes social icons at the bottom of the page
 
 #### About
 
-`Computational neuroscientist` currently working on [Brain-Score](https://www.brain-score.org), a platform for evaluating how brain-like artificial intelligent systems are, at [MIT Quest for Intelligence](https://quest.mit.edu).
+`Computational neuroscientist` currently building [software](https://www.brain-score.org) to understand how brain-like artificial intelligent systems are, at [MIT Quest for Intelligence](https://quest.mit.edu).
 <br><br>
 I recently completed my doctorate in Neuroscience at [Western University](https://www.uwo.ca) where I was co-supervised by Dr. Julio Martinez-Trujillo and Dr. Lyle Muller. My research investigated the development of microcircuits in stem cell-derived neuronal networks using [multielectrode arrays (MEAs)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8868577/) and spiking network modeling. This work involved excitating collaborations with The Hospital for Sick Children and The Salk Institute for Biological Studies. Towards the end of my PhD, I founded [Neurocyte Bioinformatics](https://www.neurocyte.io) (no longer active), a contract research organization that specialized in developing MEA software pipelines and providing consulting for molecular biology labs. Previously, I also completed my BSc with an Honors Double Major in Genetics and Physiology at Western University with an emphasis on neurophysiology. 
 <br><br>
