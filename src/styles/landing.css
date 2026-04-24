@@ -375,3 +375,17 @@
 .wit-body p:last-child { margin-bottom: 0; }
 .wit-body strong { font-weight: 600; color: var(--dark-fg); }
 .wit-body em { color: var(--dark-fg); font-style: italic; }
+
+.wit-body a {
+  color: var(--dark-fg);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-color: rgba(245, 245, 244, 0.5);
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 150ms ease;
+}
+.wit-body a:hover,
+.wit-body a:focus-visible {
+  text-decoration-color: var(--dark-fg);
+  outline: none;
+}
