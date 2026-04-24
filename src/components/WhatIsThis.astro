@@ -1,0 +1,68 @@
+---
+// Small "What is this?" button that opens a native <dialog> explaining
+// the neural raster simulation on the landing page.
+---
+
+<button type="button" class="wit-button" aria-haspopup="dialog" data-wit-open>
+  <span class="wit-mark" aria-hidden="true">?</span>
+  <span class="wit-label">What is this</span>
+</button>
+
+<dialog class="wit-dialog" aria-labelledby="wit-title">
+  <div class="wit-inner">
+    <div class="wit-header">
+      <h2 id="wit-title">What is this?</h2>
+      <button type="button" class="wit-close" aria-label="Close" data-wit-close>×</button>
+    </div>
+
+    <div class="wit-body">
+      <p>
+        The animation behind this page is a live simulation of 1,000 neurons
+        arranged as a <strong>population raster plot</strong> — each row is
+        a neuron, each dot is a spike, and time runs right to left.
+      </p>
+
+      <p>
+        Each neuron has a <em>preferred direction</em>. Move your cursor and the
+        neurons whose tuning matches the direction of motion fire more than
+        the rest.
+      </p>
+
+      <p>
+        <strong>Click and hold anywhere</strong> to trigger a
+        <em>Reverberating Super Burst</em> — a coordinated wave of activity
+        that ripples across the population. RSBs show up in cultures of
+        stem-cell-derived neurons during early development, and are
+        hypothesized to strengthen network connections as neurons wire
+        together.
+      </p>
+
+      <p>
+        The strip at the bottom is the summed population firing rate — a
+        rough stand-in for a local field potential (LFP). Watch it spike
+        when an RSB fires.
+      </p>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline>
+  (function () {
+    const btn = document.querySelector("[data-wit-open]");
+    const dialog = document.querySelector(".wit-dialog");
+    const closeBtn = document.querySelector("[data-wit-close]");
+    if (!btn || !dialog) return;
+
+    btn.addEventListener("click", () => {
+      if (typeof dialog.showModal === "function") dialog.showModal();
+      else dialog.setAttribute("open", "");
+    });
+
+    closeBtn?.addEventListener("click", () => dialog.close());
+
+    // Click outside the inner panel (on the backdrop) closes the dialog.
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  })();
+</script>

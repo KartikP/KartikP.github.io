@@ -1,0 +1,33 @@
+---
+import { getCollection, render } from "astro:content";
+import LightLayout from "../../layouts/LightLayout.astro";
+
+export async function getStaticPaths() {
+  const pubs = await getCollection("publications", ({ data }) => !data.draft);
+  return pubs.map((pub) => ({
+    params: { slug: pub.id },
+    props: { pub },
+  }));
+}
+
+const { pub } = Astro.props;
+const { Content } = await render(pub);
+---
+
+<LightLayout title={pub.data.title} section="Publications" wide>
+  <h1 class="page-title">{pub.data.title}</h1>
+  <p class="page-subtitle">
+    {pub.data.authors} · <em>{pub.data.venue}</em> · {pub.data.year}
+    {pub.data.doi && <> · <a href={`https://doi.org/${pub.data.doi}`} target="_blank" rel="noopener">doi:{pub.data.doi}</a></>}
+    {pub.data.url && <> · <a href={pub.data.url} target="_blank" rel="noopener">Link</a></>}
+    {pub.data.pdf && <> · <a href={pub.data.pdf} target="_blank" rel="noopener">PDF</a></>}
+  </p>
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <p style="margin-top: 3rem;">
+    <a href="/publications" class="entry-meta" style="text-decoration: underline; text-underline-offset: 0.25em;">← All publications</a>
+  </p>
+</LightLayout>

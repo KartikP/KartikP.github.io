@@ -1,0 +1,11 @@
+---
+title: Wide spectrum of neuronal and network phenotypes in human stem cell-derived excitatory neurons with Rett syndrome-associated MECP2 mutations
+authors: "R. S. Mok, W. Zhang, T. I. Sheikh, K. S. Pradeepan, I. R. Fernandes, L. C. DeJong, G. Benigno, M. R. Hildebrandt, M. Mufteev, D. C. Rodrigues, others"
+venue: Translational Psychiatry
+year: 2022
+doi: 10.1038/s41398-022-02216-1
+url: "https://www.nature.com/articles/s41398-022-02216-1"
+---
+## Abstract
+
+Rett syndrome (RTT) is a severe neurodevelopmental disorder primarily caused by heterozygous loss-of-function mutations in the X-linked gene MECP2 that is a global transcriptional regulator. Mutations in the methyl-CpG binding domain (MBD) of MECP2 disrupt its interaction with methylated DNA. Here, we investigate the effect of a novel MECP2 L124W missense mutation in the MBD of an atypical RTT patient with preserved speech in comparison to severe MECP2 null mutations. L124W protein had a limited ability to disrupt heterochromatic chromocenters due to decreased binding dynamics. We isolated two pairs of isogenic WT and L124W induced pluripotent stem cells. L124W induced excitatory neurons expressed stable protein, exhibited increased input resistance and decreased voltage-gated Na+ and K+ currents, and their neuronal dysmorphology was limited to decreased dendritic complexity. Three isogenic pairs of MECP2 null neurons had the expected more extreme morphological and electrophysiological phenotypes. We examined development and maturation of L124W and MECP2 null excitatory neural network activity using micro-electrode arrays. Relative to isogenic controls, L124W neurons had an increase in synchronous network burst frequency, in contrast to MECP2 null neurons that suffered a significant decrease in synchronous network burst frequency and a transient extension of network burst duration. A biologically motivated computational neural network model shows the observed changes in network dynamics are explained by changes in intrinsic Na+ and K+ currents in individual neurons. Our multilevel results demonstrate that RTT excitatory neurons show a wide spectrum of morphological, electrophysiological and circuitry phenotypes that are dependent on the severity of the MECP2 mutation.

@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import LightLayout from "../../layouts/LightLayout.astro";
+
+const projects = (await getCollection("projects", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "short" });
+---
+
+<LightLayout title="Projects" section="Projects">
+  <h1 class="page-title">Projects</h1>
+  <p class="page-subtitle">Selected work and prototypes.</p>
+
+  {projects.length === 0 ? (
+    <p class="entry-empty">No projects yet. Drop a <code>.md</code> file in <code>src/content/projects/</code> to add one.</p>
+  ) : (
+    <ul class="entry-list">
+      {projects.map((project) => (
+        <li>
+          <a href={`/projects/${project.id}`}>
+            <div>
+              <div class="entry-title">{project.data.title}</div>
+              {project.data.description && <div class="entry-desc">{project.data.description}</div>}
+            </div>
+            <time class="entry-meta" datetime={project.data.date.toISOString()}>
+              {fmt(project.data.date)}
+            </time>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</LightLayout>

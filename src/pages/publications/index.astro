@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import LightLayout from "../../layouts/LightLayout.astro";
+
+const pubs = (await getCollection("publications", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.year - a.data.year);
+---
+
+<LightLayout title="Publications" section="Publications">
+  <h1 class="page-title">Publications</h1>
+  <p class="page-subtitle">Peer-reviewed work.</p>
+
+  {pubs.length === 0 ? (
+    <p class="entry-empty">No publications yet. Drop a <code>.md</code> file in <code>src/content/publications/</code> to add one.</p>
+  ) : (
+    <ul class="entry-list">
+      {pubs.map((pub) => (
+        <li>
+          <a href={`/publications/${pub.id}`}>
+            <div>
+              <div class="entry-title">{pub.data.title}</div>
+              <div class="entry-desc">{pub.data.authors} · <em>{pub.data.venue}</em></div>
+            </div>
+            <span class="entry-meta">{pub.data.year}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</LightLayout>

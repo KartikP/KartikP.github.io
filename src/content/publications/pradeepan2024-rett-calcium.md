@@ -1,0 +1,11 @@
+---
+title: Calcium dependent hyperexcitability in human stem cell derived Rett syndrome neuronal networks
+authors: "K. S. Pradeepan, F. P. McCready, W. Wei, M. Khaki, W. Zhang, M. W. Salter, J. Ellis, J. Martinez-Trujillo"
+venue: Biological Psychiatry Global Open Science
+year: 2024
+doi: 10.1016/j.bpsgos.2024.100290
+url: "https://www.sciencedirect.com/science/article/pii/S266717432400003X"
+---
+## Abstract
+
+Background: Mutations in MECP2 predominantly cause Rett syndrome (RTT) and can be modelled in vitro using human stem cell-derived neurons. RTT patients have signs of cortical hyperexcitability, such as seizures. Human stem cell-derived MECP2 null excitatory neurons have smaller soma size and reduced synaptic connectivity but are also hyperexcitable due to higher input resistance. Paradoxically, networks of MECP2 null neurons show a decrease in the frequency of network bursts consistent with a hypoconnectivity phenotype. Here, we examine this issue. Methods:We reanalyzed multielectrode array data from 3 isogenic MECP2 cell line pairs recorded over six weeks (n=144). We employed a custom burst detection algorithm to analyze network events and isolated a phenomenon we termed reverberating super bursts (RSBs). To probe potential mechanisms of RSBs, we conducted pharmacological manipulations using bicuculline, EGTA-AM, and DMSO on one cell line (n=34). Results: RSBs, often misidentified as single long-duration bursts, consisted of a large amplitude initial burst followed by several high-frequency, low-amplitude mini-bursts. Our analysis revealed that MECP2 null networks exhibited increased frequency of RSBs, which produced increased bursts compared to isogenic controls. Bicuculline or DMSO treatment did not affect RSBs. EGTA-AM selectively eliminated RSBs and rescued network burst dynamics. Conclusions: During early development, MECP2 null neurons are hyperexcitable and produce hyperexcitable networks. This may predispose them to the emergence of hyper-synchronic states that potentially translate into seizures. Network hyperexcitability depends on asynchronous neurotransmitter release likely driven by pre-synaptic Ca2+ and can be rescued by EGTA-AM to restore typical network dynamics.

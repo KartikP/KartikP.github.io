@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from "astro:content";
+import LightLayout from "../../layouts/LightLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<LightLayout title={post.data.title} section="Posts" description={post.data.description} wide>
+  <h1 class="page-title">{post.data.title}</h1>
+  <p class="page-subtitle">
+    <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
+  </p>
+
+  {post.data.brainbrowser && (
+    <div class="brainbrowser-embed">
+      <p class="brainbrowser-caption">MRI slicer — may take a moment to load.</p>
+      <script src="/assets/brainbrowser/brainbrowser.volume-viewer.min.js" is:inline></script>
+      <div class="brainBrowserWrapper" id="brainBrowserWrapper"></div>
+      <script id="volume-ui-template" type="x-volume-ui-template" is:inline><div class="volume-viewer-display"></div></script>
+      <script src="/assets/js/brain.js" is:inline></script>
+    </div>
+  )}
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <p style="margin-top: 3rem;">
+    <a href="/posts" class="entry-meta" style="text-decoration: underline; text-underline-offset: 0.25em;">← All posts</a>
+  </p>
+</LightLayout>

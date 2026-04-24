@@ -1,0 +1,69 @@
+---
+import "../styles/global.css";
+import "../styles/content.css";
+import { site } from "../config/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  section?: string;
+  wide?: boolean;
+}
+
+const {
+  title,
+  description = site.hero,
+  wide = false,
+} = Astro.props;
+
+const pageTitle = title ? `${title} — ${site.name}` : `${site.name}`;
+const shellClass = wide ? "content-shell wide" : "content-shell";
+
+// Build breadcrumb trail from the URL path.
+//   /overview              -> HOME / OVERVIEW
+//   /posts                 -> HOME / POSTS
+//   /posts/my-brain        -> HOME / POSTS /        (trailing slash = at leaf)
+//   /projects/brt          -> HOME / PROJECTS /
+const segments = Astro.url.pathname.split("/").filter(Boolean);
+const topSeg = segments[0];
+const isAtLeaf = segments.length >= 2;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light" />
+    <title>{pageTitle}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="content">
+    <div class={shellClass}>
+      <header class="content-header">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/" class="crumb crumb-home">← {site.name}</a>
+          {topSeg && (
+            <>
+              <span class="crumb-sep" aria-hidden="true">/</span>
+              {isAtLeaf ? (
+                <a href={`/${topSeg}`} class="crumb">{topSeg.toUpperCase()}</a>
+              ) : (
+                <span class="crumb crumb-current" aria-current="page">{topSeg.toUpperCase()}</span>
+              )}
+              {isAtLeaf && <span class="crumb-sep" aria-hidden="true">/</span>}
+            </>
+          )}
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="content-footer">
+        <span>© {new Date().getFullYear()} {site.name}</span>
+        <a href={site.social.github} target="_blank" rel="noopener">GitHub</a>
+      </footer>
+    </div>
+  </body>
+</html>

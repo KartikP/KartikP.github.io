@@ -1,0 +1,377 @@
+/* Landing page: dark portal with neural raster background + bold nav overlay. */
+
+.landing {
+  background: var(--dark-bg);
+  color: var(--dark-fg);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+/* --- Neural raster background --- */
+#neural-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--dark-bg);
+  pointer-events: none;
+}
+
+/* Wraps the raster canvas + its overlays so the vignette/dim gradients
+   are scoped to this region only, never bleeding over the LFP strip. */
+#neural-bg .raster-layer {
+  flex: 1 1 0;
+  min-height: 0;
+  position: relative;
+  width: 100%;
+}
+
+#neural-bg #rasterCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#neural-bg #lfpCanvas {
+  flex: 0 0 5%;
+  min-height: 40px;
+  max-height: 64px;
+  width: 100%;
+  display: block;
+  background: var(--dark-bg-soft);
+  border-top: 1px solid var(--dark-rule);
+}
+
+.raster-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+/* Soft radial dimmer in the nav region — sits behind the text, dims the
+   raster just enough to let thin type read cleanly. Positioned on the
+   left-center where the nav list lives. */
+.raster-nav-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 55% 65% at 28% 50%,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.35) 35%,
+    transparent 75%
+  );
+}
+
+@media (max-width: 640px) {
+  .raster-nav-dim {
+    background: radial-gradient(
+      ellipse 90% 55% at 50% 55%,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      transparent 85%
+    );
+  }
+}
+
+/* Hidden DOM nodes required by raster JS but visually suppressed. */
+.raster-bridge {
+  position: absolute !important;
+  left: -9999px;
+  top: -9999px;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* --- Overlay shell --- */
+.landing-shell {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(20px, 3vw, 40px) clamp(24px, 6vw, 96px);
+  pointer-events: none;
+}
+
+.landing-shell a,
+.landing-shell button,
+.landing-shell select {
+  pointer-events: auto;
+}
+
+.landing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dark-fg);
+  text-shadow: var(--text-halo);
+}
+
+.landing-header .kp-mark {
+  color: var(--dark-fg);
+}
+
+.landing-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dark-fg);
+  text-shadow: var(--text-halo);
+}
+
+.landing-footer a:hover { color: var(--dark-fg); }
+
+/* --- Middle column: hero paragraph + nav list, vertically centered --- */
+.landing-middle {
+  align-self: center;
+  justify-self: start;
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 5vw, 64px);
+}
+
+/* --- Hero description (above the nav) --- */
+.landing-hero {
+  max-width: 56ch;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.3vw, 18px);
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  color: var(--dark-fg);
+  opacity: 0.78;
+  text-shadow: var(--text-halo);
+  text-wrap: pretty;
+}
+
+/* --- The nav list (the star of the show) --- */
+.landing-nav {
+  max-width: 900px;
+  width: 100%;
+}
+
+.landing-nav ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 4vw, 52px);
+}
+
+.landing-nav a {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: 24px;
+  align-items: baseline;
+  padding: 4px 0;
+  transition: transform 200ms ease, color 200ms ease;
+  will-change: transform;
+}
+
+.landing-nav a:hover,
+.landing-nav a:focus-visible {
+  outline: none;
+  transform: translateX(8px);
+}
+
+.landing-nav a:focus-visible .nav-title {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 2px;
+}
+
+.nav-title {
+  grid-column: 1;
+  grid-row: 1;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(40px, 6.5vw, 88px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--dark-fg);
+  text-shadow: var(--text-halo-strong);
+}
+
+.nav-sub {
+  grid-column: 1;
+  grid-row: 2;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--dark-fg);
+  text-shadow: var(--text-halo);
+}
+
+.nav-idx {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--dark-fg);
+  align-self: start;
+  padding-top: 8px;
+  text-shadow: var(--text-halo);
+}
+
+/* --- Responsive tweaks --- */
+@media (max-width: 640px) {
+  .landing-shell {
+    padding: 20px;
+  }
+  .landing-nav ol {
+    gap: 28px;
+  }
+  .nav-title {
+    font-size: clamp(34px, 10vw, 56px);
+  }
+  .nav-sub {
+    font-size: 11px;
+  }
+}
+
+/* Respect reduced-motion users: disable raster hover lift */
+@media (prefers-reduced-motion: reduce) {
+  .landing-nav a:hover { transform: none; }
+}
+
+/* ------------ "What is this?" button + dialog ------------ */
+
+.wit-button {
+  position: fixed;
+  bottom: clamp(16px, 3vw, 32px);
+  right: clamp(16px, 3vw, 32px);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 10px;
+  background: rgba(15, 15, 20, 0.65);
+  color: var(--dark-fg);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  pointer-events: auto;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  text-shadow: var(--text-halo);
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.wit-button:hover,
+.wit-button:focus-visible {
+  background: rgba(30, 30, 40, 0.85);
+  border-color: rgba(255, 255, 255, 0.35);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.wit-button .wit-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.wit-dialog {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--dark-fg);
+  max-width: min(560px, 92vw);
+  max-height: 85vh;
+  border-radius: 10px;
+}
+
+.wit-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.wit-inner {
+  background: #0e0e12;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 28px 32px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.wit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wit-header h2 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+
+.wit-close {
+  background: none;
+  border: none;
+  color: var(--dark-fg);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  opacity: 0.6;
+  transition: opacity 150ms ease;
+}
+.wit-close:hover { opacity: 1; }
+
+.wit-body {
+  font-family: var(--font-text);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--dark-fg);
+  opacity: 0.92;
+}
+
+.wit-body p { margin: 0 0 1em; }
+.wit-body p:last-child { margin-bottom: 0; }
+.wit-body strong { font-weight: 600; color: var(--dark-fg); }
+.wit-body em { color: var(--dark-fg); font-style: italic; }

@@ -1,0 +1,41 @@
+---
+import DarkLayout from "../layouts/DarkLayout.astro";
+import NeuralRaster from "../components/NeuralRaster.astro";
+import WhatIsThis from "../components/WhatIsThis.astro";
+import { site, nav } from "../config/site";
+---
+
+<DarkLayout>
+  <NeuralRaster />
+  <WhatIsThis />
+
+  <div class="landing-shell">
+    <header class="landing-header">
+      <span class="kp-mark">{site.name}</span>
+      <span>{site.tagline}</span>
+    </header>
+
+    <div class="landing-middle">
+      <p class="landing-hero">{site.hero}</p>
+
+      <nav class="landing-nav" aria-label="Main">
+        <ol>
+          {nav.map((item, i) => (
+            <li>
+              <a href={item.href}>
+                <span class="nav-title">{item.title}</span>
+                <span class="nav-sub">{item.subtitle}</span>
+                <span class="nav-idx">{String(i + 1).padStart(2, "0")}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </div>
+
+    <footer class="landing-footer">
+      <span>© {new Date().getFullYear()}</span>
+      <a href={site.social.github} target="_blank" rel="noopener">GitHub</a>
+    </footer>
+  </div>
+</DarkLayout>

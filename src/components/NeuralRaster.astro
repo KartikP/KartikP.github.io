@@ -1,0 +1,34 @@
+---
+// Mounts the neural raster as a full-bleed fixed background.
+// The raster JS lives in /public/raster/js/ and is loaded as an ES module.
+// The hidden .raster-bridge nodes are DOM elements the raster JS expects
+// (stat readouts, scheme select, minimap) — we keep them off-screen.
+---
+
+<div id="neural-bg" aria-hidden="true">
+  <div class="raster-layer">
+    <canvas id="rasterCanvas"></canvas>
+    <div class="raster-vignette"></div>
+    <div class="raster-nav-dim"></div>
+  </div>
+  <canvas id="lfpCanvas"></canvas>
+
+  <div class="raster-bridge">
+    <div id="pulse" class="pulse-dot"></div>
+    <span id="stat-status"></span>
+    <span id="stat-pop"></span>
+    <span id="stat-dir"></span>
+    <span id="stat-count"></span>
+    <select id="colorScheme">
+      <option value="greyscale" selected>Greyscale</option>
+      <option value="bone">Bone</option>
+      <option value="green">Green</option>
+      <option value="rainbow">Rainbow</option>
+      <option value="viridis">Viridis</option>
+      <option value="magma">Magma</option>
+    </select>
+    <canvas id="minimapCanvas" width="110" height="110"></canvas>
+  </div>
+</div>
+
+<script type="module" src="/raster/js/main.js"></script>

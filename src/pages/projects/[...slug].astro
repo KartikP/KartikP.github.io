@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from "astro:content";
+import LightLayout from "../../layouts/LightLayout.astro";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects", ({ data }) => !data.draft);
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long" });
+---
+
+<LightLayout title={project.data.title} section="Projects" description={project.data.description} wide>
+  <h1 class="page-title">{project.data.title}</h1>
+  <p class="page-subtitle">
+    <time datetime={project.data.date.toISOString()}>{fmt(project.data.date)}</time>
+    {project.data.url && <> · <a href={project.data.url} target="_blank" rel="noopener">Live</a></>}
+    {project.data.repo && <> · <a href={project.data.repo} target="_blank" rel="noopener">Repo</a></>}
+  </p>
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <p style="margin-top: 3rem;">
+    <a href="/projects" class="entry-meta" style="text-decoration: underline; text-underline-offset: 0.25em;">← All projects</a>
+  </p>
+</LightLayout>

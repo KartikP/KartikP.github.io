@@ -1,0 +1,30 @@
+---
+import LightLayout from "../layouts/LightLayout.astro";
+import { site } from "../config/site";
+---
+
+<LightLayout title="Overview" section="Overview">
+  <h1 class="page-title">Overview</h1>
+  <p class="page-subtitle">A quiet entry point.</p>
+
+  <div class="prose">
+    <p>
+      I'm {site.name}, a computational neuroscientist. I study how populations of neurons
+      represent and transform information — what they compute, how they coordinate, and what
+      we can learn about cognition by building models that try to do the same.
+    </p>
+
+    <p>
+      This site is a small, slow-growing archive: a few <a href="/posts">posts</a>,
+      the <a href="/projects">projects</a> I'm actively working on, and
+      the <a href="/publications">publications</a> I've contributed to. The background on
+      the landing page is a live raster plot of a simulated neural population — move your
+      mouse and watch it respond to direction.
+    </p>
+
+    <p>
+      Reach me at <a href={`mailto:${site.email}`}>{site.email}</a> or on
+      <a href={site.social.github} target="_blank" rel="noopener">GitHub</a>.
+    </p>
+  </div>
+</LightLayout>
