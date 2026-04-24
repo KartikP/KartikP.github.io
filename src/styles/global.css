@@ -1,3 +1,41 @@
+/* Critical raster layout — must live here rather than in landing.css because
+   global.css is loaded by every layout. landing.css is only needed by
+   DarkLayout, and Astro's ClientRouter can fail to re-apply it quickly
+   enough on a return navigation, causing the canvases to render with
+   default browser styles (stretched LFP, zero-height raster layer). Keeping
+   these rules here removes that race entirely; landing.css handles only
+   the cosmetic overlays (vignette, nav dim, backgrounds). */
+#neural-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  background: #050507;
+  pointer-events: none;
+}
+
+#neural-bg .raster-layer {
+  flex: 1 1 0;
+  min-height: 0;
+  position: relative;
+  width: 100%;
+}
+
+#neural-bg #rasterCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#neural-bg #lfpCanvas {
+  flex: 0 0 5%;
+  min-height: 40px;
+  max-height: 64px;
+  width: 100%;
+  display: block;
+}
+
 /* Design tokens — edit in one place. */
 :root {
   /* Dark landing palette */
@@ -70,4 +108,55 @@ img, svg, canvas, video { display: block; max-width: 100%; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* -------- View Transition slide animations --------
+   Astro sets data-astro-transition="forward"|"back" on <html> during
+   a navigation. TransitionDirection.astro overrides Astro's default
+   (history-based) direction with a URL-depth-based one so breadcrumb
+   "back" clicks slide backwards even though they're forward nav in
+   the browser's history. Sibling navigation (same depth) leaves the
+   attribute at Astro's default and uses the normal cross-fade. */
+
+@keyframes nav-slide-out-left {
+  from { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(-40px); opacity: 0; }
+}
+@keyframes nav-slide-in-right {
+  from { transform: translateX(40px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes nav-slide-out-right {
+  from { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(40px); opacity: 0; }
+}
+@keyframes nav-slide-in-left {
+  from { transform: translateX(-40px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+[data-astro-transition="forward"]::view-transition-old(root) {
+  animation-name: nav-slide-out-left;
+  animation-duration: 240ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+[data-astro-transition="forward"]::view-transition-new(root) {
+  animation-name: nav-slide-in-right;
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+[data-astro-transition="back"]::view-transition-old(root) {
+  animation-name: nav-slide-out-right;
+  animation-duration: 240ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+[data-astro-transition="back"]::view-transition-new(root) {
+  animation-name: nav-slide-in-left;
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
 }

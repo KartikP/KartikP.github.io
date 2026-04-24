@@ -48,6 +48,11 @@ export function createRenderer(dom, neurons, getScheme) {
         const lH = lCanvas.offsetHeight;
         if (!w || !rH || !lH) return; // layout not ready yet
 
+        // Idempotent: if nothing changed, skip. Setting canvas.width clears
+        // the drawing buffer, so re-running a no-op resize during the tick
+        // loop would wipe accumulated raster history.
+        if (w === width && rH === rHeight && lH === lHeight) return;
+
         width = w;
         rHeight = rCanvas.height = rH;
         lHeight = lCanvas.height = lH;
@@ -69,8 +74,9 @@ export function createRenderer(dom, neurons, getScheme) {
     // ResizeObserver fires on the actual canvas boxes — covers the initial
     // layout settle as well as any later resize from CSS (container changes,
     // font loads, etc.).
+    let ro = null;
     if (typeof ResizeObserver !== 'undefined') {
-        const ro = new ResizeObserver(() => resize());
+        ro = new ResizeObserver(() => resize());
         ro.observe(rCanvas);
         ro.observe(lCanvas);
     }
@@ -78,6 +84,9 @@ export function createRenderer(dom, neurons, getScheme) {
     resize();
     // If the first call raced layout, try again on the next frame.
     requestAnimationFrame(resize);
+
+    let rafHandle = null;
+    let stopped = false;
 
     function tick() {
         updateSmoothing();
@@ -214,8 +223,16 @@ export function createRenderer(dom, neurons, getScheme) {
         // Minimap
         drawMinimap(mCtx, cs, inputState.smoothAngle, inputState.movementIntensity);
 
-        requestAnimationFrame(tick);
+        if (!stopped) rafHandle = requestAnimationFrame(tick);
     }
 
-    return { tick, resize };
+    function stop() {
+        stopped = true;
+        if (rafHandle) cancelAnimationFrame(rafHandle);
+        rafHandle = null;
+        window.removeEventListener('resize', resize);
+        if (ro) ro.disconnect();
+    }
+
+    return { tick, resize, stop };
 }

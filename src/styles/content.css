@@ -183,6 +183,51 @@ a.crumb:focus-visible {
   display: none !important;
 }
 
+/* --- Expandable term: hover/tap to reveal an inline list of project links --- */
+.prose .term {
+  font: inherit;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
+  color: inherit;
+  cursor: help;
+  font-weight: 600;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--light-fg-muted);
+  transition: text-decoration-color 150ms ease;
+}
+.prose .term:hover,
+.prose .term:focus-visible {
+  outline: none;
+  text-decoration-color: var(--light-fg);
+}
+
+.prose .term-list {
+  font-weight: 400;
+  font-size: 0.95em;
+  color: var(--light-fg-muted);
+  display: none;
+}
+
+.prose .term:hover .term-list,
+.prose .term:focus-visible .term-list,
+.prose .term.is-open .term-list {
+  display: inline;
+}
+
+.prose .term-list a {
+  color: var(--light-fg);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--light-fg-muted);
+}
+.prose .term-list a:hover {
+  text-decoration-color: var(--light-fg);
+}
+
 /* BrainBrowser volume viewer embed. */
 .brainbrowser-embed {
   margin: 1.5em 0 2.5em;

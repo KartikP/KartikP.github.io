@@ -1,0 +1,50 @@
+---
+import LightLayout from "../layouts/LightLayout.astro";
+import { site } from "../config/site";
+---
+
+<LightLayout title="About" section="About">
+  <h1 class="page-title">About</h1>
+  <p class="page-subtitle">The short version.</p>
+
+  <div class="prose">
+    <p>
+      I'm <strong>{site.name}</strong>. Currently building
+      <a href="https://www.brain-score.org" target="_blank" rel="noopener">software</a>
+      to quantify how brain-like artificial systems really are. Previously,
+      I completed a PhD in Neuroscience, computationally modeling the
+      development of stem cell–derived neuronal networks.
+    </p>
+
+    <p>
+      In my free time, I love to build
+      <button type="button" class="term" aria-expanded="false">software<span class="term-list" aria-hidden="true"> (<a href="/projects/brt">BRT</a>, <a href="/projects/neurocyte-database-pipeline">Neurocyte</a>, <a href="/projects/rtt-fcnn">RTT&#x2011;FCNN</a>)</span></button>
+      and
+      <button type="button" class="term" aria-expanded="false">hardware<span class="term-list" aria-hidden="true"> (more coming soon)</span></button>
+      projects, and stay active.
+    </p>
+
+    <p>
+      Reach me at <a href={`mailto:${site.email}`}>{site.email}</a> or on
+      <a href={site.social.github} target="_blank" rel="noopener">GitHub</a>.
+    </p>
+  </div>
+</LightLayout>
+
+<script>
+  // Click / tap toggle — supports touch devices where :hover doesn't apply.
+  // Sets .is-open and mirrors aria-expanded for assistive tech.
+  function bindTerms() {
+    document.querySelectorAll<HTMLButtonElement>(".term").forEach((btn) => {
+      if ((btn as any).__termBound) return;
+      (btn as any).__termBound = true;
+      btn.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).tagName === "A") return;
+        const open = btn.classList.toggle("is-open");
+        btn.setAttribute("aria-expanded", String(open));
+      });
+    });
+  }
+  bindTerms();
+  document.addEventListener("astro:page-load", bindTerms);
+</script>

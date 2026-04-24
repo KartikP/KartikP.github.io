@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import "../styles/landing.css";
+import { ClientRouter } from "astro:transitions";
+import TransitionDirection from "../components/TransitionDirection.astro";
 import { site } from "../config/site";
 
 interface Props {
@@ -23,6 +25,8 @@ const {
     <meta name="color-scheme" content="dark" />
     <title>{title}</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <ClientRouter />
+    <TransitionDirection />
   </head>
   <body class="landing">
     <slot />

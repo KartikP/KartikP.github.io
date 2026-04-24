@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import "../styles/content.css";
+import { ClientRouter } from "astro:transitions";
+import TransitionDirection from "../components/TransitionDirection.astro";
 import { site } from "../config/site";
 
 interface Props {
@@ -20,7 +22,7 @@ const pageTitle = title ? `${title} — ${site.name}` : `${site.name}`;
 const shellClass = wide ? "content-shell wide" : "content-shell";
 
 // Build breadcrumb trail from the URL path.
-//   /overview              -> HOME / OVERVIEW
+//   /about                 -> HOME / ABOUT
 //   /posts                 -> HOME / POSTS
 //   /posts/my-brain        -> HOME / POSTS /        (trailing slash = at leaf)
 //   /projects/brt          -> HOME / PROJECTS /
@@ -38,6 +40,8 @@ const isAtLeaf = segments.length >= 2;
     <meta name="color-scheme" content="light" />
     <title>{pageTitle}</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <ClientRouter />
+    <TransitionDirection />
   </head>
   <body class="content">
     <div class={shellClass}>

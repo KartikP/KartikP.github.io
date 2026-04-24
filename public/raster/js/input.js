@@ -15,7 +15,11 @@ function handleMove(dx, dy) {
     s.movementAngle = Math.atan2(dy, dx);
 }
 
+let inputBound = false;
 export function bindInputEvents() {
+    if (inputBound) return; // idempotent — survives View Transition re-inits
+    inputBound = true;
+
     window.addEventListener('mousemove', (e) => {
         const dx = e.clientX - inputState.lastX;
         const dy = e.clientY - inputState.lastY;

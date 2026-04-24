@@ -1,0 +1,32 @@
+---
+// Overrides Astro's automatic nav direction (which is based on browser
+// history order) with a URL-depth-based one. This way clicking the
+// breadcrumb "← Home" from a deeper page slides the "back" way even
+// though it's a link click, not the browser back button.
+//
+// After this runs, Astro sets `data-astro-transition="forward"|"back"`
+// on <html>, and CSS keyframes in global.css pick the right slide.
+---
+
+<script is:inline>
+  (function () {
+    if (window.__navDirectionBound) return;
+    window.__navDirectionBound = true;
+
+    function depthOf(pathname) {
+      return pathname.replace(/\/+$/, "").split("/").filter(Boolean).length;
+    }
+
+    document.addEventListener("astro:before-preparation", function (e) {
+      try {
+        const fromDepth = depthOf(new URL(e.from).pathname);
+        const toDepth = depthOf(new URL(e.to).pathname);
+        if (toDepth > fromDepth) e.direction = "forward";
+        else if (toDepth < fromDepth) e.direction = "back";
+        // Same depth (sibling nav): leave Astro's default.
+      } catch (_) {
+        /* fall through to Astro's default direction */
+      }
+    });
+  })();
+</script>

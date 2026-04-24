@@ -95,7 +95,10 @@ export function rsbTick(rowCount) {
     return 0;
 }
 
+let rsbBound = false;
 export function bindRsbEvents(rowCount) {
+    if (rsbBound) return; // idempotent — survives View Transition re-inits
+    rsbBound = true;
     window.addEventListener('mousedown', (e) => { if (e.button === 0) rsbStart(rowCount); });
     window.addEventListener('mouseup', (e) => { if (e.button === 0) rsbRelease(); });
     window.addEventListener('touchstart', () => rsbStart(rowCount));
