@@ -1,6 +1,7 @@
 import { SPEED, LFP_HISTORY_MAX } from './config.js';
 import { inputState, updateSmoothing } from './input.js';
 import { rsbState, rsbTick } from './rsb.js';
+import { learningTick, learningFiringRate, learningIsBurstActive } from './learning.js';
 import { drawMinimap } from './minimap.js';
 
 function angleToDeg(rad) {
@@ -92,6 +93,10 @@ export function createRenderer(dom, neurons, getScheme) {
         // RSB state machine
         const rsbFiringProb = rsbTick(rowCount);
 
+        // Learned / spontaneous-network-burst state — evolves with RSB count.
+        learningTick(rowCount, rsbState.phase);
+        const inLearnedBurst = learningIsBurstActive();
+
         // Spikes
         let totalSpikes = 0;
         const rowStep = rHeight / rowCount;
@@ -105,6 +110,7 @@ export function createRenderer(dom, neurons, getScheme) {
             const evokedRate = (inputState.movementIntensity * 0.003) * tuningEffect;
 
             const rsbRate = (rsbFiringProb > 0 && rsbState.neuronMask[i]) ? rsbFiringProb : 0;
+            const learnRate = inLearnedBurst ? learningFiringRate(i) : 0;
 
             if (n.isPersistent) {
                 const drive = evokedRate * 1.5;
@@ -121,18 +127,19 @@ export function createRenderer(dom, neurons, getScheme) {
                 p = n.burstProb;
                 n.burstRemaining--;
             } else {
-                p = n.baseExcitability + evokedRate + rsbRate + (n.isPersistent ? n.residual : 0);
+                p = n.baseExcitability + evokedRate + rsbRate + learnRate + (n.isPersistent ? n.residual : 0);
             }
 
             if (Math.random() < p) {
-                if (n.isBursty && n.burstRemaining <= 0 && (evokedRate > 0.005 || n.residual > 0.005 || rsbRate > 0.05)) {
+                if (n.isBursty && n.burstRemaining <= 0 && (evokedRate > 0.005 || n.residual > 0.005 || rsbRate > 0.05 || learnRate > 0.05)) {
                     n.burstRemaining = n.burstLen;
                 }
 
                 const isEvoked = (inputState.movementIntensity > 2 && tuningEffect > 0.7)
                     || n.burstRemaining > 0
                     || (n.isPersistent && n.residual > 0.003)
-                    || rsbRate > 0;
+                    || rsbRate > 0
+                    || learnRate > 0.01;
                 const y = i * rowStep;
 
                 if (isEvoked) {
