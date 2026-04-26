@@ -1,0 +1,110 @@
+---
+import "../styles/global.css";
+import "../styles/case-study.css";
+import { ClientRouter } from "astro:transitions";
+import TransitionDirection from "../components/TransitionDirection.astro";
+import { site } from "../config/site";
+
+interface TocEntry {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  title: string;
+  summary?: string;
+  description?: string;
+  accent?: string;
+  toc: TocEntry[];
+}
+
+const {
+  title,
+  summary,
+  description,
+  accent = "#c5663a",
+  toc,
+} = Astro.props;
+
+const pageTitle = `${title} — ${site.name}`;
+const metaDescription = description ?? summary ?? site.hero;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={metaDescription} />
+    <meta name="color-scheme" content="light" />
+    <title>{pageTitle}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <ClientRouter />
+    <TransitionDirection />
+  </head>
+  <body class="case-body" style={`--accent: ${accent};`}>
+    <div class="case-shell">
+      <aside class="case-sidebar">
+        <a href="/" class="home-link">← {site.name}</a>
+
+        {toc.length > 0 && (
+          <nav class="case-toc" aria-label="Case study sections">
+            <p class="case-toc-label">Table of contents</p>
+            <ol class="case-toc-list">
+              {toc.map((entry, i) => (
+                <li>
+                  <a href={`#${entry.id}`} data-toc-link={entry.id}>
+                    {String(i + 1).padStart(2, "0")}. {entry.label}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+
+        <a href="#top" class="back-to-top">↑ Back to top</a>
+      </aside>
+
+      <main class="case-main" id="top">
+        <slot />
+      </main>
+    </div>
+
+    <script is:inline>
+      // Active-section highlighting via IntersectionObserver.
+      // Each <Section> has data-toc-id; sidebar links have data-toc-link.
+      (function () {
+        function bind() {
+          const sections = document.querySelectorAll("[data-toc-id]");
+          const links = document.querySelectorAll("[data-toc-link]");
+          if (!sections.length || !links.length) return;
+
+          const linkById = {};
+          links.forEach((a) => {
+            linkById[a.getAttribute("data-toc-link")] = a;
+          });
+
+          const obs = new IntersectionObserver(
+            (entries) => {
+              const visible = entries
+                .filter((e) => e.isIntersecting)
+                .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+              if (!visible.length) return;
+              const id = visible[0].target.getAttribute("data-toc-id");
+              links.forEach((a) => a.classList.remove("is-active"));
+              if (linkById[id]) linkById[id].classList.add("is-active");
+            },
+            { rootMargin: "-30% 0px -55% 0px", threshold: [0, 0.5, 1] }
+          );
+          sections.forEach((s) => obs.observe(s));
+        }
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", bind);
+        } else {
+          bind();
+        }
+        document.addEventListener("astro:page-load", bind);
+      })();
+    </script>
+  </body>
+</html>

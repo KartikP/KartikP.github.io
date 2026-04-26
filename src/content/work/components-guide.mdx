@@ -1,0 +1,411 @@
+---
+title: Case study components — reference
+summary: "How to use each component in the case-study kit. Use this page as a copy-paste reference when authoring new case studies. Marked draft so it never ships."
+date: 2026-04-26
+accent: "#3d6b73"
+draft: true
+tags: [reference, internal]
+role: System author
+team: Just me
+timeline: One sitting
+skills: [Astro, MDX, design]
+---
+
+import CaseHero from "../../components/case-study/CaseHero.astro";
+import MetaBar from "../../components/case-study/MetaBar.astro";
+import Section from "../../components/case-study/Section.astro";
+import CardRow from "../../components/case-study/CardRow.astro";
+import ImageWithPros from "../../components/case-study/ImageWithPros.astro";
+import Callout from "../../components/case-study/Callout.astro";
+import KeyFlow from "../../components/case-study/KeyFlow.astro";
+import Figure from "../../components/case-study/Figure.astro";
+import NextProject from "../../components/case-study/NextProject.astro";
+
+<CaseHero
+  title={frontmatter.title}
+  summary={frontmatter.summary}
+  tags={["REFERENCE", "INTERNAL"]}
+/>
+
+<MetaBar
+  role={frontmatter.role}
+  team={frontmatter.team}
+  timeline={frontmatter.timeline}
+  skills={frontmatter.skills}
+/>
+
+## Getting started
+
+<Section id="getting-started" eyebrow="GETTING STARTED" heading="The shape of a case study.">
+
+Each case study is one `.mdx` file in `src/content/work/`. The filename
+becomes the URL slug — `vivarium.mdx` → `/work/vivarium`. The file has
+two parts: a YAML frontmatter block at the top, then MDX (markdown +
+imported components) below.
+
+**Frontmatter fields you can set:**
+
+```yaml
+---
+title: My case study              # required
+summary: One paragraph hook       # required, supports inline HTML
+date: 2026-04-26                  # required, YYYY-MM-DD
+accent: "#3d6b73"                 # required-ish, the per-page accent colour
+draft: false                      # set true to hide from the index
+tags: [software, research]        # optional pill labels
+role: Solo developer              # optional, surfaces in <MetaBar>
+team: Just me
+timeline: "Apr 2026 –\npresent"
+skills: [Astro, MDX, Postgres]
+repo: "https://github.com/..."    # optional
+url: "https://..."                # optional, live link
+---
+```
+
+**The first lines of the MDX after frontmatter** are component imports
+plus the hero. Always:
+
+```jsx
+import CaseHero from "../../components/case-study/CaseHero.astro";
+import MetaBar from "../../components/case-study/MetaBar.astro";
+import Section from "../../components/case-study/Section.astro";
+// ...one import per component you'll use
+
+<CaseHero
+  title={frontmatter.title}
+  summary={frontmatter.summary}
+  tags={["TAG ONE", "TAG TWO"]}
+/>
+```
+
+The TOC sidebar auto-builds from the `## Heading` markdown lines AND
+from the `<Section id>` you place beside them. Keep them in sync.
+
+</Section>
+
+## CaseHero
+
+<Section id="case-hero" eyebrow="01" heading="CaseHero — the title block.">
+
+The first thing on every case study. Renders the soft accent-tinted card,
+optional inline screenshot, eyebrow tag pills, the asterisk-prefixed
+title, and the summary paragraph below.
+
+**Props:**
+
+- `title` — the case study title (string, required)
+- `summary` — short paragraph below the title (string, optional, supports inline HTML)
+- `tags` — eyebrow pill labels, all-caps (string array, optional)
+- `image` — path to an inline screenshot inside the gradient card (string, optional)
+- `imageAlt` — alt text for the screenshot (string, optional)
+- `asterisk` — show the accent-colored `*` before the title (boolean, default `true`)
+
+**Use it like:**
+
+```jsx
+<CaseHero
+  title="Vivarium"
+  summary="Colony-management and experimental-scheduling tool…"
+  tags={["PERSONAL", "IN PROGRESS"]}
+  image="/assets/work/vivarium/hero.png"
+  imageAlt="Vivarium calendar view"
+/>
+```
+
+Reading `frontmatter.title` and `frontmatter.summary` straight from the
+YAML keeps things DRY.
+
+</Section>
+
+## MetaBar
+
+<Section id="meta-bar" eyebrow="02" heading="MetaBar — the role/team/timeline/skills block.">
+
+The orange (or accent-colored) horizontal block that anchors a case
+study's metadata. Sits right under the hero and before the first
+content section.
+
+**Props (all optional, omit any column you don't have):**
+
+- `role` — your role on the project (string)
+- `team` — team composition (string, supports `\n` for multi-line)
+- `timeline` — duration (string, supports `\n`)
+- `skills` — skill labels list (string array)
+
+```jsx
+<MetaBar
+  role="Solo developer"
+  team={"2 PMs\n5 devs\n1 designer (me)"}
+  timeline={"Apr 2026 –\npresent"}
+  skills={["Astro", "FastAPI", "Postgres"]}
+/>
+```
+
+Or pull from frontmatter:
+
+```jsx
+<MetaBar
+  role={frontmatter.role}
+  team={frontmatter.team}
+  timeline={frontmatter.timeline}
+  skills={frontmatter.skills}
+/>
+```
+
+</Section>
+
+## Section
+
+<Section id="section" eyebrow="03" heading="Section — the spine of the page.">
+
+The TOC-aware wrapper. Every major content section uses one. Two things
+matter for the sidebar to work correctly:
+
+1. The `id` prop on `<Section>` is what the TOC link anchors to
+2. The `## Heading` markdown line right above provides the TOC label
+
+Keep them paired. Astro slugifies the markdown heading; that slug must
+match the `Section` `id`. Conventional pattern:
+
+```jsx
+## My section name
+
+<Section id="my-section-name" eyebrow="EYEBROW" heading="My section name.">
+
+Section body content goes here. You can write any markdown.
+
+</Section>
+```
+
+**Props:**
+
+- `id` — anchor id, must match the slugified `## heading` above (string, required)
+- `eyebrow` — small mono caps label like `CONTEXT` or `01` (string, optional)
+- `heading` — the serif headline (string, required)
+
+Anything between `<Section>` open and close is the body, including paragraphs, lists, embedded components — whatever.
+
+</Section>
+
+## Callout — three variants
+
+<Section id="callouts" eyebrow="04" heading="Callout — for centered statements.">
+
+Use when one sentence deserves more weight than ordinary prose. Three
+variants:
+
+<Callout variant="design" eyebrow="DESIGN CONSIDERATION">
+The "design" variant — soft tinted background, accent-colored eyebrow.
+Best for trade-off statements and design constraints.
+</Callout>
+
+<Callout variant="goal" eyebrow="MY GOAL">
+The "goal" variant — solid accent background, white text. Best for
+project-defining statements you want to stand out the most.
+</Callout>
+
+<Callout variant="pick" eyebrow="THE THREE RULES">
+The "pick" variant — left-aligned (not centered) on a soft tinted background.
+Use it for highlighting a chosen direction, summarising key principles,
+or grouping a small set of bullet points.
+</Callout>
+
+**Props:**
+
+- `variant` — `"design"` | `"goal"` | `"pick"`, default `"design"`
+- `eyebrow` — small caps label above the body (string, optional)
+- `children` — the content, free-form (markdown, JSX)
+
+```jsx
+<Callout variant="goal" eyebrow="THE GOAL">
+Move the researcher's job from "track every date manually" to "confirm
+the predictions the system makes."
+</Callout>
+```
+
+</Section>
+
+## CardRow
+
+<Section id="card-row" eyebrow="05" heading="CardRow — three cards in a row.">
+
+A 3-up grid of cards, each with an optional thumbnail, a title, and a
+short body paragraph. Best for showing parallel ideas — three pillars,
+three capabilities, three audience segments. Collapses to a single
+column on mobile.
+
+<CardRow
+  cards={[
+    {
+      title: "First pillar",
+      body: "A short paragraph explaining what this card represents. Keep it under three lines.",
+    },
+    {
+      title: "Second pillar",
+      body: "Cards next to each other read as parallel ideas. The eye expects them to be roughly the same length.",
+    },
+    {
+      title: "Third pillar",
+      body: "If you have only two ideas, use a different layout — a grid of three half-empty cards looks awkward.",
+    },
+  ]}
+/>
+
+**Props:**
+
+- `cards` — array of `{ title, body?, image?, imageAlt? }` objects
+
+```jsx
+<CardRow
+  cards={[
+    { title: "Pairings", body: "A male and female assigned to a cage…" },
+    { title: "Litters", body: "On birth confirmation, Vivarium creates…" },
+    { title: "Events", body: "Each protocol step is materialised as…" },
+  ]}
+/>
+```
+
+If you provide `image` paths, they render inside square accent-tinted
+thumbnails above each card title.
+
+</Section>
+
+## KeyFlow
+
+<Section id="key-flow" eyebrow="06" heading="KeyFlow — numbered image + description.">
+
+Use for walking through a flow, screen by screen. The image sits left,
+the numbered description sits right. Stack several to build a flow.
+
+<KeyFlow num={1} title="Subscribe once" image="/favicon.svg">
+  <p>
+    Generate a feed token from the UI; paste the URL into Google Calendar's
+    "From URL" subscription dialog.
+  </p>
+</KeyFlow>
+
+<KeyFlow num={2} title="Enter the inputs" image="/favicon.svg">
+  <p>
+    Define pairings, confirm births, run protocols. Every change writes
+    to Postgres.
+  </p>
+</KeyFlow>
+
+**Props:**
+
+- `num` — number or string for the badge (e.g. `1`, `"01"`, `"03b"`)
+- `title` — the row's headline (string, required)
+- `image` — path to the screenshot (string, required)
+- `imageAlt` — alt text (string, optional)
+- `children` — the description body, free-form
+
+```jsx
+<KeyFlow num={1} title="Step name" image="/path/to/screenshot.png">
+  <p>One or more paragraphs of description.</p>
+</KeyFlow>
+```
+
+</Section>
+
+## ImageWithPros
+
+<Section id="image-with-pros" eyebrow="07" heading="ImageWithPros — image with a +/− sidebar.">
+
+For evaluating a design decision: show the option, list its pros and cons.
+
+<ImageWithPros
+  image="/favicon.svg"
+  imageAlt="Example design exploration"
+  title="Multiple pages for root causes and solutions"
+  pros={[
+    "Users can review all potential root causes before diving in",
+    "Extremely linear and structured, easy to follow",
+  ]}
+  cons={[
+    "Requires many clicks to navigate",
+    "Troublesome to view a different root cause once one path is started",
+  ]}
+/>
+
+**Props:**
+
+- `image` — path to the screenshot (string, required)
+- `imageAlt` — alt text (string, optional)
+- `title` — small heading above the lists (string, optional)
+- `pros` — list of positive points (string array, optional, prefixed with green `+`)
+- `cons` — list of negative points (string array, optional, prefixed with red `−`)
+
+```jsx
+<ImageWithPros
+  image="/path/to/exploration.png"
+  title="Approach A"
+  pros={["Cheap to build", "Fast to ship"]}
+  cons={["Doesn't scale", "Awkward on mobile"]}
+/>
+```
+
+</Section>
+
+## Figure
+
+<Section id="figure" eyebrow="08" heading="Figure — image with caption.">
+
+A single image with optional caption underneath. Wrapped in the same
+accent-tinted frame the other image components use. Set `framed={false}`
+for an un-framed image (e.g. a diagram with its own background).
+
+<Figure
+  src="/favicon.svg"
+  caption="A small framed image with a caption underneath."
+/>
+
+**Props:**
+
+- `src` — image path (string, required)
+- `alt` — alt text (string, optional)
+- `caption` — caption rendered below the image (string, optional)
+- `framed` — wrap in the gradient frame (boolean, default `true`)
+
+```jsx
+<Figure src="/path/to/diagram.png" caption="The full data flow." />
+<Figure src="/path/to/raw.svg" framed={false} />
+```
+
+</Section>
+
+## NextProject
+
+<Section id="next-project" eyebrow="09" heading="NextProject — pagination footer.">
+
+Always last. Provides prev/next links to other case studies, plus a "All
+work" link in the middle.
+
+**Props (all optional, omit either side if it doesn't apply):**
+
+- `prevHref`, `prevTitle` — link to the previous case study
+- `nextHref`, `nextTitle` — link to the next case study
+
+```jsx
+<NextProject
+  prevHref="/work/health-dashboard"
+  prevTitle="Health Dashboard"
+  nextHref="/work/another"
+  nextTitle="Another case"
+/>
+```
+
+</Section>
+
+## Tips
+
+<Section id="tips" eyebrow="10" heading="Authoring tips.">
+
+- **Keep section ids unique.** TOC anchors break if two sections share an id.
+- **Use the accent sparingly.** Each case study has one accent colour — let it carry meaning by being rare. The components handle this for you (only links, callouts, and the meta bar use it).
+- **Aim for 5–8 sections.** Fewer feels thin, more feels exhausting. The TOC starts looking like a phone book past 10.
+- **Image paths.** Put images under `public/assets/work/<slug>/`. Reference them as `/assets/work/<slug>/image.png` in your MDX.
+- **Per-component data first, prose second.** When a section is mostly a `<CardRow>` or `<KeyFlow>`, the prose around it should be brief — the components are the content.
+
+</Section>
+
+<NextProject prevHref="/work" prevTitle="All work" />

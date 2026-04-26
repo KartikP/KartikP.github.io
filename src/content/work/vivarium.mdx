@@ -1,0 +1,234 @@
+---
+title: Vivarium
+summary: "Colony-management and experimental-scheduling tool for rodent behavioural research. Enter a breeding window once and every downstream date — plug checks, birth predictions, sexing, weaning, neonatal and adolescent protocols — auto-populates a Google or Apple Calendar subscription."
+date: 2026-04-20
+accent: "#3d6b73"
+draft: false
+tags: [software, research-tools, neuroscience]
+role: Solo developer
+team: Just me
+timeline: "Apr 2026 –\npresent"
+skills: [Full-stack, FastAPI, Next.js, Postgres, ICS feeds]
+repo: "https://github.com/KartikP/vivarium"
+---
+
+import CaseHero from "../../components/case-study/CaseHero.astro";
+import MetaBar from "../../components/case-study/MetaBar.astro";
+import Section from "../../components/case-study/Section.astro";
+import CardRow from "../../components/case-study/CardRow.astro";
+import ImageWithPros from "../../components/case-study/ImageWithPros.astro";
+import Callout from "../../components/case-study/Callout.astro";
+import KeyFlow from "../../components/case-study/KeyFlow.astro";
+import Figure from "../../components/case-study/Figure.astro";
+import NextProject from "../../components/case-study/NextProject.astro";
+
+<CaseHero
+  title={frontmatter.title}
+  summary={frontmatter.summary}
+  tags={["PERSONAL", "IN PROGRESS"]}
+/>
+
+<MetaBar
+  role={frontmatter.role}
+  team={frontmatter.team}
+  timeline={frontmatter.timeline}
+  skills={frontmatter.skills}
+/>
+
+## Context
+
+<Section id="context" eyebrow="CONTEXT" heading="A rodent colony is mostly a calendar problem.">
+
+A behavioural-neuroscience lab running a rodent colony spends an enormous
+amount of attention on dates. Every breeding pair sets off a chain of
+obligations: a plug check the next morning, a birth prediction nineteen
+days later, sexing a few weeks after that, weaning at postnatal day 17, a
+sequence of neonatal protocols anchored to each litter's birth, and a
+sequence of adolescent protocols anchored to the cohort's median birth date
+plus an offset that's different for males and females.
+
+Most labs manage this with a whiteboard, a shared spreadsheet, and a
+combination of memory and post-its. The spreadsheet drifts. The
+post-its fall off. A missed weaning day cascades into a missed
+behavioural session two weeks later, which means the cohort gets dropped
+from analysis. The cost of a single missed date can be a month of work.
+
+</Section>
+
+## The premise
+
+<Section id="premise" eyebrow="PREMISE" heading="Every date worth tracking is derivable from a small number of inputs.">
+
+The observation Vivarium is built around: of all the dates a researcher
+tracks for a colony, **almost none of them are independent**. They cascade
+out of a handful of inputs:
+
+- A pairing window
+- A confirmed birth date
+- A protocol definition (with offsets in days, optionally split by sex)
+
+If you write down the inputs once and the protocols once, every concrete
+event — for every pup, in every litter, in every cohort, on every day for
+the next three months — is a deterministic function of those inputs.
+Researchers shouldn't be entering individual events. They should be
+declaring inputs and watching events appear.
+
+<Callout variant="goal" eyebrow="THE GOAL">
+Move the researcher's job from "track every date manually" to "confirm
+the predictions the system makes." The calendar should be a side effect
+of correctly entered colony data, not a parallel artefact.
+</Callout>
+
+</Section>
+
+## Data flow
+
+<Section id="data-flow" eyebrow="DATA FLOW" heading="Pairings cascade into litters, litters cascade into events.">
+
+The shape of the model mirrors the shape of the colony. A pairing produces
+a litter. A litter produces pups. Protocol steps materialise into events
+on specific dates per pup or per cage.
+
+<CardRow
+  cards={[
+    {
+      title: "Pairings",
+      body: "A male and female assigned to a cage for a breeding window. Vivarium predicts a plug observation date and, on confirmation, a birth check at +19 days.",
+    },
+    {
+      title: "Litters",
+      body: "On birth confirmation, Vivarium creates a litter plus N numbered pups (sex blank until sexing). Every neonatal protocol step now has a concrete date attached.",
+    },
+    {
+      title: "Events",
+      body: "Each protocol step — sexing, weaning, behavioural assays — is materialised as a scheduled event keyed to the right subject or cage, on the right day.",
+    },
+  ]}
+/>
+
+The key invariant: **events are computed, never entered**. Editing a
+litter's birth date doesn't ask the researcher to also edit fifty
+downstream events; the events update because they were never standalone.
+
+</Section>
+
+## Sex-staggered protocols
+
+<Section id="sex-staggered" eyebrow="SUBTLETY THAT MATTERS" heading="One step, two timelines.">
+
+A behaviourist running adolescent protocols often wants to test males and
+females on consecutive days — males at P30, females at P31 — to keep
+session loads even and avoid pseudo-replication.
+
+In a typical scheduling tool, that means duplicating every step: one row
+for males at offset 30, one row for females at offset 31. Forty steps in
+the protocol becomes eighty rows; any change has to happen twice; the
+two rows drift apart over time.
+
+<Callout variant="design" eyebrow="DESIGN CONSIDERATION">
+A protocol step should be declared once, with the female offset declared
+as a *property of the step*, not as a separate step. The materialiser
+handles the day-shift on its own.
+</Callout>
+
+The model lets a step define `day_offset` and an optional
+`female_offset_days`. When events are materialised, the system splits
+each subject by sex and emits one event per group on the correct day.
+The protocol stays one row; the calendar gets two events.
+
+</Section>
+
+## The calendar feed
+
+<Section id="calendar-feed" eyebrow="DELIVERY" heading="The interface is a calendar subscription.">
+
+Researchers do not want to learn a new app to check what's happening
+today. They already live in Google Calendar or Apple Calendar. The
+question Vivarium had to answer: *how does the data get there?*
+
+The answer was an **ICS feed**, served at a per-user tokenised URL like
+`/api/feed/<token>.ics`. The user adds it once as a subscribed calendar in
+Google or Apple. From then on, every event Vivarium materialises shows up
+on their phone, on their laptop, in their meeting reminders, with no extra
+software installed and nothing to check.
+
+<KeyFlow num={1} title="Subscribe once" image="/favicon.svg">
+  <p>
+    Generate a feed token from the Vivarium UI; paste the URL into Google
+    Calendar's "From URL" subscription dialog. Apple Calendar works the
+    same way. The feed is per-user — rotating the token rotates access.
+  </p>
+</KeyFlow>
+
+<KeyFlow num={2} title="Enter the inputs" image="/favicon.svg">
+  <p>
+    Define pairings, confirm births, run protocols. Every change writes to
+    Postgres; the materialiser turns the derived state into ICS events on
+    the next feed poll.
+  </p>
+</KeyFlow>
+
+<KeyFlow num={3} title="The calendar is always right" image="/favicon.svg">
+  <p>
+    Google polls the feed every few hours; Apple polls a bit more
+    aggressively. Edit a litter's birth date and the events shift the next
+    time the calendar pulls. No notifications to wire up, no app to launch.
+  </p>
+</KeyFlow>
+
+</Section>
+
+## Stack and conventions
+
+<Section id="stack" eyebrow="BUILD" heading="A small system with strong rules.">
+
+The stack is unsurprising on purpose: Postgres for the data, FastAPI on
+the server, Next.js on the client, Docker Compose to run the whole thing
+behind a Cloudflare Tunnel on a homelab box. The constraints that *do*
+matter aren't visible in a list of dependencies — they're enforced as
+project conventions.
+
+<Callout variant="pick" eyebrow="THE THREE RULES">
+**Every schema change goes through an Alembic migration.** The database
+is never touched by hand, even in development. The migration history is
+the schema's documentation. <br/><br/>
+**Every domain table carries `user_id`.** The current Vivarium runs for
+one researcher, but the schema is multi-tenant from day one. Migrating
+to a hosted SaaS will be a deployment change, not a schema rewrite. <br/><br/>
+**The CLI owns user creation and feed-token rotation.** Credentials and
+tokens never live in source. The first user is bootstrapped from
+the command line during deployment.
+</Callout>
+
+</Section>
+
+## What's next
+
+<Section id="next" eyebrow="WHAT'S NEXT" heading="Open questions and obvious extensions.">
+
+Vivarium runs for one researcher today. The interesting next questions
+are operational rather than architectural:
+
+- **Cage capacity awareness.** The materialiser currently emits events
+  blind to whether a cage is full. The natural extension is a soft
+  warning when a weaning event would exceed cage capacity, with a
+  suggested split.
+- **Behavioural-session conflict detection.** Two cohorts whose
+  adolescent windows overlap can collide on a behaviour rig. The data is
+  all there — the system just doesn't yet flag the collision.
+- **Multi-user lab mode.** The `user_id` foreign keys are in place; the
+  remaining work is permissioning, role definition (PI / postdoc /
+  technician), and shared cohort visibility.
+
+The core observation — that almost every date worth tracking is
+derivable, not declared — has held up well. The bigger Vivarium gets, the
+more weight it puts on that idea.
+
+</Section>
+
+<NextProject
+  prevHref="/projects"
+  prevTitle="All projects"
+  nextHref="/work"
+  nextTitle="All work"
+/>

@@ -30,6 +30,29 @@ const projects = defineCollection({
   }),
 });
 
+// Work — long-form case studies authored in MDX. Richer than projects:
+// per-study accent colour, hero artwork, and structured meta (role, team,
+// timeline, skills). Each entry routes at /work/<slug> and uses the
+// CaseStudyLayout with TOC sidebar and component kit.
+const work = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/work" }),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    date: z.coerce.date(),
+    accent: z.string().default("#c5663a"),
+    accentSoft: z.string().optional(), // hero gradient (defaults to accent at low opacity)
+    tags: z.array(z.string()).default([]),
+    role: z.string().optional(),
+    team: z.string().optional(),
+    timeline: z.string().optional(),
+    skills: z.array(z.string()).default([]),
+    repo: z.string().url().optional(),
+    url: z.string().url().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
 // Publications — peer-reviewed work.
 const publications = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/publications" }),
@@ -45,4 +68,4 @@ const publications = defineCollection({
   }),
 });
 
-export const collections = { posts, projects, publications };
+export const collections = { posts, projects, publications, work };

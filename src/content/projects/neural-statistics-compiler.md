@@ -4,6 +4,7 @@ date: 2023-07-21
 description: Simple to use GUI for the automated analysis of multielectrode array for non-coding research scientists to use. Avoids manual error in compiling statistics and expedites preliminary analysis.
 tags:
   - neuroscience
+draft: true
 ---
 [Project link](https://github.com/KartikP/BIOPHYS9709B-FCNN/blob/main/Pradeepan_Kartik_Final_Code.ipynb)
 

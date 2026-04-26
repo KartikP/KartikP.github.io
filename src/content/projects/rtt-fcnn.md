@@ -5,6 +5,7 @@ description: Classification of stem cell derived Rett syndrome neuronal networks
 repo: "https://github.com/KartikP/BIOPHYS9709B-FCNN/blob/main/Pradeepan_Kartik_Final_Code.ipynb"
 tags:
   - neuroscience
+draft: true
 ---
 [Project link](https://github.com/KartikP/BIOPHYS9709B-FCNN/blob/main/Pradeepan_Kartik_Final_Code.ipynb)
 

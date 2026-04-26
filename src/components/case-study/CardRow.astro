@@ -1,0 +1,26 @@
+---
+type Card = {
+  image?: string;
+  imageAlt?: string;
+  title: string;
+  body?: string;
+};
+
+interface Props {
+  cards: Card[];
+}
+
+const { cards } = Astro.props;
+---
+
+<div class="card-row">
+  {cards.map((card) => (
+    <div class="card">
+      <div class="card-thumb">
+        {card.image && <img src={card.image} alt={card.imageAlt ?? ""} />}
+      </div>
+      <h3 class="card-title">{card.title}</h3>
+      {card.body && <p class="card-body">{card.body}</p>}
+    </div>
+  ))}
+</div>

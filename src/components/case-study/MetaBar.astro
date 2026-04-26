@@ -1,0 +1,29 @@
+---
+interface Props {
+  role?: string;
+  team?: string;
+  timeline?: string;
+  skills?: string[];
+}
+
+const { role, team, timeline, skills = [] } = Astro.props;
+---
+
+<div class="meta-bar">
+  <div>
+    <div class="meta-label">Role</div>
+    <div class="meta-value">{role}</div>
+  </div>
+  <div>
+    <div class="meta-label">Team</div>
+    <div class="meta-value">{team}</div>
+  </div>
+  <div>
+    <div class="meta-label">Timeline</div>
+    <div class="meta-value">{timeline}</div>
+  </div>
+  <div>
+    <div class="meta-label">Skills</div>
+    <div class="meta-value">{skills.join("\n")}</div>
+  </div>
+</div>

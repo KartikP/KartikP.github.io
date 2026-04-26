@@ -4,6 +4,7 @@ date: 2024-01-24
 description: A cost-effective serverless AWS ETL pipeline
 tags:
   - data
+draft: true
 ---
 Over the next couple of months, I'll be working on a *greenfield* data project. This kind of project is built from scratch, from the ground up, without any constraints from prior work. Here, I will provide the motivation and a high-level overview of how this project will be accomplished and updates along the way.
 

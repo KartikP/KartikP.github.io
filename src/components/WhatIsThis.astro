@@ -52,22 +52,29 @@
 </dialog>
 
 <script is:inline>
-  (function () {
-    const btn = document.querySelector("[data-wit-open]");
-    const dialog = document.querySelector(".wit-dialog");
-    const closeBtn = document.querySelector("[data-wit-close]");
-    if (!btn || !dialog) return;
-
-    btn.addEventListener("click", () => {
-      if (typeof dialog.showModal === "function") dialog.showModal();
-      else dialog.setAttribute("open", "");
+  // Use event delegation on document — survives View Transition DOM swaps,
+  // which would otherwise leave click handlers bound to stale element
+  // references after navigating back to the landing.
+  if (!window.__witBound) {
+    window.__witBound = true;
+    document.addEventListener("click", function (e) {
+      const opener = e.target.closest && e.target.closest("[data-wit-open]");
+      if (opener) {
+        const dialog = document.querySelector(".wit-dialog");
+        if (dialog && typeof dialog.showModal === "function") dialog.showModal();
+        else if (dialog) dialog.setAttribute("open", "");
+        return;
+      }
+      const closer = e.target.closest && e.target.closest("[data-wit-close]");
+      if (closer) {
+        const dialog = closer.closest(".wit-dialog");
+        if (dialog && typeof dialog.close === "function") dialog.close();
+        return;
+      }
+      // Click on the dialog element itself (i.e. on its backdrop) closes it.
+      if (e.target.classList && e.target.classList.contains("wit-dialog")) {
+        if (typeof e.target.close === "function") e.target.close();
+      }
     });
-
-    closeBtn?.addEventListener("click", () => dialog.close());
-
-    // Click outside the inner panel (on the backdrop) closes the dialog.
-    dialog.addEventListener("click", (e) => {
-      if (e.target === dialog) dialog.close();
-    });
-  })();
+  }
 </script>

@@ -1,0 +1,21 @@
+---
+interface Props {
+  src: string;
+  alt?: string;
+  caption?: string;
+  framed?: boolean; // wrap in the gradient frame
+}
+
+const { src, alt = "", caption, framed = true } = Astro.props;
+---
+
+<figure class="case-figure">
+  {framed ? (
+    <div class="case-figure-frame">
+      <img src={src} alt={alt} />
+    </div>
+  ) : (
+    <img src={src} alt={alt} style="width: 100%; border-radius: 6px; display: block;" />
+  )}
+  {caption && <figcaption class="case-figure-caption">{caption}</figcaption>}
+</figure>

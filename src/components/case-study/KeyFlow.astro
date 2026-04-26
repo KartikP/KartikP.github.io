@@ -1,0 +1,25 @@
+---
+interface Props {
+  num: number | string;
+  title: string;
+  image: string;
+  imageAlt?: string;
+}
+
+const { num, title, image, imageAlt = "" } = Astro.props;
+const formattedNum =
+  typeof num === "number" ? String(num).padStart(2, "0") : num;
+---
+
+<div class="key-flow">
+  <div class="flow-image">
+    <img src={image} alt={imageAlt} />
+  </div>
+  <div>
+    <span class="flow-num">{formattedNum}</span>
+    <h3 class="flow-title">{title}</h3>
+    <div class="flow-body">
+      <slot />
+    </div>
+  </div>
+</div>

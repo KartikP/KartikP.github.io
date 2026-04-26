@@ -180,7 +180,7 @@
   grid-row: 1;
   font-family: var(--font-sans);
   font-weight: 800;
-  font-size: clamp(40px, 6.5vw, 88px);
+  font-size: clamp(32px, 5vw, 64px);
   line-height: 0.95;
   letter-spacing: -0.02em;
   color: var(--dark-fg);
@@ -220,7 +220,7 @@
     gap: 28px;
   }
   .nav-title {
-    font-size: clamp(34px, 10vw, 56px);
+    font-size: clamp(28px, 8vw, 44px);
   }
   .nav-sub {
     font-size: 11px;

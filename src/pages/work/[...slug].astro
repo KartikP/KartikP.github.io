@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from "astro:content";
+import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("work", ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+
+// Auto-build TOC from H2 headings (depth 2). Each <Section> in MDX
+// produces an <h2> and a data-toc-id; the heading depth check picks
+// up section headings only.
+const toc = headings
+  .filter((h) => h.depth === 2)
+  .map((h) => ({ id: h.slug, label: h.text }));
+---
+
+<CaseStudyLayout
+  title={entry.data.title}
+  summary={entry.data.summary}
+  accent={entry.data.accent}
+  toc={toc}
+>
+  <Content />
+</CaseStudyLayout>

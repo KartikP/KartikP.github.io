@@ -1,0 +1,32 @@
+---
+interface Props {
+  image: string;
+  imageAlt?: string;
+  title?: string;
+  pros?: string[];
+  cons?: string[];
+}
+
+const { image, imageAlt = "", title, pros = [], cons = [] } = Astro.props;
+---
+
+<div class="image-pros">
+  <figure>
+    <div class="image-frame">
+      <img src={image} alt={imageAlt} />
+    </div>
+  </figure>
+  <div>
+    {title && <h4 class="pros-header">{title}</h4>}
+    {pros.length > 0 && (
+      <ul class="pros">
+        {pros.map((p) => <li>{p}</li>)}
+      </ul>
+    )}
+    {cons.length > 0 && (
+      <ul class="cons">
+        {cons.map((c) => <li>{c}</li>)}
+      </ul>
+    )}
+  </div>
+</div>

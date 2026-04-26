@@ -1,0 +1,15 @@
+---
+interface Props {
+  id: string;       // anchor id (must match the TOC entry's id)
+  eyebrow?: string; // small mono caps label (e.g. "CONTEXT")
+  heading: string;  // serif headline
+}
+
+const { id, eyebrow, heading } = Astro.props;
+---
+
+<section id={id} class="case-section" data-toc-id={id}>
+  {eyebrow && <p class="case-section-eyebrow">{eyebrow}</p>}
+  <h2 class="case-section-heading">{heading}</h2>
+  <slot />
+</section>

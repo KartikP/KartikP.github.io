@@ -1,0 +1,15 @@
+---
+interface Props {
+  variant?: "design" | "goal" | "pick";
+  eyebrow?: string;
+}
+
+const { variant = "design", eyebrow } = Astro.props;
+---
+
+<div class={`case-callout variant-${variant}`}>
+  {eyebrow && <div class="case-callout-eyebrow">{eyebrow}</div>}
+  <div class="case-callout-body">
+    <slot />
+  </div>
+</div>
