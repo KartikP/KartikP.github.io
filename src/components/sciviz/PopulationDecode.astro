@@ -21,8 +21,9 @@ const uid = "pd-" + Math.random().toString(36).slice(2, 8);
 
 <figure class="sciviz-figure" data-uid={uid}>
   <div class="sciviz-frame">
-    <svg viewBox="0 0 600 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Population vector decoding">
-      <g transform="translate(300 160)">
+    <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Population vector decoding">
+      <!-- LEFT: polar plot of true vs estimated stimulus -->
+      <g transform="translate(170 170)">
         <!-- Reference circle -->
         <circle r="120" fill="none" stroke="currentColor" stroke-opacity="0.12" />
         <circle r="2" fill="currentColor" fill-opacity="0.5" />
@@ -40,8 +41,34 @@ const uid = "pd-" + Math.random().toString(36).slice(2, 8);
           <text class="est-label" font-family="var(--font-mono)" font-size="11" fill="var(--accent)" font-weight="600" letter-spacing="0.08em">ESTIMATE</text>
         </g>
       </g>
-      <!-- Bottom: error readout -->
-      <g transform="translate(20 296)">
+
+      <!-- RIGHT: rolling error history (last ~4s) -->
+      <g transform="translate(360 50)">
+        <!-- Title -->
+        <text x="0" y="-14" font-family="var(--font-mono)" font-size="10"
+              fill="currentColor" fill-opacity="0.6" letter-spacing="0.08em">ERROR (°)</text>
+
+        <!-- Plot frame (420 wide × 220 tall) -->
+        <rect width="420" height="220" fill="none"
+              stroke="currentColor" stroke-opacity="0.1" />
+
+        <!-- Y axis ticks: 0°, 45°, 90°+ -->
+        <line x1="0" y1="220" x2="420" y2="220" stroke="currentColor" stroke-opacity="0.18" />
+        <line x1="0" y1="110" x2="420" y2="110" stroke="currentColor" stroke-opacity="0.08" stroke-dasharray="2 4" />
+        <text x="-8" y="223" font-family="var(--font-mono)" font-size="9" text-anchor="end" fill="currentColor" fill-opacity="0.5">0°</text>
+        <text x="-8" y="113" font-family="var(--font-mono)" font-size="9" text-anchor="end" fill="currentColor" fill-opacity="0.5">90°</text>
+        <text x="-8" y="6"   font-family="var(--font-mono)" font-size="9" text-anchor="end" fill="currentColor" fill-opacity="0.5">180°</text>
+
+        <!-- X axis label -->
+        <text x="420" y="236" font-family="var(--font-mono)" font-size="9" text-anchor="end" fill="currentColor" fill-opacity="0.5">→ time (4s window)</text>
+
+        <!-- Filled area under the trace, then the trace itself -->
+        <polygon class="err-fill" fill="var(--accent)" fill-opacity="0.12" points="" />
+        <polyline class="err-trace" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round" points="" />
+      </g>
+
+      <!-- Bottom: numeric readout -->
+      <g transform="translate(20 320)">
         <text font-family="var(--font-mono)" font-size="11" fill="currentColor" fill-opacity="0.7" letter-spacing="0.08em">
           ERROR: <tspan class="err-val" font-weight="600" fill="var(--light-fg)">0°</tspan>
           <tspan dx="24" fill="currentColor" fill-opacity="0.7">N: <tspan class="n-val" font-weight="600" fill="var(--light-fg)">12</tspan></tspan>
@@ -77,6 +104,8 @@ const uid = "pd-" + Math.random().toString(36).slice(2, 8);
       const estLine = root.querySelector(".est-line");
       const estHead = root.querySelector(".est-head");
       const estLabel = root.querySelector(".est-label");
+      const errTrace = root.querySelector(".err-trace");
+      const errFill = root.querySelector(".err-fill");
       const errVal = root.querySelector(".err-val");
       const nVal = root.querySelector(".n-val");
       const nDisplay = root.querySelector(".n-display");
@@ -88,6 +117,12 @@ const uid = "pd-" + Math.random().toString(36).slice(2, 8);
       const RADIUS = 120;
       const NS = "http://www.w3.org/2000/svg";
       const MAX_N = 100;
+
+      // Rolling error history for the right-hand line plot.
+      const HISTORY_LEN = 240;          // ~4s at 60fps
+      const PLOT_W = 420, PLOT_H = 220; // matches SVG <rect>
+      const ERR_DEG_MAX = 180;          // y-axis top
+      const errorHistory = [];
 
       // Pre-create a max-N pool of neuron dots; we'll show/hide based on N
       const allPhis = [];
@@ -134,9 +169,12 @@ const uid = "pd-" + Math.random().toString(36).slice(2, 8);
           const phi = allPhis[idx];
           let dist = Math.abs(theta - phi);
           if (dist > Math.PI) dist = 2 * Math.PI - dist;
-          // Add small Poisson-ish noise so estimate jitters at low N
+          // Add small Poisson-ish noise so estimate jitters at low N — but
+          // freeze the noise when paused so the estimate sits still.
           const ideal = Math.exp(-(dist * dist) / (2 * sigmaCurrent * sigmaCurrent));
-          const noisy = Math.max(0, ideal + (Math.random() - 0.5) * 0.25);
+          const noisy = running
+            ? Math.max(0, ideal + (Math.random() - 0.5) * 0.25)
+            : ideal;
           const r = 6 + ideal * (RADIUS - 6);
           const x = Math.cos(phi) * r;
           const y = -Math.sin(phi) * r;
@@ -183,14 +221,41 @@ const uid = "pd-" + Math.random().toString(36).slice(2, 8);
         estLabel.setAttribute("y", (ey * 1.12 - 4).toFixed(1));
         estLabel.setAttribute("text-anchor", ex >= 0 ? "start" : "end");
 
-        // Error
+        // Error (radians → degrees)
         let err = Math.abs(estAngle - theta);
         if (err > Math.PI) err = 2 * Math.PI - err;
-        const errDeg = (err * 180 / Math.PI).toFixed(1);
-        errVal.textContent = errDeg + "°";
+        const errDeg = err * 180 / Math.PI;
+        errVal.textContent = errDeg.toFixed(1) + "°";
         nVal.textContent = N;
         nDisplay.textContent = N;
         sigmaVal.textContent = sigmaCurrent.toFixed(2);
+
+        // Push into rolling history and rebuild the trace polyline.
+        // Pause holds the trace in place — no new samples while paused.
+        if (running) {
+          errorHistory.push(errDeg);
+          if (errorHistory.length > HISTORY_LEN) errorHistory.shift();
+        }
+
+        const len = errorHistory.length;
+        // Right-anchor the trace so the most recent sample sits at x = PLOT_W
+        // and earlier samples scroll off to the left as new samples arrive.
+        const xStart = PLOT_W - (len - 1) * (PLOT_W / (HISTORY_LEN - 1));
+        const dx = PLOT_W / (HISTORY_LEN - 1);
+        let pts = "";
+        for (let i = 0; i < len; i++) {
+          const x = xStart + i * dx;
+          const yClamped = Math.min(errorHistory[i], ERR_DEG_MAX);
+          const y = PLOT_H - (yClamped / ERR_DEG_MAX) * PLOT_H;
+          pts += x.toFixed(1) + "," + y.toFixed(1) + " ";
+        }
+        errTrace.setAttribute("points", pts);
+        // Build a closed polygon for the area fill (trace + bottom corners).
+        const lastX = xStart + (len - 1) * dx;
+        errFill.setAttribute(
+          "points",
+          pts + lastX.toFixed(1) + "," + PLOT_H + " " + xStart.toFixed(1) + "," + PLOT_H
+        );
 
         raf = requestAnimationFrame(tick);
       }
@@ -217,7 +282,7 @@ const uid = "pd-" + Math.random().toString(36).slice(2, 8);
 <style>
   .sciviz-figure { margin: 1.2em 0 1.6em; }
   .sciviz-frame {
-    background: var(--light-bg-soft); border-radius: 10px;
+    background: var(--light-bg); border-radius: 10px;
     padding: clamp(20px, 2.5vw, 32px); color: var(--light-fg);
   }
   .sciviz-frame svg { width: 100%; height: auto; display: block; }
