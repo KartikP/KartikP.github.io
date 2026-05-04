@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 1523" preserveAspectRatio="xMidYMid meet">
+  <g transform="translate(-210 -10006)" stroke="currentColor" fill="currentColor">
+    <g transform="matrix(1.04834,0,0,1,-11.0227,-0.892301)">
+      <g>
+        <g transform="matrix(1.18708,0,0,1,-733.8,9732.68)">
+          <g transform="matrix(0.803556,0,0,1,795.76,274.209)">
+            <path d="M152.875,1120.3C93.184,1103.21 30.843,1137.79 13.747,1197.48C-3.349,1257.17 31.233,1319.51 90.923,1336.61C150.613,1353.7 212.954,1319.12 230.05,1259.43C247.146,1199.74 212.565,1137.4 152.875,1120.3Z"/>
+            <path d="M186.79,1247.04C253.627,1258.1 330.883,1261.09 401.503,1239.76C575.285,1187.27 678.04,652.975 705.655,494.689C851.054,-338.746 882.07,1091.87 1059.74,1401.62C1164.23,1583.79 1249.6,1265.08 1389.46,1202.66" fill="none" stroke-width="75" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </g>
+        <g transform="matrix(0.847783,-0.458355,0.437218,0.888769,-875.698,10928.7)">
+          <g transform="matrix(0.575573,0,0,0.575573,915.651,590.146)">
+            <path d="M2092.15,1382.54L2120.72,1210.27" fill="none" stroke-width="130.3" stroke-linecap="round"/>
+          </g>
+          <g transform="matrix(-0.23792,0.524097,0.524097,0.23792,1995.81,1.64823)">
+            <path d="M2092.15,1382.54L2120.72,1210.27" fill="none" stroke-width="130.3" stroke-linecap="round"/>
+          </g>
+        </g>
+        <g transform="matrix(1.03887,0,0,-0.963027,-763.843,12347)">
+          <g transform="matrix(0.918195,0,0,-1.03839,938.206,2429.91)">
+            <path d="M1450.81,986.646C1461.19,1026.72 1502.15,1050.82 1542.22,1040.44C1582.29,1030.06 1606.4,989.1 1596.02,949.03C1585.64,908.959 1544.67,884.854 1504.6,895.235C1464.53,905.615 1440.43,946.575 1450.81,986.646Z" fill="none" stroke-width="75" stroke-linejoin="miter" stroke-miterlimit="10"/>
+            <path d="M1504.6,895.235C1156.62,-288.312 324.461,-121.407 158.405,972.351" fill="none" stroke-width="75" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </g>
+        <g transform="matrix(-0.614408,0.764931,-0.729656,-0.644112,2683.62,10272.6)">
+          <g transform="matrix(0.575573,0,0,0.575573,915.651,590.146)">
+            <path d="M2092.15,1382.54L2120.72,1210.27" fill="none" stroke-width="130.3" stroke-linecap="round"/>
+          </g>
+          <g transform="matrix(-0.23792,0.524097,0.524097,0.23792,1995.81,1.64823)">
+            <path d="M2092.15,1382.54L2120.72,1210.27" fill="none" stroke-width="130.3" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

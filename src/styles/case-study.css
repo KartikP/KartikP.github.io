@@ -196,6 +196,18 @@
   font-weight: 400;
 }
 
+/* Neurocyte mark — sits inline with the title, sized to the cap height,
+   inherits the per-study accent colour via currentColor. */
+.case-title .case-mark {
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -0.12em;
+  margin-right: 0.18em;
+  color: var(--accent);
+  overflow: visible;
+}
+
 .case-summary {
   font-size: 18px;
   line-height: 1.55;

@@ -95,6 +95,16 @@
 
 .landing-header .kp-mark {
   color: var(--dark-fg);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.landing-header .kp-glyph {
+  width: 18px;
+  height: 16px;
+  color: var(--dark-fg);
+  flex: 0 0 auto;
+  overflow: visible;
 }
 
 .landing-footer {
@@ -150,6 +160,11 @@
   opacity: 0;
   filter: blur(1px);
 }
+/* Hero gets a small upward translate on top of the fade so it rises
+   into place from a few pixels below. Nav block stays in place. */
+.js .landing-hero[data-reveal] {
+  transform: translateY(10px);
+}
 .js [data-reveal].is-revealing {
   /* easeOutCubic — sharper acceleration up front, longer settle than the
      default ease-out keyword. */
@@ -163,7 +178,7 @@
   to { opacity: 1; filter: blur(0); }
 }
 @keyframes reveal-hero {
-  to { opacity: 0.78; filter: blur(0); }
+  to { opacity: 0.78; filter: blur(0); transform: translateY(0); }
 }
 
 /* Burst-shutter — fires when the neural raster reports a spontaneous
