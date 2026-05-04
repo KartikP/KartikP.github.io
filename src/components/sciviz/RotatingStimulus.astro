@@ -1,0 +1,287 @@
+---
+// RotatingStimulus — a stimulus arrow rotates around the unit circle.
+// On the left: a compass with stimulus arrow + preferred-angle mark.
+// On the right: the neuron's instantaneous firing rate over time, with a
+// Poisson-spike raster underneath. Auto-animates; click to pause.
+
+interface Props {
+  phi?: number;
+  sigma?: number;
+  speed?: number; // radians per second
+  caption?: string;
+}
+
+const { phi = 0.79, sigma = 0.4, speed = 0.6, caption } = Astro.props;
+const uid = "rs-" + Math.random().toString(36).slice(2, 8);
+---
+
+<figure class="sciviz-figure" data-uid={uid}>
+  <div class="sciviz-frame">
+    <svg viewBox="0 0 600 280" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Rotating stimulus and firing-rate trace">
+      <!-- Compass on the left -->
+      <g transform="translate(120 140)" class="compass">
+        <circle r="80" fill="none" stroke="currentColor" stroke-opacity="0.18" stroke-width="1" />
+        <circle r="2" fill="currentColor" fill-opacity="0.5" />
+        <!-- Cardinal ticks -->
+        <line x1="80" y1="0" x2="86" y2="0" stroke="currentColor" stroke-opacity="0.3" />
+        <line x1="-80" y1="0" x2="-86" y2="0" stroke="currentColor" stroke-opacity="0.3" />
+        <line y1="80" x1="0" y2="86" x2="0" stroke="currentColor" stroke-opacity="0.3" />
+        <line y1="-80" x1="0" y2="-86" x2="0" stroke="currentColor" stroke-opacity="0.3" />
+        <!-- Preferred direction marker (φ) -->
+        <g class="phi-marker">
+          <line class="phi-line" x1="0" y1="0" x2="0" y2="0" stroke="var(--accent)" stroke-opacity="0.4" stroke-dasharray="3 3" />
+          <circle class="phi-dot" cx="0" cy="0" r="3" fill="var(--accent)" fill-opacity="0.8" />
+        </g>
+        <!-- Stimulus arrow (rotating) -->
+        <g class="stim-arrow">
+          <line class="stim-line" x1="0" y1="0" x2="0" y2="0" stroke="var(--accent)" stroke-width="2" />
+          <polygon class="stim-head" points="0 0" fill="var(--accent)" />
+        </g>
+        <!-- Compass labels -->
+        <text x="0" y="-92" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.5">π/2</text>
+        <text x="98" y="3" text-anchor="start" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.5">0</text>
+        <text x="0" y="106" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.5">-π/2</text>
+        <text x="-98" y="3" text-anchor="end" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.5">±π</text>
+      </g>
+
+      <!-- Time series + raster on the right -->
+      <g transform="translate(260 28)">
+        <!-- Background guides -->
+        <line x1="0" y1="0" x2="0" y2="160" stroke="currentColor" stroke-opacity="0.18" />
+        <line x1="0" y1="160" x2="320" y2="160" stroke="currentColor" stroke-opacity="0.18" />
+        <line x1="0" y1="0" x2="320" y2="0" stroke="currentColor" stroke-opacity="0.06" />
+        <line x1="0" y1="80" x2="320" y2="80" stroke="currentColor" stroke-opacity="0.06" />
+        <!-- Y axis label -->
+        <text x="-8" y="164" text-anchor="end" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55">0</text>
+        <text x="-8" y="4" text-anchor="end" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55">1</text>
+        <text x="-30" y="80" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.7" letter-spacing="0.08em" transform="rotate(-90 -30 80)">RATE</text>
+        <!-- Trace path -->
+        <path class="trace" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linejoin="round" />
+        <path class="trace-fill" fill="var(--accent)" fill-opacity="0.10" stroke="none" />
+        <!-- Spike raster row -->
+        <g class="raster-row" transform="translate(0 184)"></g>
+        <text x="-8" y="194" text-anchor="end" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55">SPIKES</text>
+        <!-- Time axis labels -->
+        <text x="0" y="226" text-anchor="start" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55">-4s</text>
+        <text x="320" y="226" text-anchor="end" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55">now</text>
+      </g>
+    </svg>
+
+    <div class="sciviz-controls">
+      <label>
+        <span class="ctrl-label">σ <span class="ctrl-val sigma-val">0.40</span></span>
+        <input class="sigma-input" type="range" min="0.1" max="1.4" step="0.01" value={sigma} />
+      </label>
+      <label>
+        <span class="ctrl-label">SPEED <span class="ctrl-val speed-val">0.60</span></span>
+        <input class="speed-input" type="range" min="0.05" max="2" step="0.05" value={speed} />
+      </label>
+      <button class="play-btn" type="button" aria-pressed="true">PAUSE</button>
+    </div>
+  </div>
+  {caption && <figcaption class="sciviz-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline define:vars={{ uid, phi, sigma, speed }}>
+  (function () {
+    function bind() {
+      const root = document.querySelector(`[data-uid="${uid}"]`);
+      if (!root || root.__bound) return;
+      root.__bound = true;
+
+      const phiLine = root.querySelector(".phi-line");
+      const phiDot = root.querySelector(".phi-dot");
+      const stimLine = root.querySelector(".stim-line");
+      const stimHead = root.querySelector(".stim-head");
+      const trace = root.querySelector(".trace");
+      const traceFill = root.querySelector(".trace-fill");
+      const rasterRow = root.querySelector(".raster-row");
+      const sigmaInput = root.querySelector(".sigma-input");
+      const speedInput = root.querySelector(".speed-input");
+      const sigmaVal = root.querySelector(".sigma-val");
+      const speedVal = root.querySelector(".speed-val");
+      const playBtn = root.querySelector(".play-btn");
+
+      const RADIUS = 70;
+      const PLOT_W = 320;
+      const PLOT_H = 160;
+      const HISTORY_S = 4;
+      const FRAME_DT = 1 / 60;
+
+      let theta = 0;
+      let history = []; // [{t, f}]
+      let spikes = []; // [t]
+      let lastTime = performance.now();
+      let elapsed = 0;
+      let running = true;
+      let raf = null;
+
+      // SVG path helper for stim arrow
+      function setArrow(angle) {
+        const x = Math.cos(angle) * RADIUS;
+        const y = -Math.sin(angle) * RADIUS;
+        stimLine.setAttribute("x2", x.toFixed(1));
+        stimLine.setAttribute("y2", y.toFixed(1));
+        // Arrowhead triangle
+        const headLen = 9;
+        const ax = Math.cos(angle), ay = -Math.sin(angle);
+        const bx = -ay, by = ax;
+        const tipX = x, tipY = y;
+        const baseX = x - ax * headLen, baseY = y - ay * headLen;
+        const p1x = baseX + bx * 4.5, p1y = baseY + by * 4.5;
+        const p2x = baseX - bx * 4.5, p2y = baseY - by * 4.5;
+        stimHead.setAttribute("points", `${tipX.toFixed(1)},${tipY.toFixed(1)} ${p1x.toFixed(1)},${p1y.toFixed(1)} ${p2x.toFixed(1)},${p2y.toFixed(1)}`);
+      }
+
+      function setPhi() {
+        const x = Math.cos(phi) * RADIUS;
+        const y = -Math.sin(phi) * RADIUS;
+        phiLine.setAttribute("x2", x);
+        phiLine.setAttribute("y2", y);
+        phiDot.setAttribute("cx", x);
+        phiDot.setAttribute("cy", y);
+      }
+
+      function tuningRate(theta, sigmaCurrent) {
+        let dist = Math.abs(theta - phi);
+        if (dist > Math.PI) dist = 2 * Math.PI - dist;
+        return Math.exp(-(dist * dist) / (2 * sigmaCurrent * sigmaCurrent));
+      }
+
+      function tick(now) {
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+        if (running) {
+          elapsed += dt;
+          const sp = parseFloat(speedInput.value);
+          theta += sp * dt;
+          while (theta > Math.PI) theta -= 2 * Math.PI;
+          while (theta < -Math.PI) theta += 2 * Math.PI;
+
+          const sigmaCurrent = parseFloat(sigmaInput.value);
+          const f = tuningRate(theta, sigmaCurrent);
+
+          history.push({ t: elapsed, f });
+          while (history.length && history[0].t < elapsed - HISTORY_S) history.shift();
+
+          // Poisson-ish spike emission, ~max 30 spikes/sec at f=1
+          const spikeProb = f * 30 * dt;
+          if (Math.random() < spikeProb) spikes.push(elapsed);
+          while (spikes.length && spikes[0] < elapsed - HISTORY_S) spikes.shift();
+
+          setArrow(theta);
+        }
+
+        // Render trace
+        if (history.length > 1) {
+          let d = "";
+          let dFill = "";
+          for (let i = 0; i < history.length; i++) {
+            const { t, f } = history[i];
+            const x = ((t - (elapsed - HISTORY_S)) / HISTORY_S) * PLOT_W;
+            const y = PLOT_H - f * PLOT_H;
+            d += (i === 0 ? "M" : "L") + x.toFixed(1) + " " + y.toFixed(1);
+          }
+          dFill = d + ` L${PLOT_W} ${PLOT_H} L0 ${PLOT_H} Z`;
+          trace.setAttribute("d", d);
+          traceFill.setAttribute("d", dFill);
+        }
+
+        // Render spike raster
+        // Use cheap diff: clear + redraw
+        rasterRow.textContent = "";
+        const ns = "http://www.w3.org/2000/svg";
+        for (const s of spikes) {
+          const x = ((s - (elapsed - HISTORY_S)) / HISTORY_S) * PLOT_W;
+          const line = document.createElementNS(ns, "line");
+          line.setAttribute("x1", x.toFixed(1));
+          line.setAttribute("x2", x.toFixed(1));
+          line.setAttribute("y1", "0");
+          line.setAttribute("y2", "14");
+          line.setAttribute("stroke", "currentColor");
+          line.setAttribute("stroke-opacity", "0.65");
+          line.setAttribute("stroke-width", "1.5");
+          rasterRow.appendChild(line);
+        }
+
+        sigmaVal.textContent = parseFloat(sigmaInput.value).toFixed(2);
+        speedVal.textContent = parseFloat(speedInput.value).toFixed(2);
+
+        raf = requestAnimationFrame(tick);
+      }
+
+      playBtn.addEventListener("click", () => {
+        running = !running;
+        playBtn.textContent = running ? "PAUSE" : "PLAY";
+        playBtn.setAttribute("aria-pressed", String(running));
+      });
+
+      setPhi();
+      raf = requestAnimationFrame(tick);
+
+      root.__cleanup = () => {
+        if (raf) cancelAnimationFrame(raf);
+      };
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bind);
+    } else {
+      bind();
+    }
+    document.addEventListener("astro:page-load", bind);
+  })();
+</script>
+
+<style>
+  .sciviz-figure { margin: 1.2em 0 1.6em; }
+  .sciviz-frame {
+    background: var(--light-bg-soft);
+    border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px);
+    color: var(--light-fg);
+  }
+  .sciviz-frame svg { width: 100%; height: auto; display: block; }
+  .sciviz-controls {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 16px 24px;
+    align-items: end;
+  }
+  .sciviz-controls label {
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--light-fg-muted);
+  }
+  .ctrl-label { display: flex; justify-content: space-between; align-items: baseline; }
+  .ctrl-val { color: var(--light-fg); font-variant-numeric: tabular-nums; font-weight: 600; letter-spacing: 0; }
+  .sciviz-controls input[type="range"] {
+    -webkit-appearance: none; appearance: none; width: 100%;
+    height: 4px; background: color-mix(in srgb, var(--accent) 25%, var(--light-bg-soft));
+    border-radius: 2px; outline: none; cursor: pointer;
+  }
+  .sciviz-controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--light-bg);
+  }
+  .sciviz-controls input[type="range"]::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--light-bg);
+  }
+  .play-btn {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--accent); color: white;
+    border: none; padding: 9px 14px; border-radius: 4px;
+    cursor: pointer; font-weight: 600;
+  }
+  .play-btn:hover { opacity: 0.9; }
+  .sciviz-caption {
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 0.05em; color: var(--light-fg-muted);
+    margin-top: 10px; text-align: center;
+  }
+</style>

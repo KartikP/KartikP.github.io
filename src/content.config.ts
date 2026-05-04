@@ -16,17 +16,31 @@ const posts = defineCollection({
   }),
 });
 
-// Projects — selected work and prototypes.
+// Projects — selected work and prototypes. Routed through CaseStudyLayout
+// just like /work entries. Markdown projects render their content inside
+// a .prose wrapper; MDX projects can additionally use case-study and
+// sciviz components inline.
 const projects = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/projects" }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
     description: z.string().optional(),
+    summary: z.string().optional(),     // long-form hero paragraph; falls back to description
+    accent: z.string().default("#404040"),
     url: z.string().url().optional(),
     repo: z.string().url().optional(),
     draft: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
+    // Optional case-study meta — render a MetaBar if any of these is set.
+    role: z.string().optional(),
+    team: z.string().optional(),
+    timeline: z.string().optional(),
+    skills: z.array(z.string()).default([]),
+    // Hero artwork — either a static image or a named live component.
+    heroImage: z.string().optional(),
+    heroImageAlt: z.string().optional(),
+    heroComponent: z.enum(["RasterMini"]).optional(),
   }),
 });
 

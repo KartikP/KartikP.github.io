@@ -2,6 +2,7 @@
    Per-study accent comes in via inline style on .case-shell as --accent. */
 
 @import "@fontsource-variable/newsreader";
+@import "katex/dist/katex.min.css";
 
 .case-body {
   background: var(--light-bg);
@@ -19,8 +20,9 @@
   gap: clamp(24px, 4vw, 64px);
   max-width: 1280px;
   margin: 0 auto;
-  padding: clamp(24px, 3vw, 48px) clamp(20px, 4vw, 64px) clamp(64px, 10vh, 120px);
+  padding: 0 clamp(20px, 4vw, 64px) clamp(64px, 10vh, 120px);
 }
+
 
 /* --- Sticky TOC sidebar --- */
 .case-sidebar {
@@ -30,30 +32,36 @@
   height: calc(100vh - clamp(48px, 6vw, 96px));
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 32px;
+  gap: 24px;
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.06em;
+  min-height: 0;
 }
 
-.case-sidebar .home-link {
-  color: var(--light-fg);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  opacity: 0.85;
-  transition: opacity 150ms ease;
-}
-.case-sidebar .home-link:hover { opacity: 1; }
+.case-sidebar .back-to-top { flex: 0 0 auto; margin-top: auto; }
 
 .case-toc {
   background: color-mix(in srgb, var(--accent) 8%, var(--light-bg-soft));
   border-radius: 6px;
   padding: 18px 14px;
+  /* Allow internal scroll when the list overflows the sidebar's height,
+     instead of being cut off at the bottom. */
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
+}
+.case-toc::-webkit-scrollbar { width: 6px; }
+.case-toc::-webkit-scrollbar-track { background: transparent; }
+.case-toc::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 3px;
+}
+.case-toc::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent) 55%, transparent);
 }
 
 .case-toc-label {
@@ -130,6 +138,19 @@
   max-height: 100%;
   border-radius: 10px;
   box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+}
+
+/* Embed variant — for live components that should fill the hero frame
+   edge-to-edge (no padding, no enforced aspect ratio). */
+.case-hero--embed {
+  aspect-ratio: auto;
+  padding: 0;
+  background: var(--light-bg-soft);
+  display: block;
+}
+.case-hero--embed > *:not(script):not(style) {
+  display: block;
+  width: 100%;
 }
 
 /* Eyebrow tags row */
@@ -474,28 +495,123 @@
   text-align: center;
 }
 
-/* --- Next project footer --- */
-.next-project {
-  border-top: 1px solid var(--light-rule);
-  padding-top: 32px;
-  margin-top: clamp(64px, 10vw, 128px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.next-project a {
+/* --- Plain prose inside .case-main (used by project detail pages) ---
+   The .prose styles in content.css are scoped to .content (LightLayout);
+   when project markdown renders inside CaseStudyLayout we re-apply the
+   essentials so paragraphs, lists, code, and images all look consistent. */
+.case-main .prose {
+  font-size: 17px;
+  line-height: 1.65;
   color: var(--light-fg);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
 }
-.next-project a:hover { color: var(--accent); }
-.next-project .next-label { color: var(--light-fg-muted); }
+.case-main .prose p { margin: 0 0 1.1em; }
+.case-main .prose h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(28px, 3.6vw, 42px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 2em 0 0.6em;
+  color: var(--light-fg);
+}
+.case-main .prose h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.25;
+  margin: 1.6em 0 0.4em;
+  color: var(--light-fg);
+}
+.case-main .prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+.case-main .prose strong { font-weight: 600; }
+.case-main .prose em { font-style: italic; }
+.case-main .prose ul,
+.case-main .prose ol {
+  margin: 0 0 1.1em;
+  padding-left: 1.4em;
+}
+.case-main .prose li { margin: 0 0 0.4em; }
+.case-main .prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--light-bg-soft);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.case-main .prose pre {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.55;
+  padding: 16px 20px;
+  background: var(--light-bg-soft);
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 0 0 1.2em;
+  max-width: 100%;
+}
+.case-main .prose pre code { background: none; padding: 0; }
+.case-main .prose blockquote {
+  margin: 1.2em 0;
+  padding: 0 0 0 18px;
+  border-left: 2px solid var(--light-rule);
+  color: var(--light-fg-muted);
+  font-style: italic;
+}
+.case-main .prose hr {
+  border: 0;
+  border-top: 1px solid var(--light-rule);
+  margin: 2em 0;
+}
+.case-main .prose img,
+.case-main .prose video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.2em auto;
+  border-radius: 4px;
+}
+.case-main .prose iframe {
+  display: block;
+  margin: 1.2em auto;
+  max-width: 100%;
+  width: 100%;
+  border: 0;
+  border-radius: 4px;
+  background: var(--light-bg-soft);
+}
+.case-main .prose table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+  border-collapse: collapse;
+  margin: 1.2em 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.case-main .prose table th,
+.case-main .prose table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--light-rule);
+  white-space: nowrap;
+}
+.case-main .prose table thead th {
+  border-bottom: 2px solid var(--light-fg);
+  font-weight: 600;
+}
+.case-main .prose table tbody tr:hover { background: var(--light-bg-soft); }
+
+/* Hide leftover Colab/Jupyter widget chrome from older project markdown. */
+.case-main .prose button.colab-df-convert,
+.case-main .prose button.colab-df-quickchart {
+  display: none !important;
+}
+
 
 /* --- Mobile: hide sidebar --- */
 @media (max-width: 920px) {

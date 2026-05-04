@@ -1,0 +1,9 @@
+---
+import { site } from "../config/site";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <span>© {year} {site.name}</span>
+  <a href={site.social.github} target="_blank" rel="noopener">GitHub</a>
+</footer>

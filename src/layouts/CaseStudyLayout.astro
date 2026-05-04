@@ -3,6 +3,7 @@ import "../styles/global.css";
 import "../styles/case-study.css";
 import { ClientRouter } from "astro:transitions";
 import TransitionDirection from "../components/TransitionDirection.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { site } from "../config/site";
 
 interface TocEntry {
@@ -28,6 +29,12 @@ const {
 
 const pageTitle = `${title} — ${site.name}`;
 const metaDescription = description ?? summary ?? site.hero;
+
+// Breadcrumb trail mirroring LightLayout — derives section from URL.
+//   /work/<slug>      -> ← Kartik Pradeepan / WORK /
+//   /projects/<slug>  -> ← Kartik Pradeepan / PROJECTS /
+const segments = Astro.url.pathname.split("/").filter(Boolean);
+const topSeg = segments[0];
 ---
 
 <!doctype html>
@@ -43,10 +50,20 @@ const metaDescription = description ?? summary ?? site.hero;
     <TransitionDirection />
   </head>
   <body class="case-body" style={`--accent: ${accent};`}>
+    <header class="page-chrome">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/" class="crumb crumb-home">← {site.name}</a>
+        {topSeg && (
+          <>
+            <span class="crumb-sep" aria-hidden="true">/</span>
+            <a href={`/${topSeg}`} class="crumb">{topSeg.toUpperCase()}</a>
+            <span class="crumb-sep" aria-hidden="true">/</span>
+          </>
+        )}
+      </nav>
+    </header>
     <div class="case-shell">
       <aside class="case-sidebar">
-        <a href="/" class="home-link">← {site.name}</a>
-
         {toc.length > 0 && (
           <nav class="case-toc" aria-label="Case study sections">
             <p class="case-toc-label">Table of contents</p>
@@ -69,6 +86,7 @@ const metaDescription = description ?? summary ?? site.hero;
         <slot />
       </main>
     </div>
+    <SiteFooter />
 
     <script is:inline>
       // Active-section highlighting via IntersectionObserver.

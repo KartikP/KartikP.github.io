@@ -1,0 +1,268 @@
+---
+// TuningCurve — interactive Gaussian tuning curve.
+//
+// f(θ) = exp(-(θ - φ)² / 2σ²)
+//
+// User drags sliders for preferred angle (φ) and tuning width (σ); the
+// curve updates smoothly. Designed to match the case-study aesthetic
+// (cream paper, accent color from --accent on the surrounding context,
+// monospace axis labels). Works inside both case-study and project MDX
+// files since it depends only on global CSS variables.
+
+interface Props {
+  initialPhi?: number;     // radians, default π/4
+  initialSigma?: number;   // radians, default 0.4
+  caption?: string;
+}
+
+const {
+  initialPhi = Math.PI / 4,
+  initialSigma = 0.4,
+  caption,
+} = Astro.props;
+
+// Stable id so multiple instances don't conflict.
+const uid = "tc-" + Math.random().toString(36).slice(2, 8);
+---
+
+<figure class="sciviz-figure tuning-curve" data-uid={uid}>
+  <div class="sciviz-frame">
+    <svg
+      viewBox="0 0 600 280"
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="Gaussian tuning curve"
+    >
+      <!-- Plot area -->
+      <g transform="translate(60 24)">
+        <!-- Y-axis -->
+        <line x1="0" y1="0" x2="0" y2="200" stroke="currentColor" stroke-opacity="0.3" />
+        <!-- X-axis -->
+        <line x1="0" y1="200" x2="500" y2="200" stroke="currentColor" stroke-opacity="0.3" />
+
+        <!-- Tick marks on x-axis (-π, -π/2, 0, π/2, π) -->
+        <g class="x-ticks" font-family="var(--font-mono)" font-size="11" fill="currentColor" fill-opacity="0.55">
+          <g><line x1="0" y1="200" x2="0" y2="206" stroke="currentColor" stroke-opacity="0.3" /><text x="0" y="222" text-anchor="middle">-π</text></g>
+          <g><line x1="125" y1="200" x2="125" y2="206" stroke="currentColor" stroke-opacity="0.3" /><text x="125" y="222" text-anchor="middle">-π/2</text></g>
+          <g><line x1="250" y1="200" x2="250" y2="206" stroke="currentColor" stroke-opacity="0.3" /><text x="250" y="222" text-anchor="middle">0</text></g>
+          <g><line x1="375" y1="200" x2="375" y2="206" stroke="currentColor" stroke-opacity="0.3" /><text x="375" y="222" text-anchor="middle">π/2</text></g>
+          <g><line x1="500" y1="200" x2="500" y2="206" stroke="currentColor" stroke-opacity="0.3" /><text x="500" y="222" text-anchor="middle">π</text></g>
+        </g>
+
+        <!-- Y-axis labels (0 and 1) -->
+        <g font-family="var(--font-mono)" font-size="11" fill="currentColor" fill-opacity="0.55" text-anchor="end">
+          <text x="-8" y="204">0</text>
+          <text x="-8" y="4">1</text>
+        </g>
+
+        <!-- Axis titles -->
+        <text x="250" y="252" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="currentColor" fill-opacity="0.7" letter-spacing="0.08em">
+          STIMULUS ANGLE θ
+        </text>
+        <text x="-44" y="100" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="currentColor" fill-opacity="0.7" letter-spacing="0.08em" transform="rotate(-90 -44 100)">
+          FIRING RATE f(θ)
+        </text>
+
+        <!-- The Gaussian curve (path is set by JS) -->
+        <path class="curve" fill="none" stroke="var(--accent, #c5663a)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+        <!-- Soft fill under the curve -->
+        <path class="curve-fill" fill="var(--accent, #c5663a)" fill-opacity="0.12" stroke="none" />
+
+        <!-- Vertical guide line at φ -->
+        <line class="phi-guide" y1="0" y2="200" stroke="var(--accent, #c5663a)" stroke-opacity="0.4" stroke-dasharray="3 3" />
+
+        <!-- φ label at top -->
+        <text class="phi-label" y="-6" text-anchor="middle"
+          font-family="var(--font-mono)" font-size="11" fill="var(--accent, #c5663a)" font-weight="600">φ</text>
+
+        <!-- σ width markers (horizontal segment at f = exp(-1/2) ≈ 0.61, between φ-σ and φ+σ) -->
+        <line class="sigma-guide" stroke="currentColor" stroke-opacity="0.5" stroke-width="1" />
+        <text class="sigma-label" text-anchor="middle"
+          font-family="var(--font-mono)" font-size="11" fill="currentColor" fill-opacity="0.7">σ</text>
+      </g>
+    </svg>
+
+    <div class="sciviz-controls">
+      <label>
+        <span class="ctrl-label">φ <span class="ctrl-val phi-val">0.79</span></span>
+        <input class="phi-input" type="range" min="-3.14" max="3.14" step="0.01" value={initialPhi} />
+      </label>
+      <label>
+        <span class="ctrl-label">σ <span class="ctrl-val sigma-val">0.40</span></span>
+        <input class="sigma-input" type="range" min="0.1" max="1.4" step="0.01" value={initialSigma} />
+      </label>
+    </div>
+  </div>
+  {caption && <figcaption class="sciviz-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline define:vars={{ uid, initialPhi, initialSigma }}>
+  (function () {
+    function bind() {
+      const root = document.querySelector(`[data-uid="${uid}"]`);
+      if (!root || root.__bound) return;
+      root.__bound = true;
+
+      const curve = root.querySelector(".curve");
+      const fill = root.querySelector(".curve-fill");
+      const phiGuide = root.querySelector(".phi-guide");
+      const phiLabel = root.querySelector(".phi-label");
+      const sigmaGuide = root.querySelector(".sigma-guide");
+      const sigmaLabel = root.querySelector(".sigma-label");
+      const phiInput = root.querySelector(".phi-input");
+      const sigmaInput = root.querySelector(".sigma-input");
+      const phiVal = root.querySelector(".phi-val");
+      const sigmaVal = root.querySelector(".sigma-val");
+
+      // Plot area: 0..500 in x, 0..200 in y. θ ∈ [-π, π], f ∈ [0, 1].
+      const W = 500;
+      const H = 200;
+
+      function xOf(theta) { return ((theta + Math.PI) / (2 * Math.PI)) * W; }
+      function yOf(f) { return H - f * H; }
+
+      function update() {
+        const phi = parseFloat(phiInput.value);
+        const sigma = parseFloat(sigmaInput.value);
+        phiVal.textContent = phi.toFixed(2);
+        sigmaVal.textContent = sigma.toFixed(2);
+
+        // Sample the gaussian across θ
+        const N = 200;
+        let d = "";
+        let dFill = "";
+        for (let i = 0; i <= N; i++) {
+          const theta = -Math.PI + (i / N) * 2 * Math.PI;
+          // Compute angular distance with wraparound
+          let dist = Math.abs(theta - phi);
+          if (dist > Math.PI) dist = 2 * Math.PI - dist;
+          const f = Math.exp(-(dist * dist) / (2 * sigma * sigma));
+          const x = xOf(theta);
+          const y = yOf(f);
+          d += (i === 0 ? "M" : "L") + x.toFixed(1) + " " + y.toFixed(1);
+        }
+        // Closed path for the fill (down to y=H, back along baseline)
+        dFill = d + ` L${W} ${H} L0 ${H} Z`;
+
+        curve.setAttribute("d", d);
+        fill.setAttribute("d", dFill);
+
+        // Phi guide
+        const phiX = xOf(phi);
+        phiGuide.setAttribute("x1", phiX);
+        phiGuide.setAttribute("x2", phiX);
+        phiLabel.setAttribute("x", phiX);
+
+        // Sigma guide — horizontal segment at f = exp(-1/2) ≈ 0.6065
+        // between θ = φ - σ and θ = φ + σ
+        const fAtSigma = Math.exp(-0.5);
+        const sigmaY = yOf(fAtSigma);
+        // For visualization wrap to nearest within plot
+        const x1raw = xOf(phi - sigma);
+        const x2raw = xOf(phi + sigma);
+        const x1 = Math.max(0, Math.min(W, x1raw));
+        const x2 = Math.max(0, Math.min(W, x2raw));
+        sigmaGuide.setAttribute("x1", x1);
+        sigmaGuide.setAttribute("y1", sigmaY);
+        sigmaGuide.setAttribute("x2", x2);
+        sigmaGuide.setAttribute("y2", sigmaY);
+        sigmaLabel.setAttribute("x", (x1 + x2) / 2);
+        sigmaLabel.setAttribute("y", sigmaY - 6);
+      }
+
+      phiInput.addEventListener("input", update);
+      sigmaInput.addEventListener("input", update);
+      update();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bind);
+    } else {
+      bind();
+    }
+    document.addEventListener("astro:page-load", bind);
+  })();
+</script>
+
+<style>
+  .sciviz-figure {
+    margin: 1.2em 0 1.6em;
+  }
+  .sciviz-frame {
+    background: var(--light-bg-soft, #efece6);
+    border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px);
+    color: var(--light-fg, #1a1a1a);
+  }
+  .sciviz-frame svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .sciviz-controls {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
+  }
+  .sciviz-controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--light-fg-muted, #6b6a66);
+  }
+  .ctrl-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .ctrl-val {
+    color: var(--light-fg, #1a1a1a);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  .sciviz-controls input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: color-mix(in srgb, var(--accent, #c5663a) 25%, var(--light-bg-soft));
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  .sciviz-controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent, #c5663a);
+    border: 2px solid var(--light-bg);
+    cursor: grab;
+    transition: transform 120ms ease;
+  }
+  .sciviz-controls input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.15); }
+  .sciviz-controls input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent, #c5663a);
+    border: 2px solid var(--light-bg);
+    cursor: grab;
+  }
+  .sciviz-caption {
+    font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--light-fg-muted, #6b6a66);
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>

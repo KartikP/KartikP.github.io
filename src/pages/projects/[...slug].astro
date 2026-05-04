@@ -1,6 +1,9 @@
 ---
 import { getCollection, render } from "astro:content";
-import LightLayout from "../../layouts/LightLayout.astro";
+import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+import CaseHero from "../../components/case-study/CaseHero.astro";
+import MetaBar from "../../components/case-study/MetaBar.astro";
+import RasterMini from "../../components/sciviz/RasterMini.astro";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects", ({ data }) => !data.draft);
@@ -11,25 +14,52 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { Content } = await render(project);
+const { Content, headings } = await render(project);
+
+const toc = headings
+  .filter((h) => h.depth === 2)
+  .map((h) => ({ id: h.slug, label: h.text }));
 
 const fmt = (d: Date) =>
-  d.toLocaleDateString("en-US", { year: "numeric", month: "long" });
+  d.toLocaleDateString("en-US", { year: "numeric", month: "short" });
+
+const heroTags = [fmt(project.data.date).toUpperCase()];
+if (project.data.repo) heroTags.push("REPO");
+if (project.data.url) heroTags.push("LIVE");
+
+const showMeta = !!(project.data.role || project.data.team || project.data.timeline || project.data.skills.length);
+
+const { heroImage, heroImageAlt, heroComponent } = project.data;
+const heroVariant = heroComponent ? "embed" : "card";
 ---
 
-<LightLayout title={project.data.title} section="Projects" description={project.data.description} wide>
-  <h1 class="page-title">{project.data.title}</h1>
-  <p class="page-subtitle">
-    <time datetime={project.data.date.toISOString()}>{fmt(project.data.date)}</time>
-    {project.data.url && <> · <a href={project.data.url} target="_blank" rel="noopener">Live</a></>}
-    {project.data.repo && <> · <a href={project.data.repo} target="_blank" rel="noopener">Repo</a></>}
-  </p>
+<CaseStudyLayout
+  title={project.data.title}
+  summary={project.data.summary || project.data.description}
+  accent={project.data.accent}
+  toc={toc}
+>
+  <CaseHero
+    title={project.data.title}
+    summary={project.data.summary || project.data.description}
+    tags={heroTags}
+    image={heroImage}
+    imageAlt={heroImageAlt}
+    variant={heroVariant}
+  >
+    {heroComponent === "RasterMini" && <RasterMini height={260} neuronCount={280} />}
+  </CaseHero>
 
-  <article class="prose">
+  {showMeta && (
+    <MetaBar
+      role={project.data.role}
+      team={project.data.team}
+      timeline={project.data.timeline}
+      skills={project.data.skills}
+    />
+  )}
+
+  <article class="prose case-prose">
     <Content />
   </article>
-
-  <p style="margin-top: 3rem;">
-    <a href="/projects" class="entry-meta" style="text-decoration: underline; text-underline-offset: 0.25em;">← All projects</a>
-  </p>
-</LightLayout>
+</CaseStudyLayout>

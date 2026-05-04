@@ -1,0 +1,247 @@
+---
+// RasterMini — a stripped-down version of the landing page raster, for
+// embedding in case-study heroes or anywhere a small live raster fits.
+//
+// Differences from the landing version:
+//   - No LFP strip, no RSB on click, no Hebbian learning, no mouse input
+//   - Self-contained: own neuron pool, own animation loop, own DOM
+//   - Multiple instances on the same page work fine
+//   - Auto-pauses via IntersectionObserver when scrolled out of view
+
+interface Props {
+  height?: number;        // px height (default 220)
+  neuronCount?: number;   // default 240
+  caption?: string;
+}
+
+const { height = 220, neuronCount = 240, caption } = Astro.props;
+const uid = "rm-" + Math.random().toString(36).slice(2, 8);
+---
+
+<figure class="raster-mini" data-uid={uid} style={`--mini-height: ${height}px;`}>
+  <div class="rm-frame">
+    <canvas class="rm-canvas"></canvas>
+  </div>
+  {caption && <figcaption class="rm-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline define:vars={{ uid, neuronCount }}>
+  (function () {
+    function bind() {
+      const root = document.querySelector(`[data-uid="${uid}"]`);
+      if (!root || root.__bound) return;
+      root.__bound = true;
+
+      const canvas = root.querySelector(".rm-canvas");
+      const ctx = canvas.getContext("2d", { alpha: false });
+
+      // Neuron population — same parameters as the landing simulation
+      // but at smaller scale. ~15% are bursty (emit short spike trains
+      // instead of single spikes when triggered).
+      const neurons = [];
+      for (let i = 0; i < neuronCount; i++) {
+        const isHigh = Math.random() < 0.04;
+        const isBursty = Math.random() < 0.15;
+        neurons.push({
+          preferredAngle: Math.random() * Math.PI * 2,
+          tuningWidth: 0.2 + Math.random() * 0.5,
+          baseExcitability: isHigh ? 0.02 : 0.003,
+          baseAlpha: isHigh ? 0.85 : 0.5,
+          size: isHigh ? 2 : 1.2,
+          isBursty,
+          // Pending burst spikes: array of seconds-from-now until each follow-up spike fires.
+          burstQueue: [],
+        });
+      }
+
+      const SPEED = 2;
+      let width = 0, height = 0;
+
+      // Phantom stimulus — slowly rotating preferred direction with
+      // intensity that drifts between low and high so the raster has
+      // visible "waves" of activity rather than uniform baseline.
+      let phantomAngle = 0;
+      let phantomIntensity = 3;
+      let phantomTarget = 6;
+      let burstCountdown = 1.5;
+
+      // Network-burst state — a brief population-wide excitability surge
+      // every few seconds, decaying back to 1.0. Multiplies every
+      // neuron's spike probability for a fraction of a second.
+      let networkBurst = 1;
+      let networkCountdown = 2 + Math.random() * 3;
+
+      function resize() {
+        const r = canvas.getBoundingClientRect();
+        const w = Math.floor(r.width);
+        const h = Math.floor(r.height);
+        if (!w || !h) return;
+        if (w === width && h === height) return;
+        width = canvas.width = w;
+        height = canvas.height = h;
+        ctx.fillStyle = "#050507";
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      let raf = null;
+      let running = false;
+      let lastTime = performance.now();
+
+      function tick(now) {
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+
+        if (!width || !height) {
+          resize();
+          if (running) raf = requestAnimationFrame(tick);
+          return;
+        }
+
+        // Drift the phantom stimulus
+        phantomAngle += 0.45 * dt;
+        if (phantomAngle > Math.PI * 2) phantomAngle -= Math.PI * 2;
+        burstCountdown -= dt;
+        if (burstCountdown <= 0) {
+          phantomTarget = 2 + Math.random() * 12;
+          burstCountdown = 1.2 + Math.random() * 2.6;
+        }
+        phantomIntensity += (phantomTarget - phantomIntensity) * Math.min(1, dt * 2);
+
+        // Network-burst event scheduler. Every few seconds the whole
+        // population gets a multiplicative excitability kick; networkBurst
+        // decays back toward 1 with τ ≈ 0.18 s.
+        networkCountdown -= dt;
+        if (networkCountdown <= 0) {
+          networkBurst = Math.max(networkBurst, 3.5 + Math.random() * 2.5);
+          networkCountdown = 2.5 + Math.random() * 4.5;
+        }
+        networkBurst += (1 - networkBurst) * Math.min(1, dt / 0.18);
+
+        // Scroll the canvas left and clear the right column
+        ctx.drawImage(canvas, -SPEED, 0);
+        ctx.fillStyle = "rgba(5, 5, 7, 0.85)";
+        ctx.fillRect(width - SPEED, 0, SPEED, height);
+
+        // Draw spikes for this frame
+        const rowStep = height / neurons.length;
+        for (let i = 0; i < neurons.length; i++) {
+          const n = neurons[i];
+          let dist = Math.abs(phantomAngle - n.preferredAngle);
+          if (dist > Math.PI) dist = 2 * Math.PI - dist;
+          const tuning = Math.exp(-(dist * dist) / (2 * n.tuningWidth * n.tuningWidth));
+          const evoked = phantomIntensity * 0.0028 * tuning;
+          const p = (n.baseExcitability + evoked) * networkBurst;
+
+          // Drain any due burst spikes scheduled from a prior frame.
+          let firedFromBurst = false;
+          if (n.burstQueue.length) {
+            for (let k = n.burstQueue.length - 1; k >= 0; k--) {
+              n.burstQueue[k] -= dt;
+              if (n.burstQueue[k] <= 0) {
+                firedFromBurst = true;
+                n.burstQueue.splice(k, 1);
+              }
+            }
+          }
+
+          const fired = firedFromBurst || Math.random() < p;
+          if (!fired) continue;
+
+          // If this is a bursty cell triggered by Poisson (not by its own
+          // queue), schedule 2–7 follow-up spikes spaced 10–20 ms apart.
+          if (n.isBursty && !firedFromBurst && n.burstQueue.length === 0) {
+            const extra = 2 + Math.floor(Math.random() * 6);
+            let t0 = 0;
+            for (let k = 0; k < extra; k++) {
+              t0 += 0.010 + Math.random() * 0.010;
+              n.burstQueue.push(t0);
+            }
+          }
+
+          const isEvoked = phantomIntensity > 4 && tuning > 0.55;
+          const t = 1 - Math.abs((n.preferredAngle / Math.PI) - 1);
+          const lightness = isEvoked ? 60 + t * 25 : 35 + t * 25;
+          ctx.fillStyle = isEvoked
+            ? `hsl(0, 0%, ${lightness}%)`
+            : `hsla(0, 0%, ${lightness}%, ${n.baseAlpha})`;
+          ctx.fillRect(width - SPEED, i * rowStep, n.size, n.size);
+        }
+
+        if (running) raf = requestAnimationFrame(tick);
+      }
+
+      function start() {
+        if (running) return;
+        running = true;
+        lastTime = performance.now();
+        raf = requestAnimationFrame(tick);
+      }
+      function stop() {
+        running = false;
+        if (raf) cancelAnimationFrame(raf);
+        raf = null;
+      }
+
+      // Pause when out of viewport
+      if (typeof IntersectionObserver !== "undefined") {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) start();
+              else stop();
+            }
+          },
+          { threshold: 0.01 }
+        );
+        io.observe(root);
+      } else {
+        start();
+      }
+
+      // Track size changes
+      if (typeof ResizeObserver !== "undefined") {
+        const ro = new ResizeObserver(() => resize());
+        ro.observe(canvas);
+      }
+      window.addEventListener("resize", resize);
+
+      resize();
+
+      root.__cleanup = () => {
+        stop();
+      };
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bind);
+    } else {
+      bind();
+    }
+    document.addEventListener("astro:page-load", bind);
+  })();
+</script>
+
+<style>
+  .raster-mini { margin: 0; width: 100%; }
+  .rm-frame {
+    width: 100%;
+    height: var(--mini-height);
+    background: #050507;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .rm-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .rm-caption {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--light-fg-muted);
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>

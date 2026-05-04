@@ -1,0 +1,266 @@
+---
+// NeuronTypes — three small rasters showing how the same input drive
+// produces different outputs for three neuron types: standard, bursty,
+// persistent. Drive impulses fire on a regular cadence; click anywhere
+// in the figure to apply an extra drive.
+
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+const uid = "nt-" + Math.random().toString(36).slice(2, 8);
+---
+
+<figure class="sciviz-figure" data-uid={uid}>
+  <div class="sciviz-frame">
+    <svg viewBox="0 0 600 240" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Three neuron types responding to the same drive">
+      <!-- Three columns -->
+      <g transform="translate(20 28)" class="col col-standard">
+        <text x="0" y="-12" font-family="var(--font-mono)" font-size="11" letter-spacing="0.12em" fill="var(--light-fg)" font-weight="600">STANDARD</text>
+        <rect width="180" height="100" fill="color-mix(in srgb, var(--accent) 6%, var(--light-bg))" rx="4" />
+        <g class="raster"></g>
+        <path class="rate-trace" fill="none" stroke="var(--accent)" stroke-opacity="0.45" stroke-width="1.4" />
+        <text x="0" y="118" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55">Poisson, low rate</text>
+      </g>
+
+      <g transform="translate(210 28)" class="col col-bursty">
+        <text x="0" y="-12" font-family="var(--font-mono)" font-size="11" letter-spacing="0.12em" fill="var(--light-fg)" font-weight="600">BURSTY</text>
+        <rect width="180" height="100" fill="color-mix(in srgb, var(--accent) 6%, var(--light-bg))" rx="4" />
+        <g class="raster"></g>
+        <path class="rate-trace" fill="none" stroke="var(--accent)" stroke-opacity="0.45" stroke-width="1.4" />
+        <text x="0" y="118" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55">Short trains on activation</text>
+      </g>
+
+      <g transform="translate(400 28)" class="col col-persistent">
+        <text x="0" y="-12" font-family="var(--font-mono)" font-size="11" letter-spacing="0.12em" fill="var(--light-fg)" font-weight="600">PERSISTENT</text>
+        <rect width="180" height="100" fill="color-mix(in srgb, var(--accent) 6%, var(--light-bg))" rx="4" />
+        <g class="raster"></g>
+        <path class="rate-trace" fill="none" stroke="var(--accent)" stroke-opacity="0.45" stroke-width="1.4" />
+        <text x="0" y="118" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55">Slow-decaying residual</text>
+      </g>
+
+      <!-- Drive indicator (timeline at bottom) -->
+      <g transform="translate(20 165)">
+        <text x="0" y="-6" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.7" letter-spacing="0.08em">DRIVE</text>
+        <line x1="0" y1="0" x2="560" y2="0" stroke="currentColor" stroke-opacity="0.18" />
+        <g class="drive-pulses"></g>
+      </g>
+      <text x="20" y="220" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55">-3s</text>
+      <text x="580" y="220" text-anchor="end" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55">now</text>
+    </svg>
+
+    <div class="sciviz-controls">
+      <button class="drive-btn" type="button">DRIVE NOW</button>
+      <button class="play-btn" type="button" aria-pressed="true">PAUSE</button>
+    </div>
+  </div>
+  {caption && <figcaption class="sciviz-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline define:vars={{ uid }}>
+  (function () {
+    function bind() {
+      const root = document.querySelector(`[data-uid="${uid}"]`);
+      if (!root || root.__bound) return;
+      root.__bound = true;
+
+      const cols = ["standard", "bursty", "persistent"].map((n) => ({
+        name: n,
+        raster: root.querySelector(`.col-${n} .raster`),
+        trace: root.querySelector(`.col-${n} .rate-trace`),
+        spikes: [],
+        rateHistory: [], // { t, rate }
+      }));
+      const drivePulsesG = root.querySelector(".drive-pulses");
+      const driveBtn = root.querySelector(".drive-btn");
+      const playBtn = root.querySelector(".play-btn");
+
+      const PLOT_W = 180;
+      const PLOT_H = 100;
+      const TIMELINE_W = 560;
+      const HISTORY_S = 3;
+      const NS = "http://www.w3.org/2000/svg";
+
+      let elapsed = 0;
+      let lastTime = performance.now();
+      let running = true;
+      let raf = null;
+
+      let drives = []; // [{t}]
+      let lastAutoDrive = -2;
+      // Persistent residual (only used for persistent col)
+      let persistentResidual = 0;
+      // Bursty refractory tracker
+      let burstRemaining = 0;
+      let burstProb = 0;
+
+      function applyDrive() {
+        drives.push({ t: elapsed });
+        // Cap so we don't accumulate forever
+        while (drives.length && drives[0].t < elapsed - HISTORY_S) drives.shift();
+      }
+
+      function rateAtTime(t, type) {
+        // Compute rate contribution from drives up to t
+        let driveRate = 0;
+        for (const d of drives) {
+          if (d.t > t) break;
+          const since = t - d.t;
+          if (since > 1.5) continue;
+          // Smooth pulse: rises in 50ms, decays over ~250ms
+          const rise = Math.min(1, since / 0.05);
+          const decay = Math.exp(-since / 0.25);
+          driveRate = Math.max(driveRate, rise * decay);
+        }
+
+        if (type === "standard") {
+          return 0.05 + driveRate * 0.35;
+        }
+        if (type === "bursty") {
+          // Bursty cells fire short trains when activated; use a higher peak
+          // but the peak is brief and clusters spikes via burst probability.
+          return 0.04 + driveRate * 0.6;
+        }
+        // persistent: slow-decaying residual integrates from drives
+        return 0.04 + driveRate * 0.4;
+      }
+
+      function tick(now) {
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+        if (running) {
+          elapsed += dt;
+          // Auto-drive every ~2 seconds
+          if (elapsed - lastAutoDrive > 2) {
+            applyDrive();
+            lastAutoDrive = elapsed;
+          }
+          // Persistent integrator: integrate driveRate, decay slowly
+          // (only used to add residual on top of the standard rate calc)
+          const standardRateNow = rateAtTime(elapsed, "standard");
+          persistentResidual = Math.max(persistentResidual * Math.exp(-dt / 0.6),
+                                         standardRateNow * 0.35);
+        }
+
+        // Render each column
+        for (const col of cols) {
+          // Compute current rate
+          let rate = rateAtTime(elapsed, col.name);
+          if (col.name === "persistent") rate = Math.max(rate, persistentResidual);
+
+          // Bursty: when rate is high, fire short trains
+          if (col.name === "bursty" && running) {
+            if (burstRemaining > 0) {
+              col.spikes.push(elapsed);
+              burstRemaining--;
+            } else if (rate > 0.2 && Math.random() < rate * 0.4) {
+              // Start a short burst
+              burstRemaining = 4 + Math.floor(Math.random() * 4);
+              col.spikes.push(elapsed);
+            } else if (Math.random() < 0.03 + rate * 0.05) {
+              // Sparse baseline
+              col.spikes.push(elapsed);
+            }
+          } else if (running) {
+            // Poisson-ish for standard and persistent
+            const spikeProb = rate * 30 * dt;
+            if (Math.random() < spikeProb) col.spikes.push(elapsed);
+          }
+
+          while (col.spikes.length && col.spikes[0] < elapsed - HISTORY_S) col.spikes.shift();
+
+          // Push rate history
+          col.rateHistory.push({ t: elapsed, r: rate });
+          while (col.rateHistory.length && col.rateHistory[0].t < elapsed - HISTORY_S) col.rateHistory.shift();
+
+          // Render raster
+          col.raster.textContent = "";
+          for (const s of col.spikes) {
+            const x = ((s - (elapsed - HISTORY_S)) / HISTORY_S) * PLOT_W;
+            if (x < 0 || x > PLOT_W) continue;
+            const ln = document.createElementNS(NS, "line");
+            ln.setAttribute("x1", x.toFixed(1));
+            ln.setAttribute("x2", x.toFixed(1));
+            ln.setAttribute("y1", "10");
+            ln.setAttribute("y2", "70");
+            ln.setAttribute("stroke", "var(--light-fg)");
+            ln.setAttribute("stroke-opacity", "0.85");
+            ln.setAttribute("stroke-width", "1.2");
+            col.raster.appendChild(ln);
+          }
+          // Render rate trace
+          if (col.rateHistory.length > 1) {
+            let d = "";
+            for (let i = 0; i < col.rateHistory.length; i++) {
+              const { t, r } = col.rateHistory[i];
+              const x = ((t - (elapsed - HISTORY_S)) / HISTORY_S) * PLOT_W;
+              const y = PLOT_H - r * (PLOT_H - 12) - 4;
+              d += (i === 0 ? "M" : "L") + x.toFixed(1) + " " + y.toFixed(1);
+            }
+            col.trace.setAttribute("d", d);
+          }
+        }
+
+        // Render drive pulses
+        drivePulsesG.textContent = "";
+        for (const d of drives) {
+          const x = ((d.t - (elapsed - HISTORY_S)) / HISTORY_S) * TIMELINE_W;
+          if (x < 0 || x > TIMELINE_W) continue;
+          const tri = document.createElementNS(NS, "polygon");
+          tri.setAttribute("points", `${x - 4},6 ${x + 4},6 ${x},-2`);
+          tri.setAttribute("fill", "var(--accent)");
+          tri.setAttribute("fill-opacity", "0.85");
+          drivePulsesG.appendChild(tri);
+        }
+
+        raf = requestAnimationFrame(tick);
+      }
+
+      driveBtn.addEventListener("click", () => applyDrive());
+      playBtn.addEventListener("click", () => {
+        running = !running;
+        playBtn.textContent = running ? "PAUSE" : "PLAY";
+        playBtn.setAttribute("aria-pressed", String(running));
+      });
+
+      raf = requestAnimationFrame(tick);
+      root.__cleanup = () => raf && cancelAnimationFrame(raf);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bind);
+    } else {
+      bind();
+    }
+    document.addEventListener("astro:page-load", bind);
+  })();
+</script>
+
+<style>
+  .sciviz-figure { margin: 1.2em 0 1.6em; }
+  .sciviz-frame {
+    background: var(--light-bg-soft); border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px); color: var(--light-fg);
+  }
+  .sciviz-frame svg { width: 100%; height: auto; display: block; }
+  .sciviz-controls {
+    margin-top: 16px; display: flex; gap: 12px; justify-content: flex-end;
+  }
+  .drive-btn, .play-btn {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); background: transparent;
+    border: 1px solid var(--accent);
+    padding: 9px 14px; border-radius: 4px;
+    cursor: pointer; font-weight: 600;
+  }
+  .play-btn { background: var(--accent); color: white; border-color: var(--accent); }
+  .drive-btn:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .play-btn:hover { opacity: 0.9; }
+  .sciviz-caption {
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 0.05em; color: var(--light-fg-muted);
+    margin-top: 10px; text-align: center;
+  }
+</style>

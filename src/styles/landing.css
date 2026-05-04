@@ -361,3 +361,40 @@
   text-decoration-color: var(--dark-fg);
   outline: none;
 }
+
+/* Highlighted CTA — pulls the eye to the deep-dive link. */
+.wit-body .wit-more {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  color: rgba(245, 245, 244, 0.7);
+  font-size: 14px;
+}
+.wit-body .wit-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0;
+  padding: 12px 16px;
+  border: 1px solid rgba(245, 245, 244, 0.3);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dark-fg);
+  text-decoration: none;
+  background: rgba(245, 245, 244, 0.05);
+  transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+.wit-body .wit-cta:hover,
+.wit-body .wit-cta:focus-visible {
+  background: rgba(245, 245, 244, 0.12);
+  border-color: rgba(245, 245, 244, 0.55);
+  outline: none;
+}
+.wit-body .wit-cta:hover .wit-cta-arrow {
+  transform: translateX(3px);
+}
+.wit-body .wit-cta-arrow {
+  transition: transform 150ms ease;
+}

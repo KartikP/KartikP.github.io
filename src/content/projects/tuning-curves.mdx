@@ -1,0 +1,268 @@
+---
+title: Tuning curves
+description: "An interactive walk through the math and neuroscience behind the neural raster on the landing page — what a tuning curve is, how a population of differently-tuned neurons collectively encodes a stimulus, and what makes the bursty and persistent neuron types behave differently."
+date: 2026-05-04
+draft: false
+tags: [neuroscience, visualization, explainer]
+heroComponent: RasterMini
+---
+
+import NeuronSchematic from "../../components/sciviz/NeuronSchematic.astro";
+import SmallNetwork from "../../components/sciviz/SmallNetwork.astro";
+import TuningCurve from "../../components/sciviz/TuningCurve.astro";
+import RotatingStimulus from "../../components/sciviz/RotatingStimulus.astro";
+import PopulationResponse from "../../components/sciviz/PopulationResponse.astro";
+import NeuronTypes from "../../components/sciviz/NeuronTypes.astro";
+import PopulationDecode from "../../components/sciviz/PopulationDecode.astro";
+
+<div style="--accent: #404040;">
+
+## What is a neuron?
+
+Every neuron in the brain is a cell with a clear job: take in voltage
+changes from upstream cells, integrate them, and — when the integrated
+signal is large enough — emit its own electrical pulse downstream. The
+parts of the cell are specialised for that job. **Dendrites** branch off
+the cell body to collect input from many sources. The **soma** (cell
+body) does the integration. A single long **axon** carries the output.
+
+The output is binary — an **action potential**, or "spike". The cell sits
+at a resting voltage of about $-70$ mV; when input pushes the membrane
+above a threshold around $-55$ mV, voltage-gated sodium channels open
+and the membrane rapidly depolarises to about $+30$ mV, then just as
+rapidly repolarises and dips slightly below resting before returning. The
+whole event takes about a millisecond, and the resulting pulse travels
+down the axon at meters per second toward the cell's downstream targets.
+
+<NeuronSchematic
+  caption="A neuron firing an action potential. Click STIMULATE to fire on demand. The soma flashes when the spike begins; the bright dot tracks the action potential travelling along the axon; the right panel shows the membrane voltage trace."
+/>
+
+The all-or-nothing nature of spikes is what makes this physiology so
+useful. Neurons don't broadcast a continuously varying voltage — they
+emit a stream of yes/no events at certain times. **Information lives in
+the rate and pattern of those spikes**, not in their amplitude. A neuron
+firing 30 spikes per second is communicating something different from
+the same neuron firing 5 per second; the meaning of "different" is set
+by what the downstream cells do with that input.
+
+## What is a network?
+
+When an action potential reaches an axon terminal, it doesn't just stop
+there. It triggers the release of **chemical neurotransmitters** into the
+small gap between cells called the **synapse**. The neurotransmitter
+diffuses across the gap and either *excites* the downstream neuron
+(making it more likely to fire) or *inhibits* it (making it less likely).
+Whether a synapse is excitatory or inhibitory is determined by the
+neurotransmitter and the receptors it binds — glutamate at AMPA/NMDA
+receptors is excitatory; GABA at GABA-A receptors is inhibitory.
+
+A single cortical neuron typically receives input from **thousands** of
+upstream cells through thousands of synapses. Whether it fires depends on
+the integrated effect of all of them. The figure below sketches a much
+smaller network — just six neurons connected by a mix of excitatory
+(arrowheads) and inhibitory (flat ends) synapses. Click any neuron to
+inject a current, or use the buttons to stimulate the input cells. Watch
+how an excitatory cascade can be cut short by an inhibitory connection,
+and how the output neuron's firing depends on which combination of
+upstream cells is active.
+
+<SmallNetwork
+  caption="A 6-neuron network with excitatory (arrow) and inhibitory (flat-end) synapses. Auto-stimulation of A or B alone is sub-threshold for the hidden layer — the cells decay back to rest before the next input arrives, so F never fires on its own. Click STIMULATE A then STIMULATE B within ~1 second of each other to drive convergent input through C, D, E to F."
+/>
+
+This is the smallest interesting unit of "network activity" — small
+enough to follow each event, large enough to show the basic pattern: a
+spike at the input doesn't deterministically produce a spike at the
+output, because inhibitory connections and the timing of competing inputs
+matter. Real cortical networks scale this up by six or seven orders of
+magnitude — the human cortex has roughly $10^{10}$ neurons and $10^{14}$
+synapses — but the qualitative behaviour is the same.
+
+The animated raster on this site's landing page is the next step up: a
+population of one thousand neurons, where each spot of brightness is one
+yes/no spike from one cell. The rest of this piece is about how that
+population, despite being made of these noisy yes/no events, manages to
+encode a continuous value — the angle of the cursor.
+
+## A single neuron
+
+The animated raster on the landing page is built out of one thousand
+copies of the same idea: a neuron whose firing rate is highest when the
+stimulus matches a specific *preferred direction* and falls off
+gracefully as the stimulus angle moves away from it. The standard
+mathematical shape for that is a **Gaussian tuning curve**:
+
+$$
+f(\theta) = \exp\!\left(-\frac{(\theta - \phi)^2}{2\sigma^2}\right)
+$$
+
+Here $\theta$ is the stimulus angle, $\phi$ is the neuron's preferred
+direction, and $\sigma$ is the *tuning width* — how broadly the neuron
+responds to nearby angles. Drag the sliders below: $\phi$ slides the
+peak left and right; $\sigma$ controls how sharp or broad the response
+is.
+
+<TuningCurve
+  initialPhi={0.79}
+  initialSigma={0.4}
+  caption="Gaussian tuning curve. φ is the preferred angle (peak); σ is the tuning width — the curve falls to ~0.61 at θ = φ ± σ."
+/>
+
+In the landing-page raster, each neuron is created with a random $\phi$
+drawn uniformly from $[0, 2\pi)$ and a random $\sigma$ drawn uniformly
+from $[0.2, 0.7]$. So a "narrow" neuron in this population has $\sigma
+\approx 0.2$ rad and only fires for a narrow band of stimulus
+directions; a "broad" neuron has $\sigma \approx 0.7$ and is excited
+across most of the angular range.
+
+The biological lineage of this curve is older than the math. Hubel and
+Wiesel won the Nobel Prize for showing, in 1959, that neurons in cat
+primary visual cortex have *preferred orientations* — a single cell
+fires hard for a bar tilted at one angle and barely at all for a bar
+tilted ninety degrees away. The same selectivity has since been found
+in motion-sensitive area MT (tuned to direction of movement), in
+parietal cortex (tuned to attended location), and in primary motor
+cortex (tuned to direction of arm movement). The Gaussian above is the
+canonical first-pass model for any of these systems.
+
+## A neuron in time
+
+A tuning curve, on its own, is a *theoretical* object. What you measure
+in a real recording is a spike train: a series of action potentials
+emitted at unpredictable times whose *rate* is governed by the tuning
+curve. To go from rate to spikes, the standard assumption is a
+**Poisson process** — the probability of emitting a spike in a small
+interval $dt$ is $f(\theta) \cdot dt$, scaled to a peak firing rate
+that's biologically plausible (in the figure below, ~30 spikes per
+second at the peak of the curve).
+
+That's why the raster on the landing page never looks the same twice.
+Even a perfectly stationary stimulus and a perfectly tuned neuron will
+produce a different sequence of spikes every time — same average, never
+the same instance.
+
+<RotatingStimulus
+  phi={0.79}
+  sigma={0.4}
+  speed={0.6}
+  caption="A single neuron with φ = π/4. The stimulus angle (left) sweeps around the unit circle; the right panel shows the instantaneous firing rate above and Poisson-emitted spikes below."
+/>
+
+The exact same machinery — angular distance from the preferred
+direction, Gaussian envelope, Poisson sampling — runs once per neuron
+per frame in the raster simulation. With 1,000 neurons and rates
+between 0 and ~30 Hz, the raster you see is a thousand independent
+random processes, all coupled only through their shared dependence on
+the cursor angle.
+
+## A population, not a single cell
+
+A single direction-tuned neuron is, frankly, a bad measurement device.
+Its peak firing rate has noise on the order of $\sqrt{rate}$ — pure
+Poisson statistics — so reading off the precise stimulus angle from one
+neuron's output requires a long integration window and is still wrong
+by a wide margin. The brain doesn't try.
+
+Instead, the cortex uses a *population code*. Many neurons, each with
+its own preferred angle, respond simultaneously; the stimulus is
+inferred from their joint pattern of activity. The figure below shows
+this directly: each dot is one neuron, sitting at its preferred angle
+on the unit circle, with its radial distance from the center
+proportional to its current firing rate. As the stimulus rotates, the
+polygon connecting the neurons morphs through the population's
+collective response shape. No single dot "knows" the stimulus angle.
+The shape, taken as a whole, does.
+
+<PopulationResponse
+  count={30}
+  sigma={0.5}
+  speed={0.45}
+  caption="30 neurons with random preferred angles. Each dot's radius from center is its current firing rate. The polygon is the population response."
+/>
+
+This is more than a visualisation trick. The Hubel-and-Wiesel-era idea
+that a single "grandmother cell" represents a single concept has been
+largely displaced, in the orientation/direction-tuning literature, by
+distributed coding. Strong evidence comes from Apostolos Georgopoulos's
+monkey reaching experiments in the 1980s, where simultaneously-recorded
+motor cortex neurons each responded broadly to many movement
+directions, but their *combined* output predicted the direction the
+monkey was about to reach in with striking accuracy. We'll get to that
+decoding step in the last section.
+
+## Three neuron types
+
+So far each neuron in the simulation has been a Poisson generator
+modulated by a Gaussian tuning curve. Real cortex isn't that
+homogeneous, and neither is the landing-page raster. Three sub-types
+coexist there and in the figure below:
+
+- **Standard.** A Poisson cell. Spikes arrive independently with a rate
+  set by the tuning curve. Most cortical neurons behave like this most
+  of the time — this is the "Poisson cortex" approximation that
+  underlies a lot of computational neuroscience.
+- **Bursty.** Around 15% of the simulation's neurons. When activated,
+  they don't emit a single spike — they emit a *short train* of 3–8
+  spikes packed close together, mimicking *intrinsic-bursting* (IB)
+  cells found in cortical layer 5. Bursts carry more information than
+  isolated spikes; downstream cells treat them as a stronger signal.
+- **Persistent.** Around 7% of the simulation's neurons. These cells
+  carry a *residual* of recent input that decays slowly after the
+  stimulus is gone. Real cortical neurons of this type are heavily
+  studied in working-memory contexts: they keep a stimulus "in mind"
+  by sustaining their firing well past the offset of the thing that
+  drove them. Romo and colleagues showed this directly in monkey
+  prefrontal cortex with parametric working-memory tasks.
+
+The figure below sends the same drive impulse to all three types and
+shows how the output differs. Standard fires a sparse Poisson scatter.
+Bursty fires in clusters tightly time-locked to the drive. Persistent
+keeps firing well after the drive has ended.
+
+<NeuronTypes caption="Same drive, three different cells. Standard: independent Poisson spikes. Bursty: short tightly-clustered trains. Persistent: a slow-decaying residual that outlives the input." />
+
+In the population on the landing page, all three types fire alongside
+each other every frame. The visual difference is subtle when you're
+not looking for it, but it's why the raster has *texture* — not all
+spikes are statistically equivalent.
+
+## Reading the population back
+
+If the cortex represents a stimulus as a pattern across many neurons,
+then the natural inverse problem is: *given the pattern, recover the
+stimulus*. The simplest decoding rule that works is the **population
+vector**, formalised by Georgopoulos in 1986:
+
+$$
+\mathbf{v}(\text{stim}) = \sum_{i=1}^{N} r_i \cdot (\cos \phi_i, \sin \phi_i)
+$$
+
+Each neuron contributes a vector pointing in its own preferred
+direction, weighted by how strongly it's currently firing. Sum over the
+population and the resulting vector points (roughly) at the stimulus
+angle. With a small number of neurons the estimate is jittery — Poisson
+noise wins. With more, the estimate sharpens, and the angular error
+shrinks roughly as $1/\sqrt{N}$.
+
+<PopulationDecode
+  countDefault={12}
+  sigma={0.5}
+  speed={0.4}
+  caption="The dashed grey arrow is the true stimulus angle; the bold accent arrow is the population-vector estimate. Drag N to scrub from a noisy 2-neuron estimate up to a tight 100-neuron one. Watch the error readout."
+/>
+
+The reason the population vector matters beyond a textbook example: it
+was the first method robust enough to support a working **brain–computer
+interface**. Neural prosthetics that decode intended movement from
+motor-cortex recordings are direct descendants of Georgopoulos's
+arithmetic. The mathematical content here — Gaussian tuning, population
+coding, vector decoding — is the same content, in the same order, that
+underwrites the field.
+
+The animation on the landing page is a 1,000-neuron population doing
+exactly this. The cursor is the stimulus; the spikes are the response.
+Whether it's "doing" anything useful is up to the reader. But it is, at
+least, doing the same thing the cortex does.
+
+</div>

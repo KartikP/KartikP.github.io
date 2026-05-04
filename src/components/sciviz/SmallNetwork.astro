@@ -1,0 +1,331 @@
+---
+// SmallNetwork — 6 neurons connected by excitatory and inhibitory synapses.
+// Each neuron has a simple integrate-and-fire dynamic: voltage decays toward
+// resting; incoming pulses add or subtract to it; when it crosses threshold
+// it fires and sends pulses to its targets.
+//
+// Click any neuron to inject a current. STIMULATE A and STIMULATE B fire
+// the two input neurons. Watch the activity propagate through the network.
+
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+const uid = "sn-" + Math.random().toString(36).slice(2, 8);
+---
+
+<figure class="sciviz-figure" data-uid={uid}>
+  <div class="sciviz-frame">
+    <svg viewBox="0 0 600 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Small network of 6 neurons with excitatory and inhibitory synapses">
+      <!-- Connections drawn first so neurons sit on top -->
+      <g class="connections"></g>
+      <!-- Pulses traveling along connections -->
+      <g class="pulses"></g>
+      <!-- Neurons -->
+      <g class="neurons"></g>
+      <!-- Legend -->
+      <g transform="translate(20 296)" font-family="var(--font-mono)" font-size="10" letter-spacing="0.08em" fill="currentColor" fill-opacity="0.65">
+        <line x1="0" y1="0" x2="22" y2="0" stroke="var(--accent)" stroke-width="1.8" />
+        <polygon points="22,0 17,-3 17,3" fill="var(--accent)" />
+        <text x="30" y="3">EXCITATORY</text>
+        <line x1="130" y1="0" x2="152" y2="0" stroke="#a44a4a" stroke-width="1.8" />
+        <line x1="148" y1="-4" x2="148" y2="4" stroke="#a44a4a" stroke-width="1.8" />
+        <text x="160" y="3">INHIBITORY</text>
+      </g>
+    </svg>
+
+    <div class="sciviz-controls">
+      <button class="stim-btn" type="button" data-target="A">STIMULATE A</button>
+      <button class="stim-btn" type="button" data-target="B">STIMULATE B</button>
+      <button class="reset-btn" type="button">RESET</button>
+    </div>
+  </div>
+  {caption && <figcaption class="sciviz-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline define:vars={{ uid }}>
+  (function () {
+    function bind() {
+      const root = document.querySelector(`[data-uid="${uid}"]`);
+      if (!root || root.__bound) return;
+      root.__bound = true;
+
+      const NS = "http://www.w3.org/2000/svg";
+      const connectionsG = root.querySelector(".connections");
+      const pulsesG = root.querySelector(".pulses");
+      const neuronsG = root.querySelector(".neurons");
+
+      // Network definition. C and E sit at the same x; D is offset to the
+      // right so the C↔E inhibitory connection (which runs straight along the
+      // vertical) doesn't pass through D's body.
+      const neurons = [
+        { id: "A", x: 80,  y: 100, label: "A", role: "input" },
+        { id: "B", x: 80,  y: 220, label: "B", role: "input" },
+        { id: "C", x: 250, y: 70,  label: "C", role: "hidden" },
+        { id: "D", x: 320, y: 160, label: "D", role: "hidden" },
+        { id: "E", x: 250, y: 250, label: "E", role: "hidden" },
+        { id: "F", x: 480, y: 160, label: "F", role: "output" },
+      ];
+      // Connections: { from, to, weight } — positive=excitatory, negative=inhibitory.
+      // Designed so:
+      //   - A or B alone is sub-threshold for the hidden layer (no cascade)
+      //   - A AND B both stimulated → C, D, E all fire → F fires
+      //   - Inhibitory recurrence (C→E, D→C) shapes the dynamics
+      const connections = [
+        { from: "A", to: "C", weight: +0.80 },
+        { from: "A", to: "D", weight: +0.70 },
+        { from: "A", to: "E", weight: +0.40 }, // weak crossover
+        { from: "B", to: "C", weight: +0.40 }, // weak crossover
+        { from: "B", to: "D", weight: +0.70 },
+        { from: "B", to: "E", weight: +0.80 },
+        { from: "C", to: "F", weight: +0.55 },
+        { from: "D", to: "F", weight: +0.55 },
+        { from: "E", to: "F", weight: +0.55 },
+        { from: "C", to: "E", weight: -0.35 }, // inhibitory recurrent
+        { from: "D", to: "C", weight: -0.30 }, // inhibitory recurrent
+      ];
+
+      const byId = {};
+      for (const n of neurons) {
+        n.v = 0;          // voltage (0 resting, 1 = threshold)
+        n.flashUntil = 0; // visual flash timestamp
+        n.lastSpike = -Infinity;
+        byId[n.id] = n;
+      }
+
+      // Render connections
+      const connElems = [];
+      for (const c of connections) {
+        const from = byId[c.from], to = byId[c.to];
+        // Curve a bit so opposing connections don't overlap
+        const dx = to.x - from.x, dy = to.y - from.y;
+        const len = Math.hypot(dx, dy);
+        const ux = dx / len, uy = dy / len;
+        // Endpoint pull-back so arrows don't sit inside the neurons
+        const R = 22;
+        const sx = from.x + ux * R, sy = from.y + uy * R;
+        const ex = to.x - ux * R,   ey = to.y - uy * R;
+        const isInhib = c.weight < 0;
+        const stroke = isInhib ? "#a44a4a" : "var(--accent)";
+        // Slight curve via control point offset perpendicular to the line
+        const px = -uy * (isInhib ? 18 : 0);
+        const py =  ux * (isInhib ? 18 : 0);
+        const cx = (sx + ex) / 2 + px, cy = (sy + ey) / 2 + py;
+        const path = document.createElementNS(NS, "path");
+        path.setAttribute("d", `M${sx} ${sy} Q ${cx} ${cy}, ${ex} ${ey}`);
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", stroke);
+        path.setAttribute("stroke-width", "1.6");
+        path.setAttribute("stroke-opacity", "0.55");
+        connectionsG.appendChild(path);
+        // Endpoint marker: arrow for excitatory, flat bar for inhibitory
+        const marker = document.createElementNS(NS, isInhib ? "line" : "polygon");
+        if (isInhib) {
+          // Perpendicular to the line at endpoint
+          marker.setAttribute("x1", (ex - uy * 5).toFixed(1));
+          marker.setAttribute("y1", (ey + ux * 5).toFixed(1));
+          marker.setAttribute("x2", (ex + uy * 5).toFixed(1));
+          marker.setAttribute("y2", (ey - ux * 5).toFixed(1));
+          marker.setAttribute("stroke", stroke);
+          marker.setAttribute("stroke-width", "2");
+        } else {
+          // Triangle pointing toward target
+          const bx = ex - ux * 7, by = ey - uy * 7;
+          marker.setAttribute("points",
+            `${ex.toFixed(1)},${ey.toFixed(1)} ${(bx - uy * 4).toFixed(1)},${(by + ux * 4).toFixed(1)} ${(bx + uy * 4).toFixed(1)},${(by - ux * 4).toFixed(1)}`);
+          marker.setAttribute("fill", stroke);
+        }
+        connectionsG.appendChild(marker);
+        connElems.push({ ...c, path, sx, sy, ex, ey, cx, cy });
+      }
+
+      // Render neurons
+      const neuronElems = {};
+      for (const n of neurons) {
+        const g = document.createElementNS(NS, "g");
+        g.setAttribute("transform", `translate(${n.x} ${n.y})`);
+        g.style.cursor = "pointer";
+        // Halo (visible briefly on flash)
+        const halo = document.createElementNS(NS, "circle");
+        halo.setAttribute("r", "26");
+        halo.setAttribute("fill", "var(--accent)");
+        halo.setAttribute("opacity", "0");
+        g.appendChild(halo);
+        // Body
+        const body = document.createElementNS(NS, "circle");
+        body.setAttribute("r", "18");
+        body.setAttribute("fill", "var(--light-bg-soft)");
+        body.setAttribute("stroke", "currentColor");
+        body.setAttribute("stroke-opacity", "0.6");
+        body.setAttribute("stroke-width", "1.5");
+        g.appendChild(body);
+        // Voltage fill (rises from bottom up to threshold)
+        const fill = document.createElementNS(NS, "circle");
+        fill.setAttribute("r", "18");
+        fill.setAttribute("fill", "var(--accent)");
+        fill.setAttribute("fill-opacity", "0");
+        g.appendChild(fill);
+        // Label
+        const text = document.createElementNS(NS, "text");
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("y", "5");
+        text.setAttribute("font-family", "var(--font-mono)");
+        text.setAttribute("font-size", "13");
+        text.setAttribute("font-weight", "600");
+        text.setAttribute("fill", "currentColor");
+        text.textContent = n.label;
+        g.appendChild(text);
+        // Click to inject
+        g.addEventListener("click", () => stimulate(n.id, 1.2));
+        neuronsG.appendChild(g);
+        neuronElems[n.id] = { halo, body, fill, text };
+      }
+
+      // In-flight pulses traveling along connections
+      const pulses = []; // { conn, startedAt, duration, weight }
+      const PULSE_TRAVEL_S = 0.30; // snappier — feels more responsive
+
+      function stimulate(id, amount) {
+        const n = byId[id];
+        if (!n) return;
+        n.v = Math.max(n.v, amount);
+      }
+
+      let elapsed = 0;
+      let lastTime = performance.now();
+      let raf = null;
+      let lastAuto = 0;
+
+      function tick(now) {
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+        elapsed += dt;
+
+        // Auto-stimulate every ~3 seconds (alternate A and B)
+        if (elapsed - lastAuto > 3) {
+          stimulate(elapsed < lastAuto + 6 ? "A" : "B", 1.15);
+          lastAuto = elapsed;
+        }
+
+        // Per-neuron decay + threshold check.
+        // tau is long enough that two user-triggered stimulations (A then B
+        // a second or so apart) sum at the convergence neurons before they
+        // decay back to rest.
+        for (const n of neurons) {
+          const tau = 0.9;
+          if (elapsed - n.lastSpike > 0.05) {
+            n.v *= Math.exp(-dt / tau);
+            if (n.v < 0.0001 && n.v > -0.0001) n.v = 0;
+          }
+          // Fire if above threshold and out of refractory
+          if (n.v >= 1.0 && elapsed - n.lastSpike > 0.12) {
+            n.lastSpike = elapsed;
+            n.flashUntil = elapsed + 0.4;
+            n.v = 0; // reset to resting
+            // Send pulses on outgoing connections
+            for (const c of connElems) {
+              if (c.from === n.id) {
+                pulses.push({ conn: c, startedAt: elapsed, duration: PULSE_TRAVEL_S, weight: c.weight });
+              }
+            }
+          }
+        }
+
+        // Process pulses: deliver weight to target when they reach the end
+        for (let i = pulses.length - 1; i >= 0; i--) {
+          const p = pulses[i];
+          if (elapsed - p.startedAt >= p.duration) {
+            byId[p.conn.to].v += p.weight;
+            // Cap at slightly above threshold to keep dynamics tame
+            if (byId[p.conn.to].v < -0.5) byId[p.conn.to].v = -0.5;
+            pulses.splice(i, 1);
+          }
+        }
+
+        // Render pulses
+        pulsesG.textContent = "";
+        for (const p of pulses) {
+          const t = (elapsed - p.startedAt) / p.duration;
+          const c = p.conn;
+          // Quadratic Bezier point at parameter t
+          const x = (1 - t) * (1 - t) * c.sx + 2 * (1 - t) * t * c.cx + t * t * c.ex;
+          const y = (1 - t) * (1 - t) * c.sy + 2 * (1 - t) * t * c.cy + t * t * c.ey;
+          const dot = document.createElementNS(NS, "circle");
+          dot.setAttribute("cx", x.toFixed(1));
+          dot.setAttribute("cy", y.toFixed(1));
+          dot.setAttribute("r", "4");
+          dot.setAttribute("fill", p.weight < 0 ? "#a44a4a" : "var(--accent)");
+          pulsesG.appendChild(dot);
+        }
+
+        // Render neurons (voltage fill, flash halo)
+        for (const n of neurons) {
+          const e = neuronElems[n.id];
+          // Fill opacity = clamp(v, 0, 1) * 0.45 (so resting is invisible, threshold = vivid)
+          const fillOp = Math.max(0, Math.min(1, n.v)) * 0.5;
+          e.fill.setAttribute("fill-opacity", fillOp.toFixed(2));
+          // Flash halo on spike
+          if (elapsed < n.flashUntil) {
+            const remaining = n.flashUntil - elapsed;
+            const haloOp = Math.max(0, remaining / 0.4) * 0.45;
+            e.halo.setAttribute("opacity", haloOp.toFixed(2));
+            e.halo.setAttribute("r", (26 + (1 - remaining / 0.4) * 8).toFixed(1));
+          } else {
+            e.halo.setAttribute("opacity", "0");
+            e.halo.setAttribute("r", "26");
+          }
+        }
+
+        raf = requestAnimationFrame(tick);
+      }
+
+      // Wire control buttons
+      root.querySelectorAll(".stim-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const target = btn.getAttribute("data-target");
+          if (target) stimulate(target, 1.15);
+        });
+      });
+      root.querySelector(".reset-btn").addEventListener("click", () => {
+        for (const n of neurons) { n.v = 0; n.lastSpike = -Infinity; n.flashUntil = 0; }
+        pulses.length = 0;
+      });
+
+      raf = requestAnimationFrame(tick);
+      root.__cleanup = () => raf && cancelAnimationFrame(raf);
+    }
+
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind);
+    else bind();
+    document.addEventListener("astro:page-load", bind);
+  })();
+</script>
+
+<style>
+  .sciviz-figure { margin: 1.2em 0 1.6em; }
+  .sciviz-frame {
+    background: var(--light-bg-soft); border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px); color: var(--light-fg);
+  }
+  .sciviz-frame svg { width: 100%; height: auto; display: block; }
+  .sciviz-controls {
+    margin-top: 16px; display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap;
+  }
+  .stim-btn, .reset-btn {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); background: transparent;
+    border: 1px solid var(--accent);
+    padding: 9px 14px; border-radius: 4px;
+    cursor: pointer; font-weight: 600;
+  }
+  .stim-btn:hover, .reset-btn:hover {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+  .sciviz-caption {
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 0.05em; color: var(--light-fg-muted);
+    margin-top: 10px; text-align: center;
+  }
+</style>

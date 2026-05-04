@@ -19,7 +19,6 @@ import ImageWithPros from "../../components/case-study/ImageWithPros.astro";
 import Callout from "../../components/case-study/Callout.astro";
 import KeyFlow from "../../components/case-study/KeyFlow.astro";
 import Figure from "../../components/case-study/Figure.astro";
-import NextProject from "../../components/case-study/NextProject.astro";
 
 <CaseHero
   title={frontmatter.title}
@@ -373,32 +372,9 @@ for an un-framed image (e.g. a diagram with its own background).
 
 </Section>
 
-## NextProject
-
-<Section id="next-project" eyebrow="09" heading="NextProject — pagination footer.">
-
-Always last. Provides prev/next links to other case studies, plus a "All
-work" link in the middle.
-
-**Props (all optional, omit either side if it doesn't apply):**
-
-- `prevHref`, `prevTitle` — link to the previous case study
-- `nextHref`, `nextTitle` — link to the next case study
-
-```jsx
-<NextProject
-  prevHref="/work/health-dashboard"
-  prevTitle="Health Dashboard"
-  nextHref="/work/another"
-  nextTitle="Another case"
-/>
-```
-
-</Section>
-
 ## Tips
 
-<Section id="tips" eyebrow="10" heading="Authoring tips.">
+<Section id="tips" eyebrow="09" heading="Authoring tips.">
 
 - **Keep section ids unique.** TOC anchors break if two sections share an id.
 - **Use the accent sparingly.** Each case study has one accent colour — let it carry meaning by being rare. The components handle this for you (only links, callouts, and the meta bar use it).
@@ -408,4 +384,3 @@ work" link in the middle.
 
 </Section>
 
-<NextProject prevHref="/work" prevTitle="All work" />

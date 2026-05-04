@@ -2,6 +2,7 @@ import { SPEED, LFP_HISTORY_MAX } from './config.js';
 import { inputState, updateSmoothing } from './input.js';
 import { rsbState, rsbTick } from './rsb.js';
 import { learningTick, learningFiringRate, learningIsBurstActive } from './learning.js';
+import { hoverFiringRate, hoverIsActive } from './hover.js';
 import { drawMinimap } from './minimap.js';
 
 function angleToDeg(rad) {
@@ -106,6 +107,11 @@ export function createRenderer(dom, neurons, getScheme) {
         learningTick(rowCount, rsbState.phase);
         const inLearnedBurst = learningIsBurstActive();
 
+        // Hover-evoked selective firing — the hovered element's preferred
+        // angle drives the matching subpopulation of direction-tuned neurons,
+        // at a higher intensity than mouse movement does.
+        const inHover = hoverIsActive();
+
         // Spikes
         let totalSpikes = 0;
         const rowStep = rHeight / rowCount;
@@ -120,6 +126,7 @@ export function createRenderer(dom, neurons, getScheme) {
 
             const rsbRate = (rsbFiringProb > 0 && rsbState.neuronMask[i]) ? rsbFiringProb : 0;
             const learnRate = inLearnedBurst ? learningFiringRate(i) : 0;
+            const hoverRate = inHover ? hoverFiringRate(n) : 0;
 
             if (n.isPersistent) {
                 const drive = evokedRate * 1.5;
@@ -136,7 +143,7 @@ export function createRenderer(dom, neurons, getScheme) {
                 p = n.burstProb;
                 n.burstRemaining--;
             } else {
-                p = n.baseExcitability + evokedRate + rsbRate + learnRate + (n.isPersistent ? n.residual : 0);
+                p = n.baseExcitability + evokedRate + rsbRate + learnRate + hoverRate + (n.isPersistent ? n.residual : 0);
             }
 
             if (Math.random() < p) {
@@ -148,7 +155,8 @@ export function createRenderer(dom, neurons, getScheme) {
                     || n.burstRemaining > 0
                     || (n.isPersistent && n.residual > 0.003)
                     || rsbRate > 0
-                    || learnRate > 0.01;
+                    || learnRate > 0.01
+                    || hoverRate > 0;
                 const y = i * rowStep;
 
                 if (isEvoked) {

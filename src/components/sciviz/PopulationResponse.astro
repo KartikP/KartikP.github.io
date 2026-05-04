@@ -1,0 +1,219 @@
+---
+// PopulationResponse — N neurons with random preferred angles plotted
+// in polar coordinates. Each neuron sits at its preferred angle on the
+// unit circle; its radial distance from center is its current firing rate.
+// As the stimulus rotates, the polygon connecting them morphs through
+// the population's response shape.
+
+interface Props {
+  count?: number;       // number of neurons
+  sigma?: number;       // shared tuning width
+  speed?: number;       // rad/sec
+  caption?: string;
+}
+
+const { count = 30, sigma = 0.5, speed = 0.45, caption } = Astro.props;
+const uid = "pr-" + Math.random().toString(36).slice(2, 8);
+---
+
+<figure class="sciviz-figure" data-uid={uid}>
+  <div class="sciviz-frame">
+    <svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Population response polar plot">
+      <g transform="translate(300 150)">
+        <!-- Concentric reference rings -->
+        <circle r="120" fill="none" stroke="currentColor" stroke-opacity="0.10" stroke-dasharray="2 4" />
+        <circle r="90" fill="none" stroke="currentColor" stroke-opacity="0.10" stroke-dasharray="2 4" />
+        <circle r="60" fill="none" stroke="currentColor" stroke-opacity="0.10" stroke-dasharray="2 4" />
+        <circle r="30" fill="none" stroke="currentColor" stroke-opacity="0.10" stroke-dasharray="2 4" />
+        <!-- Cardinal rays -->
+        <line x1="-130" y1="0" x2="130" y2="0" stroke="currentColor" stroke-opacity="0.08" />
+        <line x1="0" y1="-130" x2="0" y2="130" stroke="currentColor" stroke-opacity="0.08" />
+        <!-- Cardinal labels -->
+        <text x="138" y="3" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.5">0</text>
+        <text x="0" y="-138" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.5">π/2</text>
+        <text x="-138" y="3" text-anchor="end" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.5">π</text>
+        <text x="0" y="148" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.5">-π/2</text>
+        <!-- Population polygon -->
+        <polygon class="pop-polygon" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round" />
+        <!-- Neurons (dots at their current positions) -->
+        <g class="neurons"></g>
+        <!-- Stimulus arrow -->
+        <g class="stim-arrow">
+          <line class="stim-line" x1="0" y1="0" x2="0" y2="0" stroke="var(--accent)" stroke-width="2.5" />
+          <polygon class="stim-head" points="0,0" fill="var(--accent)" />
+        </g>
+        <!-- Center dot -->
+        <circle r="2" fill="currentColor" fill-opacity="0.5" />
+      </g>
+    </svg>
+
+    <div class="sciviz-controls">
+      <label>
+        <span class="ctrl-label">σ <span class="ctrl-val sigma-val">0.50</span></span>
+        <input class="sigma-input" type="range" min="0.1" max="1.4" step="0.01" value={sigma} />
+      </label>
+      <label>
+        <span class="ctrl-label">SPEED <span class="ctrl-val speed-val">0.45</span></span>
+        <input class="speed-input" type="range" min="0" max="2" step="0.05" value={speed} />
+      </label>
+      <button class="play-btn" type="button" aria-pressed="true">PAUSE</button>
+    </div>
+  </div>
+  {caption && <figcaption class="sciviz-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline define:vars={{ uid, count, sigma, speed }}>
+  (function () {
+    function bind() {
+      const root = document.querySelector(`[data-uid="${uid}"]`);
+      if (!root || root.__bound) return;
+      root.__bound = true;
+
+      const polygon = root.querySelector(".pop-polygon");
+      const neurons = root.querySelector(".neurons");
+      const stimLine = root.querySelector(".stim-line");
+      const stimHead = root.querySelector(".stim-head");
+      const sigmaInput = root.querySelector(".sigma-input");
+      const speedInput = root.querySelector(".speed-input");
+      const sigmaVal = root.querySelector(".sigma-val");
+      const speedVal = root.querySelector(".speed-val");
+      const playBtn = root.querySelector(".play-btn");
+
+      const RADIUS_MAX = 130;
+      const N = count;
+
+      // Random preferred angles, sorted so polygon doesn't self-intersect.
+      const phis = [];
+      for (let i = 0; i < N; i++) phis.push(Math.random() * Math.PI * 2);
+      phis.sort((a, b) => a - b);
+
+      // Pre-create neuron dots
+      const ns = "http://www.w3.org/2000/svg";
+      const dots = phis.map(() => {
+        const c = document.createElementNS(ns, "circle");
+        c.setAttribute("r", "3");
+        c.setAttribute("fill", "var(--accent)");
+        neurons.appendChild(c);
+        return c;
+      });
+
+      let theta = 0;
+      let lastTime = performance.now();
+      let running = true;
+      let raf = null;
+
+      function tuningRate(stim, phi, sigmaCurrent) {
+        let dist = Math.abs(stim - phi);
+        if (dist > Math.PI) dist = 2 * Math.PI - dist;
+        return Math.exp(-(dist * dist) / (2 * sigmaCurrent * sigmaCurrent));
+      }
+
+      function tick(now) {
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+        if (running) {
+          theta += parseFloat(speedInput.value) * dt;
+          if (theta > Math.PI * 2) theta -= Math.PI * 2;
+        }
+
+        const sigmaCurrent = parseFloat(sigmaInput.value);
+
+        // Compute neuron rates and positions
+        const pts = [];
+        for (let i = 0; i < N; i++) {
+          const phi = phis[i];
+          const rate = tuningRate(theta, phi, sigmaCurrent);
+          const r = 8 + rate * (RADIUS_MAX - 8);
+          const x = Math.cos(phi) * r;
+          const y = -Math.sin(phi) * r;
+          dots[i].setAttribute("cx", x.toFixed(1));
+          dots[i].setAttribute("cy", y.toFixed(1));
+          dots[i].setAttribute("fill-opacity", (0.35 + rate * 0.5).toFixed(2));
+          pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+        }
+        polygon.setAttribute("points", pts.join(" "));
+
+        // Stimulus arrow at full radius
+        const sx = Math.cos(theta) * RADIUS_MAX;
+        const sy = -Math.sin(theta) * RADIUS_MAX;
+        stimLine.setAttribute("x2", sx.toFixed(1));
+        stimLine.setAttribute("y2", sy.toFixed(1));
+        const headLen = 11;
+        const ax = Math.cos(theta), ay = -Math.sin(theta);
+        const bx = -ay, by = ax;
+        const baseX = sx - ax * headLen, baseY = sy - ay * headLen;
+        stimHead.setAttribute("points",
+          `${sx.toFixed(1)},${sy.toFixed(1)} ${(baseX + bx*5).toFixed(1)},${(baseY + by*5).toFixed(1)} ${(baseX - bx*5).toFixed(1)},${(baseY - by*5).toFixed(1)}`);
+
+        sigmaVal.textContent = sigmaCurrent.toFixed(2);
+        speedVal.textContent = parseFloat(speedInput.value).toFixed(2);
+
+        raf = requestAnimationFrame(tick);
+      }
+
+      playBtn.addEventListener("click", () => {
+        running = !running;
+        playBtn.textContent = running ? "PAUSE" : "PLAY";
+        playBtn.setAttribute("aria-pressed", String(running));
+      });
+
+      raf = requestAnimationFrame(tick);
+      root.__cleanup = () => raf && cancelAnimationFrame(raf);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bind);
+    } else {
+      bind();
+    }
+    document.addEventListener("astro:page-load", bind);
+  })();
+</script>
+
+<style>
+  .sciviz-figure { margin: 1.2em 0 1.6em; }
+  .sciviz-frame {
+    background: var(--light-bg-soft); border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px); color: var(--light-fg);
+  }
+  .sciviz-frame svg { width: 100%; height: auto; display: block; }
+  .sciviz-controls {
+    margin-top: 16px; display: grid;
+    grid-template-columns: 1fr 1fr auto; gap: 16px 24px; align-items: end;
+  }
+  .sciviz-controls label {
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--light-fg-muted);
+  }
+  .ctrl-label { display: flex; justify-content: space-between; align-items: baseline; }
+  .ctrl-val { color: var(--light-fg); font-variant-numeric: tabular-nums; font-weight: 600; letter-spacing: 0; }
+  .sciviz-controls input[type="range"] {
+    -webkit-appearance: none; appearance: none; width: 100%;
+    height: 4px; background: color-mix(in srgb, var(--accent) 25%, var(--light-bg-soft));
+    border-radius: 2px; outline: none; cursor: pointer;
+  }
+  .sciviz-controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--light-bg);
+  }
+  .sciviz-controls input[type="range"]::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--light-bg);
+  }
+  .play-btn {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--accent); color: white;
+    border: none; padding: 9px 14px; border-radius: 4px;
+    cursor: pointer; font-weight: 600;
+  }
+  .play-btn:hover { opacity: 0.9; }
+  .sciviz-caption {
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 0.05em; color: var(--light-fg-muted);
+    margin-top: 10px; text-align: center;
+  }
+</style>

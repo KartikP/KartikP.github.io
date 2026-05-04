@@ -7,54 +7,16 @@
   min-height: 100dvh;
 }
 
+/* Body content shell — sits below the shared .page-chrome crumb header. */
 .content-shell {
   max-width: var(--measure);
   margin: 0 auto;
-  padding: clamp(32px, 6vw, 80px) clamp(20px, 5vw, 40px) clamp(48px, 8vw, 96px);
+  padding: 0 clamp(20px, 5vw, 40px) clamp(48px, 8vw, 96px);
 }
 
 /* Project and post bodies — widen to accommodate tables, code, iframes. */
 .content-shell.wide {
   max-width: var(--measure-wide);
-}
-
-.content-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 24px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--light-fg-muted);
-  margin-bottom: clamp(48px, 8vw, 96px);
-}
-
-.crumbs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.crumb {
-  color: var(--light-fg-muted);
-  transition: color 150ms ease;
-}
-
-.crumb:hover,
-a.crumb:focus-visible {
-  color: var(--light-fg);
-  outline: none;
-}
-
-.crumb-current {
-  color: var(--light-fg);
-}
-
-.crumb-sep {
-  color: var(--light-fg-faint);
 }
 
 /* Page titles */
@@ -338,21 +300,6 @@ a.crumb:focus-visible {
   color: var(--light-fg-muted);
   font-size: 15px;
   font-style: italic;
-}
-
-/* --- Footer --- */
-.content-footer {
-  margin-top: clamp(64px, 10vw, 120px);
-  padding-top: 24px;
-  border-top: 1px solid var(--light-rule);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--light-fg-faint);
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
 }
 
 @media (max-width: 640px) {

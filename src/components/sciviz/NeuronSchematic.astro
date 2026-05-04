@@ -1,0 +1,455 @@
+---
+// NeuronSchematic — animated diagram of one neuron firing an action potential.
+// Shows dendrites → soma → axon (with myelin) → terminals on the left, and
+// a live membrane-voltage trace on the right. A pulse animates down the
+// axon every time an action potential fires; the trace shows the canonical
+// Hodgkin-Huxley-shaped AP waveform with afterhyperpolarization.
+//
+// Auto-fires every ~2.5s; click STIMULATE to fire on demand.
+
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+const uid = "ns-" + Math.random().toString(36).slice(2, 8);
+---
+
+<figure class="sciviz-figure" data-uid={uid}>
+  <div class="sciviz-frame">
+    <svg viewBox="0 0 600 280" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Neuron firing an action potential">
+      <!-- ===== SCHEMATIC (left half) ===== -->
+      <g transform="translate(20 24)">
+        <text x="40" y="-2" font-family="var(--font-mono)" font-size="9" letter-spacing="0.08em"
+              fill="currentColor" fill-opacity="0.6">DENDRITES</text>
+
+        <!-- Dendrite tree — explicit topology so EPSPs animate along it.
+             Soma at (115,118). Four primary branches each carry 2-3 tips. -->
+        <g class="dendrites" stroke="currentColor" stroke-opacity="0.55" fill="none" stroke-width="1.6" stroke-linecap="round">
+          <!-- Branch 1 (upper-far): soma → (60,70) → 3 tips -->
+          <line x1="115" y1="118" x2="60" y2="70" />
+          <line x1="60" y1="70" x2="16" y2="14" />
+          <line x1="60" y1="70" x2="48" y2="6" />
+          <line x1="60" y1="70" x2="14" y2="50" />
+          <!-- Branch 2 (upper-mid): soma → (70,102) → 2 tips -->
+          <line x1="115" y1="118" x2="70" y2="102" />
+          <line x1="70" y1="102" x2="14" y2="88" />
+          <line x1="70" y1="102" x2="34" y2="78" />
+          <!-- Branch 3 (lower-mid): soma → (70,134) → 2 tips -->
+          <line x1="115" y1="118" x2="70" y2="134" />
+          <line x1="70" y1="134" x2="14" y2="148" />
+          <line x1="70" y1="134" x2="34" y2="158" />
+          <!-- Branch 4 (lower-far): soma → (60,168) → 3 tips -->
+          <line x1="115" y1="118" x2="60" y2="168" />
+          <line x1="60" y1="168" x2="14" y2="184" />
+          <line x1="60" y1="168" x2="16" y2="220" />
+          <line x1="60" y1="168" x2="48" y2="232" />
+        </g>
+        <!-- Branch-point dots -->
+        <g fill="currentColor" fill-opacity="0.5">
+          <circle cx="60" cy="70" r="1.6" />
+          <circle cx="70" cy="102" r="1.6" />
+          <circle cx="70" cy="134" r="1.6" />
+          <circle cx="60" cy="168" r="1.6" />
+        </g>
+        <!-- Dendritic spine tips (10 of them) -->
+        <g fill="currentColor" fill-opacity="0.5">
+          <circle cx="16" cy="14"  r="2.2" />
+          <circle cx="48" cy="6"   r="2.2" />
+          <circle cx="14" cy="50"  r="2.2" />
+          <circle cx="14" cy="88"  r="2.2" />
+          <circle cx="34" cy="78"  r="2.2" />
+          <circle cx="14" cy="148" r="2.2" />
+          <circle cx="34" cy="158" r="2.2" />
+          <circle cx="14" cy="184" r="2.2" />
+          <circle cx="16" cy="220" r="2.2" />
+          <circle cx="48" cy="232" r="2.2" />
+        </g>
+
+        <!-- Soma (cell body) with a more organic shape and inner nucleus -->
+        <ellipse cx="115" cy="118" rx="26" ry="22"
+                 fill="color-mix(in srgb, var(--accent) 18%, var(--light-bg-soft))"
+                 stroke="currentColor" stroke-opacity="0.75" stroke-width="1.6" />
+        <ellipse cx="115" cy="118" rx="9" ry="8"
+                 fill="color-mix(in srgb, var(--accent) 35%, var(--light-bg-soft))"
+                 stroke="currentColor" stroke-opacity="0.4" stroke-width="1" />
+        <text x="115" y="84" font-family="var(--font-mono)" font-size="9" letter-spacing="0.08em"
+              fill="currentColor" fill-opacity="0.6" text-anchor="middle">SOMA</text>
+
+        <!-- Axon hillock (slightly tapered transition from soma to axon) -->
+        <path d="M 138 112 Q 152 116, 155 116 Q 152 120, 138 124 Z"
+              fill="color-mix(in srgb, var(--accent) 22%, var(--light-bg-soft))"
+              stroke="currentColor" stroke-opacity="0.6" stroke-width="1" />
+
+        <!-- Axon: nodes of Ranvier (small gaps) between myelin sheaths -->
+        <g fill="none" stroke="currentColor" stroke-opacity="0.55" stroke-width="2.5" stroke-linecap="round">
+          <line x1="155" y1="118" x2="160" y2="118" />
+          <line x1="184" y1="118" x2="188" y2="118" />
+          <line x1="212" y1="118" x2="216" y2="118" />
+          <line x1="240" y1="118" x2="244" y2="118" />
+          <line x1="268" y1="118" x2="272" y2="118" />
+        </g>
+        <!-- Myelin sheaths: rounded rectangles around axon segments -->
+        <g fill="color-mix(in srgb, var(--accent) 14%, var(--light-bg-soft))"
+           stroke="currentColor" stroke-opacity="0.55" stroke-width="1.2">
+          <rect x="160" y="111" width="24" height="14" rx="7" />
+          <rect x="188" y="111" width="24" height="14" rx="7" />
+          <rect x="216" y="111" width="24" height="14" rx="7" />
+          <rect x="244" y="111" width="24" height="14" rx="7" />
+        </g>
+        <text x="216" y="100" font-family="var(--font-mono)" font-size="9" letter-spacing="0.08em"
+              fill="currentColor" fill-opacity="0.6" text-anchor="middle">AXON</text>
+
+        <!-- Terminal arborisation: branching with synaptic boutons (bulbs) -->
+        <g stroke="currentColor" stroke-opacity="0.65" stroke-width="1.5" fill="none" stroke-linecap="round">
+          <path d="M 272 118 Q 285 110, 295 90" />
+          <path d="M 272 118 Q 290 116, 300 116" />
+          <path d="M 272 118 Q 285 126, 295 146" />
+          <path d="M 285 110 Q 280 102, 270 98" />
+          <path d="M 285 126 Q 280 134, 270 138" />
+        </g>
+        <!-- Synaptic boutons (terminal swellings) -->
+        <g fill="color-mix(in srgb, var(--accent) 30%, var(--light-bg-soft))"
+           stroke="currentColor" stroke-opacity="0.6" stroke-width="1">
+          <circle cx="295" cy="90" r="4" />
+          <circle cx="300" cy="116" r="4" />
+          <circle cx="295" cy="146" r="4" />
+          <circle cx="270" cy="98" r="3.5" />
+          <circle cx="270" cy="138" r="3.5" />
+        </g>
+        <text x="295" y="74" font-family="var(--font-mono)" font-size="9" letter-spacing="0.08em"
+              fill="currentColor" fill-opacity="0.6" text-anchor="middle">TERMINALS</text>
+
+        <!-- Soma "charge" overlay — opacity tracks the integrated soma
+             voltage, so the cell visibly fills up as EPSPs accumulate. -->
+        <ellipse class="soma-charge" cx="115" cy="118" rx="26" ry="22"
+                 fill="var(--accent)" opacity="0" />
+        <!-- Soma flash (briefly very bright when an AP starts) -->
+        <ellipse class="soma-flash" cx="115" cy="118" rx="26" ry="22"
+                 fill="var(--accent)" opacity="0" />
+        <!-- EPSP events — tip flashes and travelling dots, animated by JS -->
+        <g class="epsp-events"></g>
+        <!-- Travelling AP pulse — bright dot with halo, animated by JS -->
+        <circle class="ap-halo" cx="155" cy="118" r="14" fill="var(--accent)" opacity="0" />
+        <circle class="ap-pulse" cx="155" cy="118" r="6" fill="var(--accent)" opacity="0" />
+      </g>
+
+      <!-- ===== VOLTAGE TRACE (right half) =====
+           Y axis spans -90mV (y=200) to +35mV (y=0). Threshold at -55mV
+           is y=144; resting at -70mV is y=168. -->
+      <g transform="translate(360 24)">
+        <text x="0" y="-6" font-family="var(--font-mono)" font-size="10" letter-spacing="0.08em"
+              fill="currentColor" fill-opacity="0.6">MEMBRANE VOLTAGE (mV)</text>
+        <!-- Y-axis -->
+        <line x1="0" y1="0" x2="0" y2="200" stroke="currentColor" stroke-opacity="0.18" />
+        <!-- Resting baseline -70mV -->
+        <line x1="0" y1="168" x2="220" y2="168" stroke="currentColor" stroke-opacity="0.18" stroke-dasharray="3 3" />
+        <!-- Threshold -55mV -->
+        <line x1="0" y1="144" x2="220" y2="144" stroke="currentColor" stroke-opacity="0.12" stroke-dasharray="2 4" />
+        <!-- Y labels -->
+        <text x="-6" y="13"  font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55" text-anchor="end">+30</text>
+        <text x="-6" y="148" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55" text-anchor="end">-55</text>
+        <text x="-6" y="172" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55" text-anchor="end">-70</text>
+        <text x="225" y="148" font-family="var(--font-mono)" font-size="8" fill="currentColor" fill-opacity="0.4">threshold</text>
+        <text x="225" y="172" font-family="var(--font-mono)" font-size="8" fill="currentColor" fill-opacity="0.4">resting</text>
+        <!-- Trace path -->
+        <path class="vtrace" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linejoin="round" />
+        <!-- X-axis label -->
+        <text x="110" y="220" font-family="var(--font-mono)" font-size="9" letter-spacing="0.08em"
+              fill="currentColor" fill-opacity="0.55" text-anchor="middle">TIME →</text>
+      </g>
+    </svg>
+
+    <div class="sciviz-controls">
+      <button class="stim-btn" type="button">STIMULATE</button>
+      <button class="play-btn" type="button" aria-pressed="true">PAUSE</button>
+    </div>
+  </div>
+  {caption && <figcaption class="sciviz-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline define:vars={{ uid }}>
+  (function () {
+    function bind() {
+      const root = document.querySelector(`[data-uid="${uid}"]`);
+      if (!root || root.__bound) return;
+      root.__bound = true;
+
+      const apPulse = root.querySelector(".ap-pulse");
+      const apHalo = root.querySelector(".ap-halo");
+      const somaCharge = root.querySelector(".soma-charge");
+      const somaFlash = root.querySelector(".soma-flash");
+      const epspG = root.querySelector(".epsp-events");
+      const vtrace = root.querySelector(".vtrace");
+      const stimBtn = root.querySelector(".stim-btn");
+      const playBtn = root.querySelector(".play-btn");
+      const NS = "http://www.w3.org/2000/svg";
+
+      // Trace plot area. V_MIN/V_MAX chosen so the dashed lines drawn in
+      // the SVG (at y=144 for threshold, y=168 for resting) line up with
+      // the actual mV values of -55 and -70.
+      const PLOT_W = 220;
+      const PLOT_H = 200;
+      const V_MIN = -90, V_MAX = 35;
+      function vToY(v) { return PLOT_H * (1 - (v - V_MIN) / (V_MAX - V_MIN)); }
+
+      // Axon coords — group-local (inside translate(20 24))
+      const AXON_X0 = 155, AXON_X1 = 272, AXON_Y = 118;
+
+      // Dendrite tree topology — each tip routes via its branch back to the
+      // soma. Coordinates match the SVG paths above.
+      const SOMA_CENTER = { x: 115, y: 118 };
+      const BRANCHES = [
+        { x: 60, y: 70 },   // 0: upper-far
+        { x: 70, y: 102 },  // 1: upper-mid
+        { x: 70, y: 134 },  // 2: lower-mid
+        { x: 60, y: 168 },  // 3: lower-far
+      ];
+      const SPINE_TIPS = [
+        { x: 16, y: 14,  branch: 0 }, { x: 48, y: 6,   branch: 0 }, { x: 14, y: 50,  branch: 0 },
+        { x: 14, y: 88,  branch: 1 }, { x: 34, y: 78,  branch: 1 },
+        { x: 14, y: 148, branch: 2 }, { x: 34, y: 158, branch: 2 },
+        { x: 14, y: 184, branch: 3 }, { x: 16, y: 220, branch: 3 }, { x: 48, y: 232, branch: 3 },
+      ];
+
+      // Pre-compute path lengths so EPSP travels at constant speed along
+      // tip → branch → soma, even though the two segments differ in length.
+      function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+      const TIP_PATHS = SPINE_TIPS.map((tip) => {
+        const branch = BRANCHES[tip.branch];
+        const lenA = dist(tip, branch);
+        const lenB = dist(branch, SOMA_CENTER);
+        return { tip, branch, lenA, lenB, total: lenA + lenB, fracA: lenA / (lenA + lenB) };
+      });
+
+      // ---- Integrate-and-fire model driven by random EPSPs ----
+      // Soma voltage is normalised: 0 = resting (-70mV), 1.0 = threshold (-55mV).
+      // EPSPs arrive at random tips, travel to the soma, bump voltage on arrival.
+      // When voltage crosses threshold, an AP fires and resets the soma.
+      const EPSP_TRAVEL_S = 0.18;   // tip → soma travel time
+      const EPSP_BUMP = 0.18;       // voltage added on arrival
+      const SOMA_TAU = 0.40;        // membrane time constant
+      const THRESHOLD = 1.0;
+      const TIP_RATE = 0.45;        // events/sec per spine tip (≈5.4 events/sec total)
+      const AP_REFRACTORY = 0.6;    // AP visualisation window
+
+      let somaV = 0;
+      const epsps = [];   // { tipIdx, startTime, delivered }
+      const spikes = [];  // AP onset times
+      const trace = [];
+
+      const HISTORY_S = 2.0;
+      let elapsed = 0;
+      let lastTime = performance.now();
+      let running = true;
+      let raf = null;
+
+      function fire() {
+        spikes.push(elapsed);
+        somaV = 0;
+        somaCharge.style.opacity = "0";
+        somaFlash.style.transition = "none";
+        somaFlash.style.opacity = "0.85";
+        requestAnimationFrame(() => {
+          somaFlash.style.transition = "opacity 280ms ease-out";
+          somaFlash.style.opacity = "0";
+        });
+      }
+
+      // Subthreshold voltage at the soma (mV) — linear mapping from somaV.
+      // Resting = -70mV at somaV=0; threshold = -55mV at somaV=1.
+      // The AP shape starts AT threshold (-55) — voltage was just there
+      // before firing, so the trace continues smoothly upward into the spike.
+      function vAt(tNow) {
+        for (const ts of spikes) {
+          const dt = tNow - ts;
+          if (dt < 0 || dt > 1.0) continue;
+          if (dt < 0.04) return -55 + (dt / 0.04) * 85;          // -55 → +30 in 40ms
+          if (dt < 0.10) return 30 - ((dt - 0.04) / 0.06) * 100; // +30 → -70 in 60ms
+          return -70 - 5 * Math.exp(-(dt - 0.10) / 0.20);        // small AHP, decays in ~600ms
+        }
+        return -70 + somaV * 15; // subthreshold
+      }
+
+      function tick(now) {
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+
+        const lastSpike = spikes.length ? spikes[spikes.length - 1] : -Infinity;
+        const inAP = elapsed - lastSpike < AP_REFRACTORY;
+
+        if (running) {
+          elapsed += dt;
+
+          // Random EPSP generation per tip (Poisson approximation)
+          if (!inAP) {
+            for (let i = 0; i < SPINE_TIPS.length; i++) {
+              if (Math.random() < TIP_RATE * dt) {
+                epsps.push({ tipIdx: i, startTime: elapsed, delivered: false });
+              }
+            }
+          }
+
+          // Integrate: decay toward 0, deliver any matured EPSPs
+          if (!inAP) {
+            somaV *= Math.exp(-dt / SOMA_TAU);
+            for (const ev of epsps) {
+              if (!ev.delivered && elapsed - ev.startTime >= EPSP_TRAVEL_S) {
+                ev.delivered = true;
+                somaV += EPSP_BUMP;
+              }
+            }
+            // Threshold check
+            if (somaV >= THRESHOLD) fire();
+          }
+        }
+
+        // Cleanup old EPSPs
+        while (epsps.length && elapsed - epsps[0].startTime > EPSP_TRAVEL_S + 0.05) {
+          epsps.shift();
+        }
+
+        // Sample voltage for trace
+        trace.push({ t: elapsed, v: vAt(elapsed) });
+        while (trace.length && trace[0].t < elapsed - HISTORY_S) trace.shift();
+        while (spikes.length && spikes[0] < elapsed - HISTORY_S - 0.1) spikes.shift();
+
+        // Render trace
+        if (trace.length > 1) {
+          let d = "";
+          for (let i = 0; i < trace.length; i++) {
+            const { t, v } = trace[i];
+            const x = ((t - (elapsed - HISTORY_S)) / HISTORY_S) * PLOT_W;
+            const y = vToY(v);
+            d += (i === 0 ? "M" : "L") + x.toFixed(1) + " " + y.toFixed(1);
+          }
+          vtrace.setAttribute("d", d);
+        }
+
+        // ---- Render EPSPs travelling from tips to soma ALONG the dendrites ----
+        // Each EPSP traverses two segments at constant speed: tip → branch
+        // point, then branch point → soma. The split point in time is the
+        // first segment's fraction of the total length.
+        epspG.textContent = "";
+        for (const ev of epsps) {
+          const age = elapsed - ev.startTime;
+          if (age < 0 || age > EPSP_TRAVEL_S) continue;
+          const t = age / EPSP_TRAVEL_S;
+          const path = TIP_PATHS[ev.tipIdx];
+          let x, y;
+          if (t < path.fracA) {
+            // First segment: tip → branch
+            const f = t / path.fracA;
+            x = path.tip.x + (path.branch.x - path.tip.x) * f;
+            y = path.tip.y + (path.branch.y - path.tip.y) * f;
+          } else {
+            // Second segment: branch → soma center
+            const f = (t - path.fracA) / (1 - path.fracA);
+            x = path.branch.x + (SOMA_CENTER.x - path.branch.x) * f;
+            y = path.branch.y + (SOMA_CENTER.y - path.branch.y) * f;
+          }
+          // Tip flash for the first ~60ms
+          if (age < 0.06) {
+            const flash = document.createElementNS(NS, "circle");
+            flash.setAttribute("cx", path.tip.x);
+            flash.setAttribute("cy", path.tip.y);
+            flash.setAttribute("r", "5");
+            flash.setAttribute("fill", "var(--accent)");
+            flash.setAttribute("opacity", (1 - age / 0.06).toFixed(2));
+            epspG.appendChild(flash);
+          }
+          // Travelling dot
+          const dot = document.createElementNS(NS, "circle");
+          dot.setAttribute("cx", x.toFixed(1));
+          dot.setAttribute("cy", y.toFixed(1));
+          dot.setAttribute("r", "2.4");
+          dot.setAttribute("fill", "var(--accent)");
+          dot.setAttribute("opacity", (0.6 + (1 - t) * 0.35).toFixed(2));
+          epspG.appendChild(dot);
+        }
+
+        // ---- Soma "charge" overlay reflects integrated voltage ----
+        // (Suppressed during AP — soma-flash takes over.)
+        const lastSpikeNow = spikes.length ? spikes[spikes.length - 1] : -Infinity;
+        if (elapsed - lastSpikeNow > AP_REFRACTORY * 0.4) {
+          const op = Math.min(1, Math.max(0, somaV)) * 0.55;
+          somaCharge.style.opacity = op.toFixed(2);
+        } else {
+          somaCharge.style.opacity = "0";
+        }
+
+        // ---- Axon pulse on AP ----
+        const TRAVEL_S = 0.7;
+        let bestSpike = -Infinity;
+        for (const ts of spikes) {
+          const dt2 = elapsed - ts;
+          if (dt2 >= 0 && dt2 <= TRAVEL_S && ts > bestSpike) bestSpike = ts;
+        }
+        if (bestSpike > -Infinity) {
+          const dt2 = elapsed - bestSpike;
+          const progress = dt2 / TRAVEL_S;
+          const x = AXON_X0 + progress * (AXON_X1 - AXON_X0);
+          const fade = Math.max(0, 1 - progress * 0.4);
+          apPulse.setAttribute("cx", x.toFixed(1));
+          apPulse.setAttribute("cy", AXON_Y);
+          apPulse.style.opacity = fade.toFixed(2);
+          apHalo.setAttribute("cx", x.toFixed(1));
+          apHalo.setAttribute("cy", AXON_Y);
+          apHalo.style.opacity = (fade * 0.4).toFixed(2);
+        } else {
+          apPulse.style.opacity = "0";
+          apHalo.style.opacity = "0";
+        }
+
+        raf = requestAnimationFrame(tick);
+      }
+
+      // STIMULATE: push the soma straight to threshold so the next tick fires.
+      stimBtn.addEventListener("click", () => {
+        const lastSpikeNow = spikes.length ? spikes[spikes.length - 1] : -Infinity;
+        if (elapsed - lastSpikeNow > AP_REFRACTORY) {
+          somaV = THRESHOLD;
+        }
+      });
+      playBtn.addEventListener("click", () => {
+        running = !running;
+        playBtn.textContent = running ? "PAUSE" : "PLAY";
+      });
+
+      raf = requestAnimationFrame(tick);
+      root.__cleanup = () => raf && cancelAnimationFrame(raf);
+    }
+
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind);
+    else bind();
+    document.addEventListener("astro:page-load", bind);
+  })();
+</script>
+
+<style>
+  .sciviz-figure { margin: 1.2em 0 1.6em; }
+  .sciviz-frame {
+    background: var(--light-bg-soft); border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px); color: var(--light-fg);
+  }
+  .sciviz-frame svg { width: 100%; height: auto; display: block; }
+  .sciviz-controls {
+    margin-top: 16px; display: flex; gap: 12px; justify-content: flex-end;
+  }
+  .stim-btn, .play-btn {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); background: transparent;
+    border: 1px solid var(--accent);
+    padding: 9px 14px; border-radius: 4px;
+    cursor: pointer; font-weight: 600;
+  }
+  .play-btn { background: var(--accent); color: white; border-color: var(--accent); }
+  .stim-btn:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .play-btn:hover { opacity: 0.9; }
+  .sciviz-caption {
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 0.05em; color: var(--light-fg-muted);
+    margin-top: 10px; text-align: center;
+  }
+</style>

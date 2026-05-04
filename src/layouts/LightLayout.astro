@@ -3,6 +3,7 @@ import "../styles/global.css";
 import "../styles/content.css";
 import { ClientRouter } from "astro:transitions";
 import TransitionDirection from "../components/TransitionDirection.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { site } from "../config/site";
 
 interface Props {
@@ -44,30 +45,27 @@ const isAtLeaf = segments.length >= 2;
     <TransitionDirection />
   </head>
   <body class="content">
+    <header class="page-chrome">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/" class="crumb crumb-home">← {site.name}</a>
+        {topSeg && (
+          <>
+            <span class="crumb-sep" aria-hidden="true">/</span>
+            {isAtLeaf ? (
+              <a href={`/${topSeg}`} class="crumb">{topSeg.toUpperCase()}</a>
+            ) : (
+              <span class="crumb crumb-current" aria-current="page">{topSeg.toUpperCase()}</span>
+            )}
+            {isAtLeaf && <span class="crumb-sep" aria-hidden="true">/</span>}
+          </>
+        )}
+      </nav>
+    </header>
     <div class={shellClass}>
-      <header class="content-header">
-        <nav class="crumbs" aria-label="Breadcrumb">
-          <a href="/" class="crumb crumb-home">← {site.name}</a>
-          {topSeg && (
-            <>
-              <span class="crumb-sep" aria-hidden="true">/</span>
-              {isAtLeaf ? (
-                <a href={`/${topSeg}`} class="crumb">{topSeg.toUpperCase()}</a>
-              ) : (
-                <span class="crumb crumb-current" aria-current="page">{topSeg.toUpperCase()}</span>
-              )}
-              {isAtLeaf && <span class="crumb-sep" aria-hidden="true">/</span>}
-            </>
-          )}
-        </nav>
-      </header>
       <main>
         <slot />
       </main>
-      <footer class="content-footer">
-        <span>© {new Date().getFullYear()} {site.name}</span>
-        <a href={site.social.github} target="_blank" rel="noopener">GitHub</a>
-      </footer>
     </div>
+    <SiteFooter />
   </body>
 </html>

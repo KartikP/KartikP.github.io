@@ -6,15 +6,30 @@ interface Props {
   image?: string;       // optional inline screenshot
   imageAlt?: string;
   asterisk?: boolean;   // show the orange asterisk before the title
+  variant?: "card" | "embed"; // embed = no padding, no aspect ratio (for live demos)
 }
 
-const { title, summary, tags = [], image, imageAlt = "", asterisk = true } = Astro.props;
+const {
+  title,
+  summary,
+  tags = [],
+  image,
+  imageAlt = "",
+  asterisk = true,
+  variant = "card",
+} = Astro.props;
+
+const hasSlot = Astro.slots.has("default");
+const hasHeroContent = !!image || hasSlot;
 ---
 
 <section class="case-hero-wrap">
-  <div class="case-hero">
-    {image && <img src={image} alt={imageAlt} />}
-  </div>
+  {hasHeroContent && (
+    <div class={`case-hero ${variant === "embed" ? "case-hero--embed" : ""}`}>
+      {image && <img src={image} alt={imageAlt} />}
+      <slot />
+    </div>
+  )}
 
   {tags.length > 0 && (
     <div class="case-tags">
