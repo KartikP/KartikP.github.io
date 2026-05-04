@@ -83,4 +83,64 @@ import { site, nav } from "../config/site";
       });
     })();
   </script>
+
+  <script is:inline>
+    // Spontaneous-network-burst glitch — when the raster fires a burst,
+    // briefly apply a chromatic-split glitch to the nav titles. The neurons
+    // that map to each link "fire" along with the burst, so the title
+    // shudders and chromatic-aberrates for ~280ms with a small random
+    // per-title offset.
+    (function () {
+      let bound = false;
+
+      function bind() {
+        if (bound) return;
+        bound = true;
+
+        const reduceMotion =
+          window.matchMedia &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduceMotion) return;
+
+        window.addEventListener("raster:burst", function (e) {
+          const detail = e && e.detail ? e.detail : {};
+          const intensities = detail.intensities || [];
+          const links = document.querySelectorAll(".landing-nav a");
+
+          links.forEach(function (link, i) {
+            const title = link.querySelector(".nav-title");
+            if (!title) return;
+            const intensity =
+              typeof intensities[i] === "number" ? intensities[i] : 0;
+            // Skip the pulse when this link's tuned neurons barely fired.
+            if (intensity < 0.06) return;
+
+            // Map intensity → pulse strength multiplier.
+            const gs = Math.min(0.4 + intensity * 2.4, 2.2);
+            const offset = Math.random() * 80;
+
+            setTimeout(function () {
+              const wasActive = title.classList.contains("burst-glitch");
+              title.style.setProperty("--gs", gs.toFixed(3));
+              if (wasActive) {
+                // Animation already running — let it finish naturally rather
+                // than forcing a synchronous reflow per burst.
+                return;
+              }
+              title.classList.add("burst-glitch");
+              setTimeout(function () {
+                title.classList.remove("burst-glitch");
+              }, 420);
+            }, offset);
+          });
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bind);
+      } else {
+        bind();
+      }
+    })();
+  </script>
 </DarkLayout>

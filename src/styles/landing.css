@@ -143,11 +143,12 @@
    state. The hero lands at opacity 0.78 (its baseline dim); the nav
    items land at full opacity. */
 /* Only hide reveal elements when JS is available — falls back to visible
-   if scripts fail. The .js class is set by an inline head script. */
+   if scripts fail. The .js class is set by an inline head script.
+   No will-change here: the reveal is short and persistent compositing
+   layers above the raster canvas measurably hurt its frame pacing. */
 .js [data-reveal] {
   opacity: 0;
-  filter: blur(3px);
-  will-change: opacity, filter;
+  filter: blur(1px);
 }
 .js [data-reveal].is-revealing {
   /* easeOutCubic — sharper acceleration up front, longer settle than the
@@ -163,6 +164,51 @@
 }
 @keyframes reveal-hero {
   to { opacity: 0.78; filter: blur(0); }
+}
+
+/* Burst-shutter — fires when the neural raster reports a spontaneous
+   network burst. Cyan + magenta text-shadow offsets snap apart and
+   recombine while the title shudders horizontally a sub-pixel. No big
+   blur radii — only sharp offsets — so 4 simultaneous shutters don't
+   measurably tax paint while the canvas is also drawing the burst.
+   Per-title intensity comes in via --gs (set inline by JS). */
+.nav-title.burst-glitch {
+  --gs: 1;
+  /* Layer-promote only during the animation so painted shutter offsets
+     don't dirty neighbouring tiles (esp. the raster canvas). */
+  will-change: transform, text-shadow;
+  animation: burst-shutter 380ms ease-out;
+}
+@keyframes burst-shutter {
+  0% {
+    text-shadow: var(--text-halo-strong);
+    transform: translateX(0);
+  }
+  15% {
+    text-shadow:
+      var(--text-halo-strong),
+      calc(var(--gs) * -4px) 0 rgba(77, 208, 225, 0.95),
+      calc(var(--gs) * 4px)  0 rgba(255, 90, 180, 0.85);
+    transform: translateX(calc(var(--gs) * -2px));
+  }
+  35% {
+    text-shadow:
+      var(--text-halo-strong),
+      calc(var(--gs) * 3.2px)  0 rgba(77, 208, 225, 0.9),
+      calc(var(--gs) * -3.2px) 0 rgba(255, 90, 180, 0.8);
+    transform: translateX(calc(var(--gs) * 1.5px));
+  }
+  60% {
+    text-shadow:
+      var(--text-halo-strong),
+      calc(var(--gs) * -1.8px) 0 rgba(77, 208, 225, 0.7),
+      calc(var(--gs) * 1.8px)  0 rgba(255, 90, 180, 0.6);
+    transform: translateX(calc(var(--gs) * -0.7px));
+  }
+  100% {
+    text-shadow: var(--text-halo-strong);
+    transform: translateX(0);
+  }
 }
 
 /* --- The nav list (the star of the show) --- */

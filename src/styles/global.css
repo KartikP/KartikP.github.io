@@ -26,6 +26,11 @@
   width: 100%;
   height: 100%;
   display: block;
+  /* Promote the canvas to its own compositing layer so reveal blurs and
+     burst-glow effects above it can't dirty the canvas tile. */
+  transform: translateZ(0);
+  will-change: transform;
+  contain: paint;
 }
 
 #neural-bg #lfpCanvas {
@@ -34,6 +39,8 @@
   max-height: 64px;
   width: 100%;
   display: block;
+  transform: translateZ(0);
+  contain: paint;
 }
 
 /* Design tokens — edit in one place. */

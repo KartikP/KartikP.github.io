@@ -4,6 +4,7 @@ import { createNeurons } from './neurons.js';
 import { bindInputEvents } from './input.js';
 import { bindRsbEvents } from './rsb.js';
 import { setHoverActive, setHoverInactive } from './hover.js';
+import { learningRegisterTargets } from './learning.js';
 import { createRenderer } from './renderer.js';
 
 // Each interactive element has a "preferred angle" in the same 2π space
@@ -110,6 +111,13 @@ function init() {
 
     let currentScheme = schemes.greyscale;
     const neurons = createNeurons(ROW_COUNT);
+
+    // Register per-target angles so spontaneous-burst events can carry
+    // per-link intensities (landing nav glitch reads this).
+    learningRegisterTargets(
+        neurons.map((n) => n.preferredAngle),
+        NAV_TARGETS.map((t) => t.angle),
+    );
 
     const schemeSelect = document.getElementById('colorScheme');
     if (schemeSelect) {

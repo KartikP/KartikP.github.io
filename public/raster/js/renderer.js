@@ -1,7 +1,7 @@
 import { SPEED, LFP_HISTORY_MAX } from './config.js';
 import { inputState, updateSmoothing } from './input.js';
 import { rsbState, rsbTick } from './rsb.js';
-import { learningTick, learningFiringRate, learningIsBurstActive } from './learning.js';
+import { learningTick, learningBurstEnvelope, learningIsBurstActive, learningState } from './learning.js';
 import { hoverFiringRate, hoverIsActive } from './hover.js';
 import { drawMinimap } from './minimap.js';
 
@@ -18,6 +18,7 @@ export function createRenderer(dom, neurons, getScheme) {
 
     let width, rHeight, lHeight;
     const lfpHistory = []; // entries: { spikes, active }
+    let _lastScheme = null; // sentinel for per-scheme color cache rebuild
 
     // Simulated baseline value for pre-populating history so the LFP strip
     // appears full on first paint regardless of how wide the viewport is.
@@ -106,6 +107,25 @@ export function createRenderer(dom, neurons, getScheme) {
         // Learned / spontaneous-network-burst state — evolves with RSB count.
         learningTick(rowCount, rsbState.phase);
         const inLearnedBurst = learningIsBurstActive();
+        // Hoist the time-only burst envelope out of the per-neuron loop.
+        const learnEnvelope = inLearnedBurst
+            ? learningState.burstBaseProb * learningBurstEnvelope()
+            : 0;
+        const learnMask = inLearnedBurst ? learningState.burstNeuronMask : null;
+
+        // Per-neuron color strings are pure functions of the scheme + the
+        // neuron's static properties (preferredAngle, baseAlpha). Caching
+        // them once per scheme avoids ~200 template-literal allocations
+        // and CSS color parses every burst frame. Rebuilds only when the
+        // scheme reference actually changes.
+        if (cs !== _lastScheme) {
+            for (let i = 0; i < rowCount; i++) {
+                const n = neurons[i];
+                n._baselineColor = cs.baseline(n);
+                n._evokedColor = cs.evoked(n);
+            }
+            _lastScheme = cs;
+        }
 
         // Hover-evoked selective firing — the hovered element's preferred
         // angle drives the matching subpopulation of direction-tuned neurons,
@@ -117,15 +137,24 @@ export function createRenderer(dom, neurons, getScheme) {
         const rowStep = rHeight / rowCount;
         rCtx.save();
 
-        neurons.forEach((n, i) => {
-            let angularDist = Math.abs(inputState.smoothAngle - n.preferredAngle);
-            if (angularDist > Math.PI) angularDist = Math.PI * 2 - angularDist;
+        const movementIntensity = inputState.movementIntensity;
+        const evokedScalar = movementIntensity * 0.003;
 
-            const tuningEffect = Math.exp(-Math.pow(angularDist, 2) / (2 * Math.pow(n.tuningWidth, 2)));
-            const evokedRate = (inputState.movementIntensity * 0.003) * tuningEffect;
+        neurons.forEach((n, i) => {
+            // Skip the angular-tuning Math.exp entirely when there's no
+            // movement-evoked drive — saves ~1000 exps per idle frame.
+            let tuningEffect = 0;
+            let evokedRate = 0;
+            if (evokedScalar > 0) {
+                let angularDist = Math.abs(inputState.smoothAngle - n.preferredAngle);
+                if (angularDist > Math.PI) angularDist = Math.PI * 2 - angularDist;
+                const sigma = n.tuningWidth;
+                tuningEffect = Math.exp(-(angularDist * angularDist) / (2 * sigma * sigma));
+                evokedRate = evokedScalar * tuningEffect;
+            }
 
             const rsbRate = (rsbFiringProb > 0 && rsbState.neuronMask[i]) ? rsbFiringProb : 0;
-            const learnRate = inLearnedBurst ? learningFiringRate(i) : 0;
+            const learnRate = (learnMask && learnMask[i]) ? learnEnvelope : 0;
             const hoverRate = inHover ? hoverFiringRate(n) : 0;
 
             if (n.isPersistent) {
@@ -159,11 +188,7 @@ export function createRenderer(dom, neurons, getScheme) {
                     || hoverRate > 0;
                 const y = i * rowStep;
 
-                if (isEvoked) {
-                    rCtx.fillStyle = cs.evoked(n);
-                } else {
-                    rCtx.fillStyle = cs.baseline(n);
-                }
+                rCtx.fillStyle = isEvoked ? n._evokedColor : n._baselineColor;
                 rCtx.fillRect(width - SPEED, y, n.size, n.size);
                 totalSpikes++;
             }
