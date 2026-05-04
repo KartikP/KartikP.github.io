@@ -140,17 +140,25 @@
   box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
 }
 
-/* Embed variant — for live components that should fill the hero frame
-   edge-to-edge (no padding, no enforced aspect ratio). */
+/* Embed variant — for live components or transparent-background images
+   that should fill the hero frame edge-to-edge (no padding, no
+   gradient, no enforced aspect ratio). */
 .case-hero--embed {
   aspect-ratio: auto;
   padding: 0;
-  background: var(--light-bg-soft);
+  background: transparent;
+  box-shadow: none;
   display: block;
 }
 .case-hero--embed > *:not(script):not(style) {
   display: block;
   width: 100%;
+}
+.case-hero--embed img {
+  max-width: 100%;
+  max-height: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 /* Eyebrow tags row */

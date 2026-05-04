@@ -137,6 +137,34 @@
   text-wrap: pretty;
 }
 
+/* Element-level reveal (see index.astro inline script).
+   Elements with [data-reveal] start invisible+blurred+offset; once the
+   script tags them with .is-revealing they animate to their natural
+   state. The hero lands at opacity 0.78 (its baseline dim); the nav
+   items land at full opacity. */
+/* Only hide reveal elements when JS is available — falls back to visible
+   if scripts fail. The .js class is set by an inline head script. */
+.js [data-reveal] {
+  opacity: 0;
+  filter: blur(3px);
+  will-change: opacity, filter;
+}
+.js [data-reveal].is-revealing {
+  /* easeOutCubic — sharper acceleration up front, longer settle than the
+     default ease-out keyword. */
+  animation: reveal-up 2500ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+.js .landing-hero[data-reveal].is-revealing {
+  animation-name: reveal-hero;
+}
+
+@keyframes reveal-up {
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes reveal-hero {
+  to { opacity: 0.78; filter: blur(0); }
+}
+
 /* --- The nav list (the star of the show) --- */
 .landing-nav {
   max-width: 900px;

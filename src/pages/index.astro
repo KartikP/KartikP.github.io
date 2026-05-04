@@ -16,9 +16,9 @@ import { site, nav } from "../config/site";
     </header>
 
     <div class="landing-middle">
-      <p class="landing-hero">{site.hero}</p>
+      <p class="landing-hero" data-reveal>{site.hero}</p>
 
-      <nav class="landing-nav" aria-label="Main">
+      <nav class="landing-nav" aria-label="Main" data-reveal="2000">
         <ol>
           {nav.map((item, i) => (
             <li>
@@ -38,4 +38,49 @@ import { site, nav } from "../config/site";
       <a href={site.social.github} target="_blank" rel="noopener">GitHub</a>
     </footer>
   </div>
+
+  <script is:inline>
+    // Element-level reveal — every [data-reveal] element fades in after a
+    // delay. Default delay is HEAD_DELAY; an element can override with
+    // data-reveal="<ms>" for its own timing (e.g. nav appears after hero).
+    (function () {
+      const HEAD_DELAY = 100;   // ms — default delay before reveal starts
+
+      function bind() {
+        const els = document.querySelectorAll("[data-reveal]");
+        const reduceMotion =
+          window.matchMedia &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        els.forEach(function (el) {
+          if (el.__revealed) return;
+          el.__revealed = true;
+          if (reduceMotion) return;
+          const override = el.getAttribute("data-reveal");
+          const delay =
+            override && !isNaN(parseFloat(override))
+              ? parseFloat(override)
+              : HEAD_DELAY;
+          el.style.animationDelay = delay + "ms";
+          el.classList.add("is-revealing");
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bind);
+      } else {
+        bind();
+      }
+      document.addEventListener("astro:page-load", function () {
+        document.querySelectorAll("[data-reveal]").forEach(function (el) {
+          el.__revealed = false;
+          el.classList.remove("is-revealing");
+          el.style.animationDelay = "";
+        });
+        // Re-trigger animation by forcing a reflow before re-adding the class.
+        void document.body.offsetWidth;
+        bind();
+      });
+    })();
+  </script>
 </DarkLayout>

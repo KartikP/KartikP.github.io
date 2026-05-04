@@ -1,0 +1,345 @@
+---
+title: Health dashboard
+summary: "A self-hosted, holographic dashboard that pulls Oura, Strava, Apple Health, a CGM, and lab results into a single view — 3D anatomical render, server-side aggregation across 11M+ data points, and a Cloudflare tunnel into my homelab. Single-tenant, for me, because no commercial app correlates the metrics I actually care about."
+date: 2026-05-04
+accent: "#4dd0e1"
+tags: [quantified-self, health, three.js, timescaledb, self-hosted]
+role: Solo
+team: Solo
+timeline: "2026 — present"
+skills: [Next.js, TypeScript, Three.js, React Three Fiber, TimescaleDB, Postgres, Drizzle, Docker, Cloudflare Tunnel]
+url: "https://health.kartikp.com"
+draft: false
+---
+
+{/*
+  ASSET STATUS — files under public/assets/work/health-dashboard/
+
+  HAVE:
+    hero.png              — holographic anatomy hero shot ✓
+    dashboard_1.png       — main dashboard overview ✓
+    sleep.png             — sleep page ✓
+    fitness.png           — fitness page ✓
+    anatomy-final.mp4     — rotating skeleton clip ✓ (converted from .mov)
+
+  STILL NEED:
+    anatomy-source.png    — Blender file with 4569 meshes (war story 01 / step 1)
+    anatomy-decimate.png  — gltf-transform decimation (war story 01 / step 2)
+    anatomy-edges.png     — EdgesGeometry + bloom (war story 01 / step 3)
+    anatomy-merged.png    — merged geometry diagram (war story 01 / step 4)
+    steps-chart.png       — multi-source steps chart with toggle (war story 02)
+    hr-overlay.png        — HR overlay with EKG sweep (war story 02)
+    tunnel-watchdog.png   — ntfy push notification or watchdog log (war story 03)
+*/}
+
+import CaseHero from "../../components/case-study/CaseHero.astro";
+import MetaBar from "../../components/case-study/MetaBar.astro";
+import Section from "../../components/case-study/Section.astro";
+import Callout from "../../components/case-study/Callout.astro";
+import KeyFlow from "../../components/case-study/KeyFlow.astro";
+import Figure from "../../components/case-study/Figure.astro";
+import Video from "../../components/case-study/Video.astro";
+
+<CaseHero
+  title={frontmatter.title}
+  summary={frontmatter.summary}
+  tags={["IN PROGRESS", "QUANTIFIED SELF", "SELF-HOSTED"]}
+  image="/assets/work/health-dashboard/hero.png"
+  imageAlt="Holographic 3D anatomy view — wireframe skeleton with bloom against a navy background"
+  variant="embed"
+/>
+
+<MetaBar
+  role={frontmatter.role}
+  team={frontmatter.team}
+  timeline={frontmatter.timeline}
+  skills={frontmatter.skills}
+/>
+
+## Why I built this
+
+<Section id="motivation" eyebrow="MOTIVATION" heading="Six apps, one body, no overlap.">
+
+My health data lives in six places — Oura, Strava, Apple Health, a Stelo
+CGM, Function Health, and a notebook of supplements I keep forgetting
+to update. None of them talk to each other. None of them can answer
+the question I actually want to ask, which is: *did this supplement
+move my deep sleep, or am I just imagining it?* The cross-source
+correlations that make the data useful are exactly the ones no
+commercial app will ever build, because they're n=1 by design.
+
+I also didn't want my health data living in someone else's database.
+That's a strong opinion, and it's the source of most of the
+self-hosting tax this project pays — the tunnel, the watchdog, the
+upgrade cadence, the backup story. I think it's worth it.
+
+The third reason is more honest: I wanted an excuse to build something
+in 3D.
+
+</Section>
+
+## What it does today
+
+<Section id="status" eyebrow="STATUS" heading="Working today, with caveats.">
+
+Five data sources sync on schedule. Oura and Strava run on an hourly
+cron in the homelab; Apple Health (and a Stelo CGM piggybacking on it)
+arrives via a 30-minute webhook from the *Auto Health Export* iOS
+app; lab panels are entered manually after each draw. The Apple
+Health pipeline alone has ingested 2.1M+ historical rows.
+
+<Figure
+  src="/assets/work/health-dashboard/dashboard_1.png"
+  alt="Main dashboard overview — summary metrics, heart rate chart, daily steps, activity heatmap"
+  caption="The default dashboard view. The 3D anatomy on the home tab is the marquee feature; this is the readable card view I actually open most mornings."
+  framed={false}
+/>
+
+The dashboard surfaces:
+
+- A holographic 3D anatomy view (249 bones, 32 organs, brain) with
+  region tabs, organ sub-tabs, and double-click camera zoom — plus a
+  classic card view for the days I want to read my numbers without
+  spinning a skeleton around
+- Sleep, fitness, labs, Apple Health, supplements, and a printable
+  *health brief* that flags deviations from personal baselines
+- A supplements page that computes baseline → current deltas for any
+  metric you tell it to track, direction-aware so a drop in resting HR
+  reads as good
+- Hourly sync logs and a data-pipeline page that documents itself
+
+<Figure
+  src="/assets/work/health-dashboard/sleep.png"
+  alt="Sleep page — nightly stages, overnight HR trace, and the per-night summary cards"
+  caption="The sleep page. Each night's hypnogram, overnight HR/HRV traces, and a 30-night ribbon of stage breakdowns. Oura is the source for stage detail; Apple Watch fills in the days the ring isn't worn."
+  framed={false}
+/>
+
+<Figure
+  src="/assets/work/health-dashboard/fitness.png"
+  alt="Fitness page — cumulative distance, activity calendar heatmap, and an interactive map of recent activities"
+  caption="Fitness, wired to Strava. The activity calendar uses the same green-cell density as GitHub's contribution graph, and the map renders summary polylines from any activity that has GPS."
+  framed={false}
+/>
+
+What's deliberately not there yet, and the tradeoffs section at the
+bottom is honest about why:
+
+- No anomaly detection or LLM-driven insights layer
+- No caching or materialized views — every dashboard load
+  re-aggregates from raw rows. Fine at one user; immediately a
+  problem at two.
+- No native mobile app
+- No notifications when metrics drift outside baseline
+
+</Section>
+
+## The 3D anatomy pipeline
+
+<Section id="anatomy-pipeline" eyebrow="WAR STORY 01" heading="From a 293 MB Blender file to 6.9 MB of holographic edges.">
+
+The "holographic" 3D body view is the thing visitors notice first, and
+it's almost entirely a rendering trick. There's no proprietary
+anatomy asset behind it — the source is *Z-Anatomy*, an open-source
+Blender file with 4,569 individually named meshes, weighing in at
+293 MB. Unusable as-is on the web.
+
+The pipeline that turns it into a 6.9 MB GLB is short, and most of the
+work happens before Three.js sees a single triangle:
+
+<KeyFlow
+  num={1}
+  title="Curate in Blender"
+  image="/assets/work/health-dashboard/anatomy-source.png"
+  imageAlt="Z-Anatomy source file — thousands of individual meshes in Blender"
+>
+A Python script walks the source file and extracts 281 target meshes —
+the named bones, the visceral organs, the brain regions I care about.
+The 131 individual brain parts get merged into a single mesh up front
+because nobody's clicking on the cerebellum.
+</KeyFlow>
+
+<KeyFlow
+  num={2}
+  title="Decimate via gltf-transform"
+  image="/assets/work/health-dashboard/anatomy-decimate.png"
+  imageAlt="Decimation pass reducing vertex count from 581k to 145k"
+>
+The exported GLB enters at 581k vertices and leaves at 145k after a
+quality-aware decimation pass. The simplification preserves silhouettes,
+which is all the holographic style cares about.
+</KeyFlow>
+
+<KeyFlow
+  num={3}
+  title="Render only edges"
+  image="/assets/work/health-dashboard/anatomy-edges.png"
+  imageAlt="Final render — wireframe edges with additive blending and bloom against a dark background"
+>
+In Three.js, every mesh is wrapped in an `EdgesGeometry` with additive
+blending and a bloom postprocess pass. The fill is invisible. That's
+the entire "holographic" effect — the look is just edges + bloom + a
+navy background.
+</KeyFlow>
+
+<KeyFlow
+  num={4}
+  title="Collapse on the GPU"
+  image="/assets/work/health-dashboard/anatomy-merged.png"
+  imageAlt="Three.js scene graph showing 568 meshes merged into ~20 buffers"
+>
+`mergeGeometries()` compresses the 568 remaining draw calls into ~20
+buffers grouped by region. With `frameloop="demand"` and in-place
+`setRGB()` colour mutations, GPU usage sits at zero when the camera
+isn't moving.
+</KeyFlow>
+
+<Video
+  src="/assets/work/health-dashboard/anatomy-final.mp4"
+  caption="The final view, recorded live. Region tabs change which buffer is highlighted; double-clicking on a body part zooms the camera."
+  framed={false}
+/>
+
+The lesson is the boring one: most "performant 3D on the web" is just
+not asking the browser to do work it doesn't have to. Edges instead of
+fills. Merged geometry instead of 568 draw calls. Skip the render
+loop when the camera is still. The 145k vertex count is incidental.
+
+</Section>
+
+## Multi-source step deduplication
+
+<Section id="dedup" eyebrow="WAR STORY 02" heading="30,000-step days I didn't actually walk.">
+
+Both Oura and Apple Health write to the same `steps` table, tagged by
+source. They report in completely different shapes. Oura returns one
+total per day. Apple Health writes per-second granular increments
+because Apple Watch is recording them as I move. A naive
+`SUM(count)` across both gives me 30,000-step days I definitely did
+not walk — Oura's daily roll-up is being added on top of Apple's
+per-minute deltas that *already sum to the same number*.
+
+The fix is shaped the way most multi-source aggregation problems are:
+
+<Callout>
+Bucket per `(day, source)`. Aggregate within source according to
+the source's actual shape — `MAX` for Oura (one daily roll-up
+already), `SUM` for Apple (genuinely additive minute-level data).
+Then pick the best source per day. Don't sum *across* sources.
+</Callout>
+
+<Figure
+  src="/assets/work/health-dashboard/steps-chart.png"
+  alt="Daily steps chart with All/Oura/Apple Watch toggle showing best-source-per-day"
+  caption="The dashboard's steps chart with the three-way source filter. Each day shows the best source for that day, not a sum across sources."
+/>
+
+The same exact-shape problem hits heart rate, HRV, and SpO₂. Both
+Oura and Apple Watch write to `heart_rate`. The dashboard chart
+overlays them in different shades of red on a minute-bucketed
+x-axis, with a three-way *All / Oura / Apple Watch* filter that
+re-keys the EKG sweep, the legend, and the bpm range together. It's
+five lines of UI built on top of a deduplication rule the database
+enforces.
+
+<Figure
+  src="/assets/work/health-dashboard/hr-overlay.png"
+  alt="Heart rate chart with Oura and Apple Watch sources overlaid, EKG sweep dot tracing the active source"
+  caption="Heart rate with both sources overlaid. The animated EKG dot picks the closest sample to its previous position so it doesn't jump between Oura and Apple Watch lines as it sweeps."
+/>
+
+The other quiet correctness fix in this region: *resting* heart rate
+isn't computed by averaging the raw `heart_rate` table. That gives
+you 110 bpm because it includes everything you did with your heart
+that day. The dashboard reads `resting_heart_rate` from Apple Health's
+own daily-min aggregation, with a fallback to the mean of
+`sleep_sessions.lowest_hr` over the last seven nights when that's
+not available. *Resting* was always going to mean
+*the floor of the day*, not *the average of the day*.
+
+</Section>
+
+## Tunnel reliability
+
+<Section id="tunnel" eyebrow="WAR STORY 03" heading="My ISP, Cloudflare, and an MTU of 1280.">
+
+The dashboard is exposed at `health.kartikp.com` via a Cloudflare
+tunnel from an HP EliteDesk in my apartment. For the first month it
+threw intermittent 502s that looked, *strongly*, like the application
+crashing. It wasn't. The path MTU between my router and Cloudflare's
+edge is roughly 1318 bytes, and the default 1500-byte MTU on `eno1`
+was producing silent fragmentation that Cloudflare just gave up on
+after a timeout.
+
+The fix is two boring lines of config — `protocol: http2`,
+`mtu: 1280` — plus a watchdog container I now think every
+self-hosted tunnel deserves:
+
+<Callout>
+A small alpine + curl container pings Google and Cloudflare every
+30 seconds. When it sees a Cloudflare-side failure pattern that
+lasts ~2 minutes, it restarts `cloudflared` and pushes a
+notification via ntfy.sh. I find out the tunnel was stuck before
+anyone using it does. The container is twelve lines of bash.
+</Callout>
+
+<Figure
+  src="/assets/work/health-dashboard/tunnel-watchdog.png"
+  alt="ntfy push notification: tunnel restart event with timestamp and outage duration"
+  caption="An ntfy push from the watchdog. I get a notification on my phone when cloudflared has been restarted, including how long the tunnel was stuck."
+/>
+
+The other adjacent failure mode in this story: Apple Health's
+*Auto Health Export* webhook sometimes posts payloads big enough that
+processing them inside the request takes more than 30 seconds — which
+is the Cloudflare tunnel's origin timeout. Webhooks would time out,
+the iPhone would retry, and the same payload would arrive again and
+again. The fix was to respond `202 Accepted` immediately and process
+the payload in a background task. If the background task fails, the
+next 30-minute payload contains the same data anyway, so nothing is
+lost. There is also a binary-search recovery for truncated JSON
+payloads, which I would rather not have had to write.
+
+</Section>
+
+## Open questions
+
+<Section id="tradeoffs" eyebrow="TRADEOFFS" heading="What I'm sitting with.">
+
+A few decisions I haven't resolved, listed roughly in order of how
+much they nag me:
+
+- **Insights vs. surveillance.** Every metric is descriptive today.
+  *"Your HRV dropped 18% this week and it correlates with your new
+  magnesium glycinate"* is the obvious next step, and an LLM is the
+  obvious tool. But sending health data to a hosted model has real
+  privacy cost. The honest options are a local model (slower, lower
+  quality), OpenAI with PII redaction (still uncomfortable), or
+  refusing the upgrade. I keep refusing the upgrade.
+- **Collections vs. proper schema.** Manual data — labs, supplements,
+  conditions, medications — lives in a flexible JSONB
+  `collection_entries` table. That's how I can spin up a new tracker
+  in thirty seconds without writing a migration. It's also why labs
+  can't be foreign-keyed to anything and why per-field indexing is
+  unavailable. The heavy users (labs, supplements) probably want real
+  tables. I haven't been able to give up the *thirty-second new
+  tracker* property.
+- **No caching.** Every dashboard load re-aggregates from the raw
+  hypertables. At one user, that's instant. At two users on different
+  pages, the database becomes the bottleneck.
+  TimescaleDB continuous aggregates are the natural answer; I haven't
+  needed them.
+- **Single-tenant by design.** Sharing this would require row-level
+  security, a real auth story, and a whole new threat model. I don't
+  want to build that. The alternative — *I made the thing that lets
+  me ask the questions, you can make yours* — is fine, if slightly
+  unfriendly.
+- **The 3D skeleton.** Beautiful, fun, debatable utility. The classic
+  card view exists for the days I actually want to read numbers, and
+  some days that's most of them.
+- **The self-hosting tax.** I now own a tunnel, a watchdog, an
+  upgrade cadence, and a backup story. The price of the data being
+  mine is that I'm the one paged when something breaks. Worth it; not
+  free.
+
+</Section>

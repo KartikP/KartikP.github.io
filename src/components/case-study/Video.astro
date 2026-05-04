@@ -1,0 +1,52 @@
+---
+// Lightweight video figure — autoplaying, muted, looping clip embedded in
+// the same framed style as <Figure>. Use for short demo loops where a
+// static screenshot wouldn't carry the idea (e.g. an animation, a UI
+// interaction, a 3D rotation).
+
+interface Props {
+  src: string;        // e.g. /assets/work/<slug>/clip.mp4
+  poster?: string;    // optional still frame shown before playback starts
+  caption?: string;
+  framed?: boolean;
+}
+
+const { src, poster, caption, framed = true } = Astro.props;
+---
+
+<figure class="case-figure">
+  {framed ? (
+    <div class="case-figure-frame">
+      <video
+        src={src}
+        poster={poster}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      ></video>
+    </div>
+  ) : (
+    <video
+      src={src}
+      poster={poster}
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      style="width: 100%; border-radius: 6px; display: block;"
+    ></video>
+  )}
+  {caption && <figcaption class="case-figure-caption">{caption}</figcaption>}
+</figure>
+
+<style is:global>
+  .case-figure-frame video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+  }
+</style>
