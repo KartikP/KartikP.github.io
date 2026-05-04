@@ -153,7 +153,7 @@
 .js [data-reveal].is-revealing {
   /* easeOutCubic — sharper acceleration up front, longer settle than the
      default ease-out keyword. */
-  animation: reveal-up 2500ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
+  animation: reveal-up 1900ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
 }
 .js .landing-hero[data-reveal].is-revealing {
   animation-name: reveal-hero;
