@@ -1,0 +1,232 @@
+---
+// StorageMigration — four-frame visualization of the Phase 8 NTFS → ext4
+// data migration. Each frame is a snapshot of all six drives (capacity
+// bars, used vs free) at a key checkpoint:
+//
+//   1. START          — 5 NTFS drives + the new 22 TB drive empty.
+//   2. STEPS 2-3      — Kayleigh + Tsuki drained into the 22 TB buffer;
+//                       both reformatted to ext4 (now empty).
+//   3. STEPS 4-5      — mergerfs pool created; Boiz drained into the
+//                       pool, reformatted, added back. 22 TB is now full.
+//   4. STEP 6 / FINAL — Rithi drained to disk1, reformatted as the
+//                       SnapRAID parity drive. Pool stable at 55 TB.
+//
+// All drive widths within a frame share the same capacity-to-pixel
+// scale, so size differences between drives are visible across frames.
+//
+// Static SVG. currentColor + var(--accent) for theming.
+
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+
+interface DriveState {
+  mount: string;
+  label: string;
+  capacityTb: number;
+  usedTb: number;
+  fs: "NTFS" | "ext4" | "ext4-empty" | "ext4-parity" | "unformatted";
+  inPool: boolean;
+  note?: string;
+}
+
+interface Frame {
+  step: string;
+  title: string;
+  drives: DriveState[];
+}
+
+const frames: Frame[] = [
+  {
+    step: "START",
+    title: "5 NTFS drives + a new 22 TB drive",
+    drives: [
+      { mount: "Boiz",      label: "NTFS",         capacityTb: 13.0, usedTb: 12.0, fs: "NTFS",        inPool: false },
+      { mount: "Kayleigh",  label: "NTFS",         capacityTb:  7.3, usedTb:  6.7, fs: "NTFS",        inPool: false },
+      { mount: "Tsuki",     label: "NTFS",         capacityTb:  7.3, usedTb:  5.6, fs: "NTFS",        inPool: false },
+      { mount: "Thangachi", label: "NTFS",         capacityTb:  7.3, usedTb:  0.75, fs: "NTFS",       inPool: false },
+      { mount: "Rithi",     label: "NTFS",         capacityTb: 13.0, usedTb: 11.0, fs: "NTFS",        inPool: false },
+      { mount: "22 TB",     label: "unformatted",  capacityTb: 20.0, usedTb:  0,   fs: "unformatted", inPool: false, note: "new drive" },
+    ],
+  },
+  {
+    step: "STEPS 2–3",
+    title: "Kayleigh and Tsuki drain into the 22 TB buffer; both reformatted to ext4",
+    drives: [
+      { mount: "Boiz",      label: "NTFS",         capacityTb: 13.0, usedTb: 12.0, fs: "NTFS",        inPool: false },
+      { mount: "Kayleigh",  label: "ext4 (empty)", capacityTb:  7.3, usedTb:  0,   fs: "ext4-empty",  inPool: false, note: "reformatted" },
+      { mount: "Tsuki",     label: "ext4 (empty)", capacityTb:  7.3, usedTb:  0,   fs: "ext4-empty",  inPool: false, note: "reformatted" },
+      { mount: "Thangachi", label: "NTFS",         capacityTb:  7.3, usedTb:  0.75, fs: "NTFS",       inPool: false },
+      { mount: "Rithi",     label: "NTFS",         capacityTb: 13.0, usedTb: 11.0, fs: "NTFS",        inPool: false },
+      { mount: "22 TB",     label: "ext4",         capacityTb: 20.0, usedTb: 13.0, fs: "ext4",        inPool: false, note: "buffer" },
+    ],
+  },
+  {
+    step: "STEPS 4–5",
+    title: "mergerfs pool created (disk2 · disk4 · disk5 · disk6); Boiz drains into pool, reformatted",
+    drives: [
+      { mount: "disk1",     label: "Boiz · ext4",       capacityTb: 13.0, usedTb: 11.0, fs: "ext4", inPool: true,  note: "joined pool last" },
+      { mount: "disk2",     label: "Kayleigh · ext4",   capacityTb:  7.3, usedTb:  0.4, fs: "ext4", inPool: true },
+      { mount: "disk4",     label: "Tsuki · ext4",      capacityTb:  7.3, usedTb:  4.7, fs: "ext4", inPool: true },
+      { mount: "disk5",     label: "Thangachi · ext4",  capacityTb:  7.3, usedTb:  0.8, fs: "ext4", inPool: true },
+      { mount: "disk6",     label: "22 TB · ext4",      capacityTb: 20.0, usedTb: 19.0, fs: "ext4", inPool: true,  note: "near full" },
+      { mount: "Rithi",     label: "NTFS",              capacityTb: 13.0, usedTb: 11.0, fs: "NTFS", inPool: false, note: "next" },
+    ],
+  },
+  {
+    step: "STEP 6 / FINAL",
+    title: "Rithi drains to disk1, reformatted as SnapRAID parity. Pool is stable at 55 TB.",
+    drives: [
+      { mount: "disk1",     label: "Boiz · ext4",       capacityTb: 13.0, usedTb: 11.0, fs: "ext4",        inPool: true },
+      { mount: "disk2",     label: "Kayleigh · ext4",   capacityTb:  7.3, usedTb:  0.4, fs: "ext4",        inPool: true },
+      { mount: "disk4",     label: "Tsuki · ext4",      capacityTb:  7.3, usedTb:  4.7, fs: "ext4",        inPool: true },
+      { mount: "disk5",     label: "Thangachi · ext4",  capacityTb:  7.3, usedTb:  0.8, fs: "ext4",        inPool: true },
+      { mount: "disk6",     label: "22 TB · ext4",      capacityTb: 20.0, usedTb: 19.0, fs: "ext4",        inPool: true,  note: "unprotected" },
+      { mount: "parity1",   label: "Rithi · parity",    capacityTb: 13.0, usedTb:  0,   fs: "ext4-parity", inPool: false, note: "protects disk1·2·4·5" },
+    ],
+  },
+];
+
+const VB_W = 800;
+const FRAME_H = 130;
+const FRAME_GAP = 18;
+const FRAME_HEADER = 38;
+const PAD_L = 130;
+const BAR_AREA_W = 540;
+const BAR_H = 11;
+const BAR_GAP = 5;
+
+// Capacity scale shared across all frames so 22 TB is visibly bigger
+// than the 7.3 TB drives in every snapshot.
+const maxCapTb = 22;
+const tbToPx = (tb: number) => (tb / maxCapTb) * BAR_AREA_W;
+
+const VB_H = frames.length * FRAME_H + (frames.length - 1) * FRAME_GAP + 36;
+---
+
+<figure class="migration-figure">
+  <div class="migration-frame">
+    <svg viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label="Storage migration sequence">
+      <defs>
+        <pattern id="parity-stripe-mig" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" stroke-opacity="0.45" stroke-width="2" />
+        </pattern>
+        <pattern id="ntfs-stripe" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="4" stroke="currentColor" stroke-opacity="0.25" stroke-width="1" />
+        </pattern>
+      </defs>
+
+      <text x="20" y="22" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55" letter-spacing="0.16em">STORAGE MIGRATION · PHASE 8</text>
+
+      {frames.map((frame, fi) => {
+        const frameY = 36 + fi * (FRAME_H + FRAME_GAP);
+
+        // mergerfs pool band — drawn at the level of the first pooled drive
+        const firstPoolIdx = frame.drives.findIndex((d) => d.inPool);
+        const lastPoolIdx = frame.drives.findLastIndex((d) => d.inPool);
+        const showPoolBand = firstPoolIdx >= 0 && lastPoolIdx >= firstPoolIdx;
+
+        return (
+          <g transform={`translate(0 ${frameY})`}>
+            {/* Frame header */}
+            <text x="20" y="14" font-family="var(--font-mono)" font-size="10" fill="var(--accent)" letter-spacing="0.12em" font-weight="600">{frame.step}</text>
+            <text x="20" y="28" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.7">{frame.title}</text>
+
+            {/* mergerfs pool band */}
+            {showPoolBand && (
+              <g transform={`translate(${PAD_L} ${FRAME_HEADER + firstPoolIdx * (BAR_H + BAR_GAP) - 4})`}>
+                <rect width={BAR_AREA_W} height={(lastPoolIdx - firstPoolIdx + 1) * (BAR_H + BAR_GAP) - BAR_GAP + 8}
+                      rx="3" fill="var(--accent)" fill-opacity="0.05"
+                      stroke="var(--accent)" stroke-opacity="0.35" stroke-width="1" stroke-dasharray="2 3" />
+                <text x={BAR_AREA_W - 6} y="11" font-family="var(--font-mono)" font-size="8" fill="var(--accent)" text-anchor="end" letter-spacing="0.12em">MERGERFS POOL</text>
+              </g>
+            )}
+
+            {/* Drives */}
+            {frame.drives.map((d, di) => {
+              const y = FRAME_HEADER + di * (BAR_H + BAR_GAP);
+              const barW = tbToPx(d.capacityTb);
+              const usedW = tbToPx(d.usedTb);
+
+              return (
+                <g>
+                  {/* Drive label */}
+                  <text x={PAD_L - 8} y={y + 9} font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.85" text-anchor="end" font-weight="600">{d.mount}</text>
+
+                  {/* Outline by fs type */}
+                  {d.fs === "NTFS" && (
+                    <rect x={PAD_L} y={y} width={barW} height={BAR_H} rx="2"
+                          fill="url(#ntfs-stripe)"
+                          stroke="currentColor" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="2 2" />
+                  )}
+                  {d.fs === "unformatted" && (
+                    <rect x={PAD_L} y={y} width={barW} height={BAR_H} rx="2"
+                          fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="1" stroke-dasharray="1 3" />
+                  )}
+                  {(d.fs === "ext4" || d.fs === "ext4-empty") && (
+                    <rect x={PAD_L} y={y} width={barW} height={BAR_H} rx="2"
+                          fill="none" stroke="var(--accent)" stroke-opacity="0.7" stroke-width="1" />
+                  )}
+                  {d.fs === "ext4-parity" && (
+                    <rect x={PAD_L} y={y} width={barW} height={BAR_H} rx="2"
+                          fill="url(#parity-stripe-mig)"
+                          stroke="currentColor" stroke-opacity="0.55" stroke-width="1" />
+                  )}
+
+                  {/* Used fill (data drives only) */}
+                  {d.fs !== "ext4-parity" && d.fs !== "unformatted" && d.usedTb > 0 && (
+                    <rect x={PAD_L} y={y} width={usedW} height={BAR_H} rx="2"
+                          fill={d.fs === "NTFS" ? "currentColor" : "var(--accent)"}
+                          fill-opacity={d.fs === "NTFS" ? "0.18" : "0.32"} />
+                  )}
+
+                  {/* Right-side labels */}
+                  <text x={PAD_L + barW + 8} y={y + 9} font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.7">
+                    {d.fs === "ext4-parity"
+                      ? `${d.capacityTb}T parity`
+                      : d.fs === "unformatted"
+                        ? `${d.capacityTb}T (new)`
+                        : `${d.usedTb}/${d.capacityTb}T`}
+                    {d.note && <tspan fill-opacity="0.5"> · {d.note}</tspan>}
+                  </text>
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+
+      {/* Inter-frame transitions — small chevrons between frames */}
+      {frames.slice(0, -1).map((_, fi) => {
+        const y = 36 + (fi + 1) * FRAME_H + fi * FRAME_GAP - 4;
+        return (
+          <g transform={`translate(${VB_W / 2} ${y})`} opacity="0.5">
+            <path d="M -6 0 L 0 6 L 6 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+          </g>
+        );
+      })}
+    </svg>
+  </div>
+  {caption && <figcaption class="migration-caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .migration-figure { margin: 1.6em 0; }
+  .migration-frame {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: clamp(16px, 2vw, 28px);
+    color: var(--light-fg);
+  }
+  .migration-frame svg { width: 100%; height: auto; display: block; }
+  .migration-caption {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--light-fg-muted);
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>

@@ -30,7 +30,8 @@ if (project.data.url) heroTags.push("LIVE");
 const showMeta = !!(project.data.role || project.data.team || project.data.timeline || project.data.skills.length);
 
 const { heroImage, heroImageAlt, heroComponent } = project.data;
-const heroVariant = heroComponent ? "embed" : "card";
+const heroVariant =
+  project.data.heroVariant ?? (heroComponent ? "embed" : "card");
 ---
 
 <CaseStudyLayout

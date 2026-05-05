@@ -41,6 +41,9 @@ const projects = defineCollection({
     heroImage: z.string().optional(),
     heroImageAlt: z.string().optional(),
     heroComponent: z.enum(["RasterMini"]).optional(),
+    // Optional override for the CaseHero variant. Defaults to "embed"
+    // when heroComponent is set, otherwise "card".
+    heroVariant: z.enum(["card", "embed"]).optional(),
   }),
 });
 

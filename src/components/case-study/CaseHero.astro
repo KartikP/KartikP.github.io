@@ -19,13 +19,16 @@ const {
   variant = "card",
 } = Astro.props;
 
+const heroClass =
+  "case-hero" + (variant === "embed" ? " case-hero--embed" : "");
+
 const hasSlot = Astro.slots.has("default");
 const hasHeroContent = !!image || hasSlot;
 ---
 
 <section class="case-hero-wrap">
   {hasHeroContent && (
-    <div class={`case-hero ${variant === "embed" ? "case-hero--embed" : ""}`}>
+    <div class={heroClass}>
       {image && <img src={image} alt={imageAlt} />}
       <slot />
     </div>

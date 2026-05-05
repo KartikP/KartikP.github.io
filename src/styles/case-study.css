@@ -109,9 +109,25 @@
 }
 .back-to-top:hover { color: var(--light-fg); }
 
-/* --- Main content column --- */
+/* --- Main content column ---
+   Note: no max-width here. Readability caps live on individual content
+   classes (.case-tags, .case-title, .case-summary, .case-section,
+   .case-prose, .meta-bar, .case-back) so embedded heroes — CaseHero
+   in embed mode, full-bleed Figures, Video — can fill the whole grid
+   column without being clipped to the 880px reading measure. */
 .case-main {
   min-width: 0; /* allow shrinking inside grid */
+}
+
+/* Readability caps — every text/section block constrains itself to a
+   reading measure. Heroes and embedded media are excluded. */
+.case-tags,
+.case-title,
+.case-summary,
+.case-section,
+.case-prose,
+.case-back,
+.meta-bar {
   max-width: 880px;
 }
 
@@ -141,8 +157,9 @@
 }
 
 /* Embed variant — for live components or transparent-background images
-   that should fill the hero frame edge-to-edge (no padding, no
-   gradient, no enforced aspect ratio). */
+   that should fill the hero frame edge-to-edge within the column
+   (no padding, no gradient, no enforced aspect ratio). Stays inside
+   the case-main column. */
 .case-hero--embed {
   aspect-ratio: auto;
   padding: 0;
@@ -154,11 +171,14 @@
   display: block;
   width: 100%;
 }
-.case-hero--embed img {
+.case-hero--embed img,
+.case-hero--embed video {
   max-width: 100%;
   max-height: none;
   border-radius: 0;
   box-shadow: none;
+  width: 100%;
+  display: block;
 }
 
 /* Eyebrow tags row */
@@ -463,6 +483,15 @@
   margin: 0 0 32px;
 }
 @media (max-width: 720px) { .key-flow { grid-template-columns: 1fr; } }
+
+/* Text-only KeyFlow — no image column. Used when a step doesn't have
+   accompanying artwork; numbered + titled body fills the row. */
+.key-flow.key-flow--text-only {
+  grid-template-columns: 1fr;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  padding-left: clamp(16px, 2vw, 24px);
+  margin-bottom: 24px;
+}
 
 .key-flow .flow-image {
   background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, var(--light-bg-soft)), color-mix(in srgb, var(--accent) 8%, var(--light-bg-soft)));

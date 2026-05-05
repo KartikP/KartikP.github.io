@@ -8,8 +8,7 @@ role: Solo
 team: Solo
 timeline: "2026 — present"
 skills: [Next.js, TypeScript, Three.js, React Three Fiber, TimescaleDB, Postgres, Drizzle, Docker, Cloudflare Tunnel]
-url: "https://health.kartikp.com"
-draft: false
+draft: true
 ---
 
 {/*
@@ -44,10 +43,14 @@ import Video from "../../components/case-study/Video.astro";
   title={frontmatter.title}
   summary={frontmatter.summary}
   tags={["IN PROGRESS", "QUANTIFIED SELF", "SELF-HOSTED"]}
-  image="/assets/work/health-dashboard/hero.png"
-  imageAlt="Holographic 3D anatomy view — wireframe skeleton with bloom against a navy background"
   variant="embed"
-/>
+>
+  <Video
+    src="/assets/work/health-dashboard/anatomy-final.mp4"
+    poster="/assets/work/health-dashboard/hero.png"
+    framed={false}
+  />
+</CaseHero>
 
 <MetaBar
   role={frontmatter.role}
@@ -194,12 +197,6 @@ buffers grouped by region. With `frameloop="demand"` and in-place
 isn't moving.
 </KeyFlow>
 
-<Video
-  src="/assets/work/health-dashboard/anatomy-final.mp4"
-  caption="The final view, recorded live. Region tabs change which buffer is highlighted; double-clicking on a body part zooms the camera."
-  framed={false}
-/>
-
 The lesson is the boring one: most "performant 3D on the web" is just
 not asking the browser to do work it doesn't have to. Edges instead of
 fills. Merged geometry instead of 568 draw calls. Skip the render
@@ -263,8 +260,8 @@ not available. *Resting* was always going to mean
 
 <Section id="tunnel" eyebrow="WAR STORY 03" heading="My ISP, Cloudflare, and an MTU of 1280.">
 
-The dashboard is exposed at `health.kartikp.com` via a Cloudflare
-tunnel from an HP EliteDesk in my apartment. For the first month it
+The dashboard is exposed publicly via a Cloudflare tunnel from an HP
+EliteDesk in my apartment. For the first month it
 threw intermittent 502s that looked, *strongly*, like the application
 crashing. It wasn't. The path MTU between my router and Cloudflare's
 edge is roughly 1318 bytes, and the default 1500-byte MTU on `eno1`

@@ -1,0 +1,141 @@
+---
+// RFInterference — side-view cartoon of the original "router stacked
+// on server stacked on DAS" arrangement that produced the WiFi
+// degradation. RF emissions from the USB-3 DAS are drawn as
+// concentric arcs that intercept the router antennas a few inches
+// above. Annotations point to the cause and effect.
+
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+
+const VB_W = 800;
+const VB_H = 360;
+---
+
+<figure class="rf-figure">
+  <div class="rf-frame">
+    <svg viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label="USB-3 RF interference">
+      <defs>
+        <linearGradient id="rf-fade" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.55" />
+          <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+
+      {/* Heading */}
+      <text x="20" y="22" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55" letter-spacing="0.16em">USB-3 RF INTERFERENCE — ORIGINAL ARRANGEMENT</text>
+
+      {/* === Hardware stack (centred) === */}
+      {/* DAS (bottom) */}
+      <g transform="translate(280 240)">
+        <rect width="200" height="56" rx="6" fill="none" stroke="currentColor" stroke-opacity="0.7" stroke-width="1.6" />
+        <text x="100" y="22" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.85" text-anchor="middle" letter-spacing="0.12em">TERRAMASTER D6-320</text>
+        <text x="100" y="40" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55" text-anchor="middle">USB-C 3.2 Gen 2 · 10 Gbps</text>
+        {/* drive bay slits */}
+        {[0,1,2,3,4,5].map((i) => (
+          <line x1={20 + i*28} y1="50" x2={36 + i*28} y2="50" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.4" />
+        ))}
+      </g>
+
+      {/* Server (middle) */}
+      <g transform="translate(290 196)">
+        <rect width="180" height="40" rx="5" fill="none" stroke="currentColor" stroke-opacity="0.7" stroke-width="1.6" />
+        <text x="90" y="18" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.85" text-anchor="middle" letter-spacing="0.12em">HP ELITEDESK 800 G6</text>
+        <text x="90" y="32" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55" text-anchor="middle">Mini · USB host</text>
+      </g>
+
+      {/* Router (top) */}
+      <g transform="translate(310 154)">
+        <rect width="140" height="36" rx="5" fill="none" stroke="currentColor" stroke-opacity="0.7" stroke-width="1.6" />
+        <text x="70" y="16" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.85" text-anchor="middle" letter-spacing="0.12em">GL.iNet FLINT2</text>
+        <text x="70" y="28" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55" text-anchor="middle">2.4 / 5 GHz AP</text>
+        {/* Antennas */}
+        <line x1="22" y1="0" x2="22" y2="-32" stroke="currentColor" stroke-opacity="0.7" stroke-width="2" />
+        <line x1="58" y1="0" x2="58" y2="-32" stroke="currentColor" stroke-opacity="0.7" stroke-width="2" />
+        <line x1="118" y1="0" x2="118" y2="-32" stroke="currentColor" stroke-opacity="0.7" stroke-width="2" />
+        <circle cx="22" cy="-32" r="2.5" fill="currentColor" />
+        <circle cx="58" cy="-32" r="2.5" fill="currentColor" />
+        <circle cx="118" cy="-32" r="2.5" fill="currentColor" />
+      </g>
+
+      {/* === RF emission arcs === */}
+      {/* Origin: DAS centre top */}
+      {/* Concentric arcs of widening radius emanate upward, fading out */}
+      {[40, 70, 100, 130, 160, 190].map((r, i) => {
+        const opacity = 0.55 - i * 0.08;
+        const cx = 380;
+        const cy = 240;
+        return (
+          <path
+            d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+            fill="none"
+            stroke="var(--accent)"
+            stroke-opacity={opacity.toFixed(2)}
+            stroke-width="1.8"
+            stroke-dasharray="3 4"
+          />
+        );
+      })}
+
+      {/* Highlight: arcs intersect antenna heights — draw a translucent fill */}
+      <path
+        d={`M 220 145 Q 380 50 540 145 L 540 240 L 220 240 Z`}
+        fill="url(#rf-fade)"
+        fill-opacity="0.25"
+      />
+
+      {/* === Annotations === */}
+      {/* Source label (DAS emissions) */}
+      <g transform="translate(40 270)">
+        <text font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.85" letter-spacing="0.1em">RF EMISSIONS</text>
+        <text y="14" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.6">USB-3 noise overlaps</text>
+        <text y="26" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.6">the 2.4 GHz band</text>
+      </g>
+      <path d="M 160 268 Q 220 248 280 244" fill="none" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.2" marker-end="url(#rf-arrow)" />
+
+      {/* Effect label (router antennas) */}
+      <g transform="translate(580 130)">
+        <text font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.85" letter-spacing="0.1em">SIGNAL DEGRADED</text>
+        <text y="14" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.6">~700 Mbps → ~80 Kbps</text>
+        <text y="26" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.6">40% packet loss · full bars</text>
+      </g>
+      <path d="M 575 138 Q 510 128 460 130" fill="none" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.2" marker-end="url(#rf-arrow)" />
+
+      <defs>
+        <marker id="rf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor" />
+        </marker>
+      </defs>
+
+      {/* Resolution note at bottom */}
+      <g transform={`translate(${VB_W / 2} ${VB_H - 18})`}>
+        <text font-family="var(--font-mono)" font-size="10" fill="var(--accent)" text-anchor="middle" letter-spacing="0.1em">
+          FIX → relocate the server next to the router and switch to wired Ethernet
+        </text>
+      </g>
+    </svg>
+  </div>
+  {caption && <figcaption class="rf-caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .rf-figure { margin: 1.6em 0; }
+  .rf-frame {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: clamp(16px, 2vw, 28px);
+    color: var(--light-fg);
+  }
+  .rf-frame svg { width: 100%; height: auto; display: block; }
+  .rf-caption {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--light-fg-muted);
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>

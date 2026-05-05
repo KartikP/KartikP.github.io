@@ -1,0 +1,221 @@
+---
+// EnergyChart — daily kWh trace from the smart-plug log.
+// Data is baked in (56 days, March 11 → May 5 2026). Renders a server-
+// side SVG with no client JS: polyline, area fill, average reference
+// line, and axis labels.
+
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+
+// Daily kWh series, exported from the smart plug. First nonzero day
+// onward (system was not on the plug before March 11).
+const daily: { date: string; kwh: number }[] = [
+  { date: "2026/03/11", kwh: 1.105 },
+  { date: "2026/03/12", kwh: 1.346 },
+  { date: "2026/03/13", kwh: 1.194 },
+  { date: "2026/03/14", kwh: 1.325 },
+  { date: "2026/03/15", kwh: 1.422 },
+  { date: "2026/03/16", kwh: 1.375 },
+  { date: "2026/03/17", kwh: 1.396 },
+  { date: "2026/03/18", kwh: 1.378 },
+  { date: "2026/03/19", kwh: 1.393 },
+  { date: "2026/03/20", kwh: 1.387 },
+  { date: "2026/03/21", kwh: 1.403 },
+  { date: "2026/03/22", kwh: 1.400 },
+  { date: "2026/03/23", kwh: 1.371 },
+  { date: "2026/03/24", kwh: 1.305 },
+  { date: "2026/03/25", kwh: 1.561 },
+  { date: "2026/03/26", kwh: 1.596 },
+  { date: "2026/03/27", kwh: 1.503 },
+  { date: "2026/03/28", kwh: 1.597 },
+  { date: "2026/03/29", kwh: 1.655 },
+  { date: "2026/03/30", kwh: 1.714 },
+  { date: "2026/03/31", kwh: 1.739 },
+  { date: "2026/04/01", kwh: 1.815 },
+  { date: "2026/04/02", kwh: 2.015 },
+  { date: "2026/04/03", kwh: 1.608 },
+  { date: "2026/04/04", kwh: 1.576 },
+  { date: "2026/04/05", kwh: 1.608 },
+  { date: "2026/04/06", kwh: 1.480 },
+  { date: "2026/04/07", kwh: 1.509 },
+  { date: "2026/04/08", kwh: 1.558 },
+  { date: "2026/04/09", kwh: 1.568 },
+  { date: "2026/04/10", kwh: 1.566 },
+  { date: "2026/04/11", kwh: 1.603 },
+  { date: "2026/04/12", kwh: 1.595 },
+  { date: "2026/04/13", kwh: 1.598 },
+  { date: "2026/04/14", kwh: 1.595 },
+  { date: "2026/04/15", kwh: 1.577 },
+  { date: "2026/04/16", kwh: 1.573 },
+  { date: "2026/04/17", kwh: 1.575 },
+  { date: "2026/04/18", kwh: 1.584 },
+  { date: "2026/04/19", kwh: 1.610 },
+  { date: "2026/04/20", kwh: 1.616 },
+  { date: "2026/04/21", kwh: 1.612 },
+  { date: "2026/04/22", kwh: 1.640 },
+  { date: "2026/04/23", kwh: 1.599 },
+  { date: "2026/04/24", kwh: 1.585 },
+  { date: "2026/04/25", kwh: 1.586 },
+  { date: "2026/04/26", kwh: 1.575 },
+  { date: "2026/04/27", kwh: 1.583 },
+  { date: "2026/04/28", kwh: 1.588 },
+  { date: "2026/04/29", kwh: 1.581 },
+  { date: "2026/04/30", kwh: 1.571 },
+  { date: "2026/05/01", kwh: 1.571 },
+  { date: "2026/05/02", kwh: 1.588 },
+  { date: "2026/05/03", kwh: 1.614 },
+  { date: "2026/05/04", kwh: 1.600 },
+];
+// Note: last logged day (May 5) was a partial day at export time so
+// excluded from the trace and the running average.
+
+const PLOT_W = 720;
+const PLOT_H = 200;
+const PAD_L = 56;
+const PAD_T = 28;
+const PAD_B = 36;
+const VB_W = PLOT_W + PAD_L + 24;
+const VB_H = PLOT_H + PAD_T + PAD_B;
+
+const yMax = 2.2;
+const n = daily.length;
+const dx = PLOT_W / (n - 1);
+
+const points = daily
+  .map((d, i) => {
+    const x = PAD_L + i * dx;
+    const y = PAD_T + PLOT_H - (d.kwh / yMax) * PLOT_H;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  })
+  .join(" ");
+
+const areaPoints =
+  points +
+  ` ${(PAD_L + (n - 1) * dx).toFixed(1)},${(PAD_T + PLOT_H).toFixed(1)}` +
+  ` ${PAD_L.toFixed(1)},${(PAD_T + PLOT_H).toFixed(1)}`;
+
+const total = daily.reduce((s, d) => s + d.kwh, 0);
+const avg = total / n;
+const avgY = PAD_T + PLOT_H - (avg / yMax) * PLOT_H;
+const avgWatts = (avg * 1000) / 24;
+
+const peak = daily.reduce((m, d) => (d.kwh > m.kwh ? d : m), daily[0]);
+
+// Month tick positions — find first index where the month label appears.
+const monthTicks: { label: string; x: number }[] = [];
+let lastMonth = "";
+daily.forEach((d, i) => {
+  const m = d.date.slice(0, 7);
+  if (m !== lastMonth) {
+    lastMonth = m;
+    const monthName = new Date(d.date).toLocaleString("en-US", { month: "short" });
+    monthTicks.push({ label: monthName.toUpperCase(), x: PAD_L + i * dx });
+  }
+});
+
+// Y-axis ticks
+const yTicks = [0, 0.5, 1.0, 1.5, 2.0];
+---
+
+<figure class="energy-figure">
+  <div class="energy-frame">
+    <div class="energy-stats">
+      <div class="energy-stat">
+        <span class="energy-stat-num">{total.toFixed(1)}</span>
+        <span class="energy-stat-label">kWh total</span>
+      </div>
+      <div class="energy-stat">
+        <span class="energy-stat-num">{avg.toFixed(2)}</span>
+        <span class="energy-stat-label">kWh / day avg</span>
+      </div>
+      <div class="energy-stat">
+        <span class="energy-stat-num">{avgWatts.toFixed(0)}</span>
+        <span class="energy-stat-label">W avg draw</span>
+      </div>
+      <div class="energy-stat">
+        <span class="energy-stat-num">{peak.kwh.toFixed(2)}</span>
+        <span class="energy-stat-label">peak day · {peak.date.slice(5).replace("/", "·")}</span>
+      </div>
+    </div>
+
+    <svg viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label="Daily energy consumption">
+      {yTicks.map((t) => {
+        const y = PAD_T + PLOT_H - (t / yMax) * PLOT_H;
+        return (
+          <g>
+            <line x1={PAD_L} y1={y} x2={PAD_L + PLOT_W} y2={y} stroke="currentColor" stroke-opacity="0.08" stroke-dasharray={t === 0 ? "" : "2 4"} />
+            <text x={PAD_L - 8} y={y + 3} font-family="var(--font-mono)" font-size="9" text-anchor="end" fill="currentColor" fill-opacity="0.5">{t.toFixed(1)}</text>
+          </g>
+        );
+      })}
+      <text x={PAD_L - 8} y={PAD_T - 8} font-family="var(--font-mono)" font-size="9" text-anchor="end" fill="currentColor" fill-opacity="0.5" letter-spacing="0.08em">kWh</text>
+
+      <line x1={PAD_L} y1={avgY} x2={PAD_L + PLOT_W} y2={avgY} stroke="var(--accent)" stroke-opacity="0.4" stroke-dasharray="3 4" />
+      <text x={PAD_L + PLOT_W + 4} y={avgY + 3} font-family="var(--font-mono)" font-size="9" fill="var(--accent)" fill-opacity="0.85">avg</text>
+
+      <polygon points={areaPoints} fill="var(--accent)" fill-opacity="0.12" />
+      <polyline points={points} fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round" />
+
+      {monthTicks.map((t) => (
+        <g>
+          <line x1={t.x} y1={PAD_T + PLOT_H} x2={t.x} y2={PAD_T + PLOT_H + 4} stroke="currentColor" stroke-opacity="0.4" />
+          <text x={t.x} y={PAD_T + PLOT_H + 18} font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55" letter-spacing="0.08em">{t.label}</text>
+        </g>
+      ))}
+    </svg>
+  </div>
+  {caption && <figcaption class="energy-caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .energy-figure { margin: 1.6em 0; }
+  .energy-frame {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px);
+    color: var(--light-fg);
+  }
+  .energy-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(12px, 2vw, 24px);
+    margin-bottom: 24px;
+  }
+  @media (max-width: 720px) {
+    .energy-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  .energy-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-left: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    padding-left: 12px;
+  }
+  .energy-stat-num {
+    font-family: var(--font-sans);
+    font-size: clamp(20px, 2.4vw, 28px);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--light-fg);
+    font-variant-numeric: tabular-nums;
+  }
+  .energy-stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--light-fg-muted);
+  }
+  .energy-frame svg { width: 100%; height: auto; display: block; }
+  .energy-caption {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--light-fg-muted);
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>
