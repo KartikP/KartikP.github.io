@@ -1,0 +1,358 @@
+---
+// BsPerturbationCycle — interactive lifecycle of a state-change
+// experiment. Steps through baseline → apply → lesioned → reset, with
+// a population grid that shows target units going dark on the lesion
+// step and an accuracy bar that drops + recovers. State panel uses
+// native SVG <text> rows (no foreignObject) for deterministic layout.
+
+interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+const uid = "bpc-" + Math.random().toString(36).slice(2, 8);
+---
+
+<figure class="bpc-figure" data-uid={uid}>
+  <div class="bpc-frame">
+    <div class="bpc-stage">
+      <div class="bpc-step is-active" data-step="0">
+        <span class="bpc-step-num">01</span>
+        <span class="bpc-step-name">baseline</span>
+      </div>
+      <div class="bpc-step" data-step="1">
+        <span class="bpc-step-num">02</span>
+        <span class="bpc-step-name">apply</span>
+      </div>
+      <div class="bpc-step" data-step="2">
+        <span class="bpc-step-num">03</span>
+        <span class="bpc-step-name">lesioned</span>
+      </div>
+      <div class="bpc-step" data-step="3">
+        <span class="bpc-step-num">04</span>
+        <span class="bpc-step-name">reset</span>
+      </div>
+    </div>
+
+    <svg viewBox="0 0 820 340" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Perturbation lifecycle">
+      <text x="20" y="22" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55" letter-spacing="0.16em">PERTURBATION CYCLE</text>
+
+      <!-- Population of "neurons" — 8 columns × 4 rows -->
+      <g class="bpc-population" transform="translate(60 60)"></g>
+
+      <!-- State chip on the right: shows what's happening -->
+      <g transform="translate(540 60)">
+        <rect width="240" height="220" rx="10" fill="none" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.4" />
+        <text x="20" y="22" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.6" letter-spacing="0.14em">STATE</text>
+        <g class="bpc-state-rows" transform="translate(0 38)"></g>
+      </g>
+
+      <!-- Behavior readout: accuracy bar -->
+      <g transform="translate(60 300)">
+        <text font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.6" letter-spacing="0.12em">PROBE TASK ACCURACY</text>
+        <rect x="0" y="14" width="380" height="14" rx="3" fill="currentColor" fill-opacity="0.06" />
+        <rect class="bpc-acc-bar" x="0" y="14" width="0" height="14" rx="3" fill="var(--accent)" fill-opacity="0.8" />
+        <text class="bpc-acc-num" x="392" y="25" font-family="var(--font-mono)" font-size="11" fill="currentColor" fill-opacity="0.85" font-weight="600">--</text>
+      </g>
+    </svg>
+
+    <div class="bpc-controls">
+      <button class="bpc-prev" type="button">← prev</button>
+      <button class="bpc-play" type="button">▶ play cycle</button>
+      <button class="bpc-next" type="button">next →</button>
+    </div>
+  </div>
+  {caption && <figcaption class="bpc-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline define:vars={{ uid }}>
+  (function () {
+    const NS = "http://www.w3.org/2000/svg";
+    const COLS = 8;
+    const ROWS = 4;
+    const N = COLS * ROWS;
+    const CELL = 36;
+
+    // Stable subset of "lesioned" indices.
+    const TARGETS = new Set([6, 9, 14, 17, 22]);
+
+    const STEPS = [
+      {
+        name: "baseline",
+        accuracy: 0.84,
+        lesionMask: new Set(),
+        stateLines: [
+          { text: "model.process(stimuli)", color: "accent" },
+          { text: "" },
+          { text: "behavior = baseline" },
+          { text: "no state-change applied" },
+        ],
+      },
+      {
+        name: "apply",
+        accuracy: 0.84,
+        lesionMask: new Set(),
+        stateLines: [
+          { text: "model.process(StateChange(", color: "accent" },
+          { text: "  kind=apply," },
+          { text: "  target=Selection(" },
+          { text: "    layer=lm.20.mlp," },
+          { text: "    indices=face_units)," },
+          { text: "  perturbation=" },
+          { text: "    Perturbation(kind=zero)))" },
+          { text: "" },
+          { text: "→ handle = 'h-7f2a'", color: "accent" },
+        ],
+      },
+      {
+        name: "lesioned",
+        accuracy: 0.51,
+        lesionMask: TARGETS,
+        stateLines: [
+          { text: "model.process(stimuli)", color: "accent" },
+          { text: "" },
+          { text: "behavior = lesioned" },
+          { text: "face-selective units zero'd" },
+        ],
+      },
+      {
+        name: "reset",
+        accuracy: 0.84,
+        lesionMask: new Set(),
+        stateLines: [
+          { text: "model.process(StateChange(", color: "accent" },
+          { text: "  kind=reset," },
+          { text: "  handle_id='h-7f2a'))" },
+          { text: "" },
+          { text: "→ behavior = restored", color: "accent" },
+        ],
+      },
+    ];
+
+    function bind() {
+      const root = document.querySelector(`[data-uid="${uid}"]`);
+      if (!root || root.__bound) return;
+      root.__bound = true;
+
+      const stepEls = root.querySelectorAll(".bpc-step");
+      const populationG = root.querySelector(".bpc-population");
+      const stateRowsG = root.querySelector(".bpc-state-rows");
+      const accBar = root.querySelector(".bpc-acc-bar");
+      const accNum = root.querySelector(".bpc-acc-num");
+      const prevBtn = root.querySelector(".bpc-prev");
+      const nextBtn = root.querySelector(".bpc-next");
+      const playBtn = root.querySelector(".bpc-play");
+
+      // Build the population grid once
+      const cells = [];
+      for (let i = 0; i < N; i++) {
+        const col = i % COLS;
+        const row = Math.floor(i / COLS);
+        const x = col * CELL;
+        const y = row * CELL;
+        const c = document.createElementNS(NS, "rect");
+        c.setAttribute("x", x);
+        c.setAttribute("y", y);
+        c.setAttribute("width", "26");
+        c.setAttribute("height", "26");
+        c.setAttribute("rx", "4");
+        c.setAttribute("fill", "var(--accent)");
+        c.setAttribute("fill-opacity", "0.32");
+        c.setAttribute("stroke", "var(--accent)");
+        c.setAttribute("stroke-opacity", "0.7");
+        c.setAttribute("stroke-width", "1.2");
+        populationG.appendChild(c);
+        cells.push(c);
+      }
+
+      let current = 0;
+      let timer = null;
+
+      function clearG(g) {
+        while (g.firstChild) g.removeChild(g.firstChild);
+      }
+
+      function renderState(lines) {
+        clearG(stateRowsG);
+        const lineH = 14;
+        const padX = 18;
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].text === "") continue;
+          const t = document.createElementNS(NS, "text");
+          t.setAttribute("x", padX);
+          t.setAttribute("y", i * lineH + 10);
+          t.setAttribute("font-family", "var(--font-mono)");
+          t.setAttribute("font-size", "10");
+          if (lines[i].color === "accent") {
+            t.setAttribute("fill", "var(--accent)");
+          } else {
+            t.setAttribute("fill", "currentColor");
+            t.setAttribute("fill-opacity", "0.78");
+          }
+          // Preserve leading whitespace by using xml:space="preserve"
+          t.setAttribute("xml:space", "preserve");
+          t.textContent = lines[i].text;
+          stateRowsG.appendChild(t);
+        }
+      }
+
+      function render(idx) {
+        const step = STEPS[idx];
+        // Cells
+        cells.forEach((c, i) => {
+          if (step.lesionMask.has(i)) {
+            c.setAttribute("fill", "currentColor");
+            c.setAttribute("fill-opacity", "0.05");
+            c.setAttribute("stroke", "currentColor");
+            c.setAttribute("stroke-opacity", "0.4");
+            c.setAttribute("stroke-dasharray", "2 2");
+          } else if (TARGETS.has(i) && idx === 1) {
+            c.setAttribute("fill", "var(--accent)");
+            c.setAttribute("fill-opacity", "0.18");
+            c.setAttribute("stroke", "var(--accent)");
+            c.setAttribute("stroke-opacity", "1");
+            c.setAttribute("stroke-dasharray", "");
+            c.setAttribute("stroke-width", "1.8");
+          } else {
+            c.setAttribute("fill", "var(--accent)");
+            c.setAttribute("fill-opacity", "0.32");
+            c.setAttribute("stroke", "var(--accent)");
+            c.setAttribute("stroke-opacity", "0.7");
+            c.setAttribute("stroke-dasharray", "");
+            c.setAttribute("stroke-width", "1.2");
+          }
+        });
+
+        renderState(step.stateLines);
+
+        // Accuracy bar
+        const widthPx = step.accuracy * 380;
+        accBar.setAttribute("width", widthPx.toFixed(1));
+        accNum.textContent = (step.accuracy * 100).toFixed(0) + "%";
+
+        // Tab highlight
+        stepEls.forEach((el, i) => el.classList.toggle("is-active", i === idx));
+      }
+
+      function go(idx) {
+        current = (idx + STEPS.length) % STEPS.length;
+        render(current);
+      }
+
+      function startCycle() {
+        if (timer) return;
+        playBtn.textContent = "■ stop cycle";
+        timer = setInterval(() => go(current + 1), 2000);
+      }
+      function stopCycle() {
+        if (!timer) return;
+        clearInterval(timer);
+        timer = null;
+        playBtn.textContent = "▶ play cycle";
+      }
+
+      stepEls.forEach((el, i) => el.addEventListener("click", () => {
+        stopCycle();
+        go(i);
+      }));
+      prevBtn.addEventListener("click", () => { stopCycle(); go(current - 1); });
+      nextBtn.addEventListener("click", () => { stopCycle(); go(current + 1); });
+      playBtn.addEventListener("click", () => {
+        if (timer) stopCycle(); else startCycle();
+      });
+
+      go(0);
+
+      root.__cleanup = () => stopCycle();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bind);
+    } else {
+      bind();
+    }
+    document.addEventListener("astro:page-load", bind);
+  })();
+</script>
+
+<style>
+  .bpc-figure { margin: 1.6em 0; }
+  .bpc-frame {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: clamp(16px, 2vw, 28px);
+    color: var(--light-fg);
+  }
+  .bpc-frame svg { width: 100%; height: auto; display: block; }
+  .bpc-stage {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .bpc-step {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--light-fg-muted);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    transition: background 150ms ease, color 150ms ease;
+    user-select: none;
+  }
+  .bpc-step:hover { color: var(--light-fg); }
+  .bpc-step.is-active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .bpc-step-num {
+    font-size: 9px;
+    opacity: 0.7;
+  }
+  .bpc-step-name { text-transform: lowercase; }
+
+  .bpc-acc-bar {
+    transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1), fill-opacity 300ms ease;
+  }
+
+  .bpc-controls {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .bpc-controls button {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    color: var(--light-fg);
+    padding: 7px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .bpc-controls button:hover {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+  .bpc-controls .bpc-play {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .bpc-controls .bpc-play:hover { opacity: 0.9; }
+
+  .bpc-caption {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--light-fg-muted);
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>

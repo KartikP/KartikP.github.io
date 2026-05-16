@@ -70,7 +70,7 @@
   min-height: 100dvh;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  padding: clamp(20px, 3vw, 40px) clamp(24px, 6vw, 96px);
+  padding: clamp(20px, 3vw, 40px) clamp(24px, 6vw, 96px) clamp(70px, 7vh, 78px);
   pointer-events: none;
 }
 
@@ -109,9 +109,12 @@
 
 .landing-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: baseline;
   gap: 24px;
+  /* Break out of the shell's wider right padding so the caption
+     right-aligns with the floating "Tell me more" pill. */
+  margin-right: calc(clamp(16px, 3vw, 32px) - clamp(24px, 6vw, 96px));
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -121,6 +124,36 @@
 }
 
 .landing-footer a:hover { color: var(--dark-fg); }
+
+.landing-caption {
+  color: var(--dark-fg);
+  opacity: 0.95;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+  animation: caption-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes caption-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 2px rgba(0, 0, 0, 0.85),
+      0 0 6px rgba(0, 0, 0, 0.65);
+    color: rgba(245, 245, 244, 0.85);
+  }
+  50% {
+    text-shadow:
+      0 0 3px rgba(0, 0, 0, 0.9),
+      0 0 10px rgba(255, 255, 255, 0.25),
+      0 0 20px rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-caption { animation: none; }
+}
+
 
 /* --- Middle column: hero paragraph + nav list, vertically centered --- */
 .landing-middle {
@@ -325,7 +358,7 @@
 
 .wit-button {
   position: fixed;
-  bottom: clamp(16px, 3vw, 32px);
+  bottom: clamp(12px, 2vh, 20px);
   right: clamp(16px, 3vw, 32px);
   z-index: 3;
   display: inline-flex;
@@ -346,6 +379,20 @@
   -webkit-backdrop-filter: blur(6px);
   text-shadow: var(--text-halo);
   transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+  animation: wit-breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes wit-breathe {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wit-button { animation: none; }
 }
 
 .wit-button:hover,

@@ -5,7 +5,7 @@
 
 <button type="button" class="wit-button" aria-haspopup="dialog" data-wit-open>
   <span class="wit-mark" aria-hidden="true">?</span>
-  <span class="wit-label">What is this</span>
+  <span class="wit-label">Tell me more</span>
 </button>
 
 <dialog class="wit-dialog" aria-labelledby="wit-title">
@@ -17,49 +17,36 @@
 
     <div class="wit-body">
       <p>
-        The animation behind this page is a live simulation of 1,000 neurons
-        arranged as a <strong>population raster plot</strong> — each row is
-        a neuron, each dot is a spike, and time runs right to left.
+        A live simulation of 1,000 neurons, drawn as a
+        <strong>population raster</strong> — rows are neurons, dots are
+        spikes, time runs right to left.
       </p>
 
       <p>
-        Each neuron has a <em>preferred direction</em>. Move your cursor and the
-        neurons whose tuning matches the direction of motion fire more than
-        the rest.
-      </p>
-
-      <p>
-        <strong>Hover any button on this page</strong> and you'll see a
-        brief, sparse flash of activity — the small subpopulation of
-        neurons whose preferred direction matches that button. Buttons
-        with related meanings recruit overlapping neurons; unrelated
-        buttons drive disjoint populations.
+        Each neuron has a <em>preferred direction</em>. Move your cursor
+        and neurons tuned to that direction fire more. <strong>Hover any
+        button</strong> for a sparse flash from the subpopulation that
+        "represents" it — related buttons share neurons; unrelated ones
+        don't.
       </p>
 
       <p>
         <strong>Click and hold anywhere</strong> to trigger a
         <a href="/publications/pradeepan2024-rett-calcium"><em>Reverberating Super Burst</em></a>
-        — a coordinated wave of activity that ripples across the
-        population. RSBs show up in cultures of stem-cell-derived neurons
-        during early development, and are hypothesized to strengthen
-        network connections as neurons wire together.
+        — a coordinated wave seen in cultures of stem-cell-derived neurons
+        during early development, thought to help wire networks together.
+        The more you fire them, the more the network bursts on its own.
       </p>
 
       <p>
-        As you click around and hold to produce RSBs, the network's
-        propensity for spontaneous network bursts increases.
-      </p>
-
-      <p>
-        The strip at the bottom is the summed population firing rate — a
-        rough stand-in for a local field potential (LFP). Watch it spike
-        when an RSB fires.
+        The strip at the bottom is the summed firing rate — a rough
+        stand-in for a <strong>local field potential (LFP)</strong>. It
+        spikes when an RSB fires.
       </p>
 
       <p class="wit-more">
-        For the math and neuroscience behind the simulation —
-        tuning curves, Poisson spiking, population codes, decoding —
-        read the deep dive:
+        For the math and neuroscience — tuning curves, Poisson spiking,
+        population codes, decoding — read the deep dive:
       </p>
       <a class="wit-cta" href="/projects/tuning-curves">
         <span class="wit-cta-label">Tuning curves — the explainer</span>

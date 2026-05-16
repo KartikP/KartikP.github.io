@@ -328,12 +328,32 @@
 }
 .case-section a:hover { text-decoration-color: var(--accent); }
 
-.case-section code {
+/* Inline code only — scoped via :not(pre) so the rule never applies
+   to <code> inside Shiki-rendered code blocks (where each line + each
+   highlighted token is its own <code>/<span> and a per-token pill
+   background turns the block into a striped mess). */
+.case-section :not(pre) > code {
   font-family: var(--font-mono);
   font-size: 0.9em;
   background: var(--light-bg-soft);
   padding: 2px 6px;
   border-radius: 3px;
+}
+
+/* Code blocks — Shiki applies its own theme background; we just give
+   the <pre> sensible spacing and a uniform interior padding. */
+.case-section pre {
+  margin: 0 0 24px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.case-section pre code {
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-mono);
 }
 
 /* --- Card row (3 across) --- */

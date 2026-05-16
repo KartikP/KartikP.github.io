@@ -1,0 +1,235 @@
+---
+// BsRoarPaths — grouped bar chart showing how the same behavioral
+// benchmark (ROAR lexical decision) yields four different "leaderboards"
+// when scored through four different evaluation paths via the unified
+// interface. Each model gets up to four bars (one per path); paths
+// the model doesn't support are shown as faint "N/A" placeholders.
+//
+// Reference lines mark chance (0.50), a random-features null floor
+// (0.54), and the human ceiling (0.811). Click a path tab to highlight
+// just that path's bars.
+
+interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+const uid = "brp-" + Math.random().toString(36).slice(2, 8);
+
+interface Score {
+  model: string;
+  scores: {
+    visionReadout?: number;
+    generation?: number;
+    instrReadout?: number;
+    textGeneration?: number;
+  };
+}
+
+const data: Score[] = [
+  {
+    model: "Qwen 2.5-VL · 3B",
+    scores: { visionReadout: 0.740, generation: 0.930, instrReadout: 0.980, textGeneration: 0.940 },
+  },
+  {
+    model: "BLIP-2 · OPT-2.7B",
+    scores: { visionReadout: 0.790, generation: 0.500, instrReadout: 0.920, textGeneration: 0.480 },
+  },
+  {
+    model: "GPT-2 · 124M",
+    scores: { textGeneration: 0.810 },
+  },
+  {
+    model: "CLIP ViT-B/32",
+    scores: { visionReadout: 0.680 },
+  },
+  {
+    model: "random ViT-B/32",
+    scores: { visionReadout: 0.540 },
+  },
+];
+
+const PATHS = [
+  { key: "visionReadout",   label: "vision-tower readout",            opacity: 0.32, short: "vision readout" },
+  { key: "textGeneration",  label: "text-only path",                  opacity: 0.50, short: "text path" },
+  { key: "generation",      label: "generation",                      opacity: 0.72, short: "generation" },
+  { key: "instrReadout",    label: "instruction-conditioned readout", opacity: 0.95, short: "instr readout" },
+];
+
+const VB_W = 820;
+const ROW_H = 80;
+const PAD_TOP = 110;       // room for title + reference-line labels above the axis
+const PAD_BOTTOM = 90;     // room for the legend below
+const VB_H = PAD_TOP + data.length * ROW_H + PAD_BOTTOM;
+const PAD_LEFT = 170;
+const PAD_RIGHT = 60;
+const PLOT_W = VB_W - PAD_LEFT - PAD_RIGHT;
+const X_MIN = 0.4;
+const X_MAX = 1.05;
+const xScale = (v: number) => PAD_LEFT + ((v - X_MIN) / (X_MAX - X_MIN)) * PLOT_W;
+const SUB_BAR_H = 12;
+const SUB_BAR_GAP = 4;
+
+const xTickValues = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+---
+
+<figure class="brp-figure" data-uid={uid}>
+  <div class="brp-frame">
+    <div class="brp-tabs" role="tablist">
+      <button class="brp-tab is-active" data-path="all" type="button">all</button>
+      {PATHS.map((p) => (
+        <button class="brp-tab" data-path={p.key} type="button">{p.short}</button>
+      ))}
+    </div>
+
+    <svg viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label="ROAR lexical decision — four evaluation paths">
+      <!-- Header block -->
+      <text x="20" y="22" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.55" letter-spacing="0.16em">ONE BENCHMARK · FOUR LEADERBOARDS</text>
+      <text x="20" y="38" font-family="var(--font-mono)" font-size="10" fill="currentColor" fill-opacity="0.5">ROAR lexical decision · accuracy on test set</text>
+
+      <!-- Reference-line labels above the axis (so they never collide with bars/legend) -->
+      <g>
+        <line x1={xScale(0.5)} y1={PAD_TOP - 30} x2={xScale(0.5)} y2={PAD_TOP + data.length * ROW_H} stroke="currentColor" stroke-opacity="0.18" stroke-dasharray="2 4" />
+        <text x={xScale(0.5)} y={PAD_TOP - 38} font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55" text-anchor="middle">chance · 0.50</text>
+
+        <line x1={xScale(0.54)} y1={PAD_TOP - 30} x2={xScale(0.54)} y2={PAD_TOP + data.length * ROW_H} stroke="currentColor" stroke-opacity="0.12" stroke-dasharray="1 3" />
+        <text x={xScale(0.54)} y={PAD_TOP - 50} font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.45" text-anchor="middle">null · 0.54</text>
+
+        <line x1={xScale(0.811)} y1={PAD_TOP - 30} x2={xScale(0.811)} y2={PAD_TOP + data.length * ROW_H} stroke="var(--accent)" stroke-opacity="0.55" stroke-dasharray="3 3" />
+        <text x={xScale(0.811)} y={PAD_TOP - 38} font-family="var(--font-mono)" font-size="9" fill="var(--accent)" fill-opacity="0.85" text-anchor="middle">human · 0.811</text>
+      </g>
+
+      <!-- X axis with tick marks below the labels -->
+      <line x1={PAD_LEFT} y1={PAD_TOP - 18} x2={PAD_LEFT + PLOT_W} y2={PAD_TOP - 18} stroke="currentColor" stroke-opacity="0.25" />
+      {xTickValues.map((v) => (
+        <g>
+          <line x1={xScale(v)} y1={PAD_TOP - 22} x2={xScale(v)} y2={PAD_TOP - 14} stroke="currentColor" stroke-opacity="0.35" />
+          <text x={xScale(v)} y={PAD_TOP - 6} font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.55" text-anchor="middle">{v.toFixed(1)}</text>
+        </g>
+      ))}
+
+      <!-- Model rows -->
+      {data.map((m, mi) => {
+        const rowY = PAD_TOP + mi * ROW_H + 8;
+        const labelY = rowY + (PATHS.length * (SUB_BAR_H + SUB_BAR_GAP)) / 2 + 2;
+        return (
+          <g class="brp-row">
+            <text x={PAD_LEFT - 14} y={labelY} font-family="var(--font-mono)" font-size="11" font-weight="600" fill="currentColor" fill-opacity="0.85" text-anchor="end">{m.model}</text>
+            {PATHS.map((p, pi) => {
+              const v = m.scores[p.key as keyof typeof m.scores] as number | undefined;
+              const y = rowY + pi * (SUB_BAR_H + SUB_BAR_GAP);
+              if (v === undefined) {
+                return (
+                  <g class="brp-bar" data-path={p.key}>
+                    <line x1={PAD_LEFT} y1={y + SUB_BAR_H / 2} x2={PAD_LEFT + 12} y2={y + SUB_BAR_H / 2} stroke="currentColor" stroke-opacity="0.18" stroke-dasharray="1 3" />
+                    <text x={PAD_LEFT + 16} y={y + SUB_BAR_H / 2 + 3} font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.32">N/A · {p.short}</text>
+                  </g>
+                );
+              }
+              const w = xScale(v) - PAD_LEFT;
+              return (
+                <g class="brp-bar" data-path={p.key}>
+                  <rect x={PAD_LEFT} y={y} width={w.toFixed(1)} height={SUB_BAR_H} rx="2" fill="var(--accent)" fill-opacity={p.opacity.toFixed(2)} />
+                  <text x={xScale(v) + 6} y={y + SUB_BAR_H - 2} font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.85" font-weight="600">{v.toFixed(2)}</text>
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+
+      <!-- Legend at bottom -->
+      <g transform={`translate(${PAD_LEFT} ${VB_H - 50})`}>
+        <text font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.5" letter-spacing="0.12em">PATH</text>
+        {PATHS.map((p, i) => {
+          const col = i % 2;
+          const row = Math.floor(i / 2);
+          const x = col * 240;
+          const y = 16 + row * 18;
+          return (
+            <g transform={`translate(${x} ${y})`}>
+              <rect x="0" y="-8" width="14" height="10" rx="2" fill="var(--accent)" fill-opacity={p.opacity.toFixed(2)} />
+              <text x="20" y="0" font-family="var(--font-mono)" font-size="9" fill="currentColor" fill-opacity="0.7">{p.label}</text>
+            </g>
+          );
+        })}
+      </g>
+    </svg>
+  </div>
+  {caption && <figcaption class="brp-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline define:vars={{ uid }}>
+  (function () {
+    function bind() {
+      const root = document.querySelector(`[data-uid="${uid}"]`);
+      if (!root || root.__bound) return;
+      root.__bound = true;
+
+      const tabs = root.querySelectorAll(".brp-tab");
+      const bars = root.querySelectorAll(".brp-bar");
+
+      function setFilter(key) {
+        bars.forEach((bar) => {
+          const isMatch = key === "all" || bar.getAttribute("data-path") === key;
+          bar.style.opacity = isMatch ? "1" : "0.18";
+        });
+        tabs.forEach((t) => t.classList.toggle("is-active", t.getAttribute("data-path") === key));
+      }
+
+      tabs.forEach((t) => t.addEventListener("click", () => setFilter(t.getAttribute("data-path"))));
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bind);
+    } else {
+      bind();
+    }
+    document.addEventListener("astro:page-load", bind);
+  })();
+</script>
+
+<style>
+  .brp-figure { margin: 1.6em 0; }
+  .brp-frame {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: clamp(16px, 2vw, 28px);
+    color: var(--light-fg);
+  }
+  .brp-frame svg { width: 100%; height: auto; display: block; }
+  .brp-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .brp-tab {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--light-fg-muted);
+    padding: 5px 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 150ms ease, color 150ms ease;
+  }
+  .brp-tab:hover { color: var(--light-fg); }
+  .brp-tab.is-active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .brp-bar {
+    transition: opacity 220ms ease;
+  }
+  .brp-caption {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--light-fg-muted);
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>

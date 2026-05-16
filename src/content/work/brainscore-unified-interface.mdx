@@ -1,0 +1,473 @@
+---
+title: "Unified model interface"
+summary: "A single contract for every model class Brain-Score evaluates — vision, language, multimodal, perturbation, embodied — through one interface in the platform's core repository. The platform stops asking 'what kind of model is this?' and starts asking 'what does this benchmark measure?'"
+date: 2026-05-07
+accent: "#5b4a8a"
+tags: [brain-score, neuroscience, infrastructure, model-evaluation]
+role: Author of the design proposal
+team: Brain-Score core engineering
+timeline: "2026 — present"
+skills: [Python, ABC design, interface design, multimodal evaluation, naturalistic neuroimaging, perturbation experiments, embodied AI]
+draft: false
+---
+
+import CaseHero from "../../components/case-study/CaseHero.astro";
+import MetaBar from "../../components/case-study/MetaBar.astro";
+import Section from "../../components/case-study/Section.astro";
+import Callout from "../../components/case-study/Callout.astro";
+import Figure from "../../components/case-study/Figure.astro";
+import BsArchitecture from "../../components/sciviz/BsArchitecture.astro";
+import BsInputEvents from "../../components/sciviz/BsInputEvents.astro";
+import BsTemporalAlignment from "../../components/sciviz/BsTemporalAlignment.astro";
+import BsPerturbationCycle from "../../components/sciviz/BsPerturbationCycle.astro";
+import BsRoarPaths from "../../components/sciviz/BsRoarPaths.astro";
+
+<CaseHero
+  title={frontmatter.title}
+  summary={frontmatter.summary}
+  tags={["PROPOSAL", "BRAIN-SCORE", "INFRASTRUCTURE"]}
+/>
+
+<MetaBar
+  role={frontmatter.role}
+  team={frontmatter.team}
+  timeline={frontmatter.timeline}
+  skills={frontmatter.skills}
+/>
+
+## Why this needs to change
+
+<Section id="motivation" eyebrow="MOTIVATION" heading="The platform was built when 'model' meant 'feedforward vision network.'">
+
+Brain-Score evaluates how well computational models match the brain.
+Today most of the scientifically interesting models process images,
+text, audio, and motor output together. The platform was originally
+designed when the typical submission was a feedforward vision
+network, and its current architecture reflects that assumption.
+
+The platform consists of three repositories. `core` provides shared
+infrastructure but no model interface. `vision` defines a `BrainModel`
+interface with a `look_at(stimuli, number_of_trials)` method.
+`language` defines an `ArtificialSubject` interface with a
+`digest_text(text)` method. The two were designed independently and
+are incompatible across method signatures, return types, identity
+conventions, task setup, and recording setup. Cross-domain models
+cannot be expressed naturally — a model like LLaMA 3.2V or
+Qwen 2.5-VL has to be registered twice, once per domain, and the
+platform has no concept that the two registrations are the same
+model.
+
+A second class of model the architecture cannot accommodate at all:
+models that consume continuous time-aligned video, audio, and
+language during naturalistic stimulus viewing; models that respond
+to applied perturbations (focal lesion simulation, induced dyslexia,
+pharmacological); models that produce motor output in response to
+multimodal observations. Each requires a different shape of input
+and output than the platform supports today.
+
+The proposal introduces a single shared contract — a `UnifiedModel`
+abstract base class, three input event types, a `TaskContext`, and a
+pre-flight compatibility check — that lives in `core` and is
+expressive enough to host all five model classes through one method.
+
+</Section>
+
+## The architecture
+
+<Section id="architecture" eyebrow="DESIGN" heading="One contract in core, adapters for the legacy domains, a new repo for everything new.">
+
+<BsArchitecture caption="Where the contract lives. Core defines the ABC and shared utilities; vision and language continue to use their legacy interfaces with an adapter in each that makes them look like UnifiedModel to benchmarks; new model classes implement the contract directly in a new unified repo." />
+
+The proposal preserves backwards compatibility by introducing the
+contract in `core` and routing legacy models through adapters, while
+new model classes implement the interface directly. Four repos:
+
+- **core** — shared infrastructure: the `UnifiedModel` ABC, the
+  pre-flight compatibility check, temporal utilities, multimodal
+  stimulus types. Cannot import PyTorch, transformers, or any heavy
+  dependency.
+- **vision / language** — existing domains, legacy interfaces preserved
+  unchanged. New: an adapter that wraps each legacy model so it
+  conforms to the unified interface at load time.
+- **unified** — everything new. The `BrainScoreModel` compositional
+  class, wrapper classes for tensor-to-assembly conversion,
+  multimodal benchmarks, perturbation helpers, embodied scaffolding.
+
+<Callout>
+The core constraint is zero breakage. Every existing model-benchmark
+pair must produce bit-for-bit identical scores after the change. The
+adapter delegates each call back to the original legacy model, so
+identity is preserved by construction rather than by careful
+reimplementation.
+</Callout>
+
+### What `UnifiedModel` actually defines
+
+`UnifiedModel` is an abstract base class with five attributes and
+three methods. **No modality-specific methods.** The whole interface
+fits in one file:
+
+- `identifier` — a unique string identifying the model. A `@property`,
+  resolving the cross-domain inconsistency where vision exposes
+  `identifier` as a property and language exposes `identifier()` as a
+  method.
+- `region_layer_map` — a dictionary mapping brain region names to
+  model layer names. The submitter is responsible for declaring which
+  layers correspond to which regions; the platform records the
+  declaration as a scientific hypothesis attached to the model and
+  does not search for it at scoring time.
+- `available_modalities` — the set of modalities the model can
+  consume.
+- `required_modalities` — the subset that must be present for the
+  model to run at all.
+- `process(input_event)` — the single processing method.
+- `start_task`, `start_recording`, `reset` — configuration methods.
+
+There is no `look_at`, no `digest_text`, no `generate`, no `induce`,
+no `step`. Capability comes from preprocessors, adapters, or direct
+implementations. The benchmark discovers what the model can do
+through the pre-flight check, not through method introspection on the
+class.
+
+### Composition over inheritance
+
+Most submitters do not implement `UnifiedModel` from scratch. They
+use the shared compositional class, `BrainScoreModel`, which holds a
+dictionary of preprocessors (one callable per modality) and one or
+more wrappers as configuration:
+
+```python
+model = BrainScoreModel(
+    identifier='clip-vit-b-32',
+    activations_model={'vision': vision_wrapper, 'text': text_wrapper},
+    preprocessors={'vision': clip_image_preprocess, 'text': clip_tokenize},
+    region_layer_map={
+        'V4': 'vision_model.encoder.layers.8',
+        'IT': 'vision_model.encoder.layers.10',
+        'language_network': 'text_model.encoder.layers.10',
+    },
+)
+```
+
+A vision-only model gets one preprocessor and one wrapper. A
+language-only model gets one of each. A vision-language model gets
+two of each. A model with three independent backbones plus a fusion
+network gets three preprocessors, four wrappers (three backbones plus
+the fusion net), and a `region_layer_map` that may reference layers
+in any of them. **Adding a new modality means writing one new
+preprocessor and possibly one new wrapper class. No new model
+classes are required.** The class tree stays flat regardless of how
+the model zoo evolves.
+
+`BrainScoreModel` uses the strategy pattern: each preprocessor is an
+interchangeable strategy that knows how to handle one modality. The
+strategies are passed in at construction time (dependency injection),
+not created internally. This keeps `BrainScoreModel` decoupled from
+any specific modality.
+
+### Wrappers and `TaskContext`
+
+A **wrapper** sits around the underlying neural network and handles
+three jobs: forward pass with the right call signature, hook-based
+extraction of activations from any named layer, and packaging into
+Brain-Score's xarray-based data assembly format. Five wrappers cover
+the platform's current input shapes: `PytorchWrapper` for standard
+image and tensor inputs, `TextWrapper` for tokenized text,
+`VLMVisionWrapper` for the patches-flattened-across-images layout
+modern VLMs use, `VideoWrapper` for native-temporal video input, and
+`AudioWrapper` for waveform input. A sixth, `PolicyWrapper`, is
+reserved for closed-loop dispatch where observations depend on the
+agent's previous action — out of scope for the initial proposal but
+the dispatch path is reserved.
+
+The wrapper is not a modality processor. The preprocessor handles
+modality semantics (resize, tokenize, load audio); the wrapper only
+handles the tensor boundary once preprocessing is done. A model with
+both a vision tower and a text tower has two wrappers, one per
+tower, not one wrapper that knows about both modalities.
+
+A behavioral benchmark may evaluate models that work in fundamentally
+different ways. A feature-extraction model trains a linear readout on
+labeled examples. An instruction-following model reads a text prompt
+and generates a response. Rather than forcing every benchmark to
+branch on model type, **`TaskContext`** describes the task in
+multiple formats simultaneously — `fitting_stimuli` for readout
+training, `instruction` for generation prompting, `label_set` shared
+across both, plus an optional `prefer_path` hint when a model
+supports more than one path. The model uses whichever fields match
+its paradigm; the benchmark does not know which type of model it is
+working with.
+
+### Pre-flight compatibility check
+
+Before the scoring pipeline runs any expensive computation, a fast
+check verifies that the model can handle the benchmark. It validates
+two directions: the benchmark's required input format is contained
+in what the model can consume, and the model's hard-required
+modalities are all provided by the benchmark. If either fails, the
+check produces a clear error message before any GPU time is spent.
+
+The check is what makes "register a multimodal model once and have
+it score on every compatible benchmark" actually safe. Without it,
+mismatch errors surface deep inside model code and cost a full
+scoring run to discover.
+
+</Section>
+
+## One method, three input shapes
+
+<Section id="input-events" eyebrow="DISPATCH" heading="`process()` is generic over input event type.">
+
+The single processing method on `UnifiedModel` accepts any of three
+input event types. The model dispatches on type internally; the
+benchmark calls `process()` and never branches on model class.
+
+<BsInputEvents caption="Three input event types, one process method. Click each tab to see what the model receives and returns for that shape." />
+
+- **`StimulusSet`** — perceptual input. Images, sentences, video
+  clips, audio segments, or any combination, presented as a table
+  with one row per stimulus. The dominant case.
+- **`StateChange`** — a perturbation applied to the model itself.
+  Used by benchmarks that compare baseline behavior to lesioned
+  behavior — induced dyslexia in a VLM, simulated focal cortical
+  lesion, drug-effect simulation.
+- **`EnvironmentStep`** — one tick of an environment for an embodied
+  agent. The model takes an observation (camera frames,
+  proprioception, language instruction) and returns a 7-DOF action
+  vector.
+
+Adding a new event type in the future is a new dataclass and a new
+dispatch branch — not a new method on the ABC.
+
+</Section>
+
+## One benchmark, four leaderboards
+
+<Section id="multimodal-in-practice" eyebrow="MULTIMODAL IN PRACTICE" heading="The same task, evaluated four different ways, yields four different rankings.">
+
+The clearest stress test of the unified interface is a single
+behavioral benchmark scored through every evaluation path the
+platform supports, on the same set of models, with floor and
+ceiling anchors. We ran this on **ROAR** — a lexical decision task
+from Yeatman et al. (2021): subjects see a letter string and decide
+"real word" or "pseudo-word." Human mean accuracy on the test split
+is 0.811. Two pinned variants — `Yeatman2021-lexical_decision-image`
+(image of the word) and `Yeatman2021-lexical_decision-text` (the bare
+ASCII string) — share split, ceiling, and metric, differing only in
+input format. Together they let us hold the cognitive task fixed
+while varying both the sensory pathway and the model's evaluation
+path.
+
+<BsRoarPaths caption="ROAR lexical decision scored five models through four evaluation paths. Reference lines mark chance (0.50), the random-features null floor (0.54), and the human ceiling (0.811). Click a path tab to highlight just that 'leaderboard.' Same benchmark, same metric — different rankings depending on which path the model is allowed to take." />
+
+Four findings out of one table:
+
+1. **Pure text matches humans.** GPT-2 on bare word strings scores
+   0.810 — effectively at the human mean. Lexical decision is
+   largely orthographic knowledge; the image is a thin wrapper.
+2. **Same model, 19-point gap between paths.** Qwen 2.5-VL scores
+   0.930 via generation but only 0.740 via vision-tower readout.
+   Routing the image through the language-model pathway recovers the
+   advantage that vision-tower features alone don't have.
+3. **Instruction tuning matters more than decoder size.** BLIP-2
+   OPT-2.7B via generation collapses to chance (0.500) despite a
+   2.7B-parameter language decoder — it's trained for captioning,
+   not instruction-following. The same model's vision features via
+   readout score 0.790. Generation underperforms readout by 29
+   points on the same model.
+4. **Instruction-conditioned readout beats generation, even for
+   non-instruction-tuned models.** Reading out from a late LM layer
+   *after* feeding (image, instruction) through the model's full
+   forward pass scores 0.980 for Qwen (+5 over generation) and 0.920
+   for BLIP-2 (**+42 over generation**). The bigger gap is for the
+   non-instruction-tuned model — BLIP-2's late hidden states linearly
+   encode the answer; only its OPT-2.7B output head can't articulate
+   it. **Instruction tuning's benefit lives at the head, not in the
+   features.**
+
+The ability to run these mechanism comparisons — three paths on one
+model, anchored by null controls — is the affordance the unified
+interface exists to provide. Previously, each model had one
+monolithic benchmark entry per score; comparing paths *within* a
+model required bespoke evaluation code per model. Under the unified
+interface, the same `TaskContext` is presented to each model, and
+each model uses whichever fields its declared paths consume. Toggling
+between paths is a config change, not a new benchmark.
+
+This is what "one benchmark, four leaderboards" means literally: the
+platform records `score.attrs['protocol']` on every result, so the
+leaderboard layer can display them as separate tracks, aggregate them
+into a composite, or treat them as competing measurements. The
+interface's job is to record which path was used; whether and how to
+compare across paths is one of the deferred scientific questions.
+
+</Section>
+
+## Multi-tower, time-aligned naturalistic evaluation
+
+<Section id="multimodal" eyebrow="NATURALISTIC" heading="Continuous multimodal stimuli, separate towers, one shared time grid.">
+
+The hardest target is naturalistic neural evaluation: a multi-second
+multimodal stimulus (a movie, an audiobook) with simultaneous fMRI
+recording. Each model tower runs at a different native rate — a
+vision encoder at one frame per fMRI sample, an audio encoder at
+50 Hz hidden states, a language encoder at word-onset times. They
+all need to align to the brain's recording timeline at one TR
+(roughly 1.5 s) before features can be regressed against neural
+activity. Then the predicted features have to be time-shifted to
+account for the hemodynamic response — the BOLD signal peaks roughly
+five seconds after the underlying neural event.
+
+<BsTemporalAlignment caption="The temporal-alignment problem. Each tower's native sample rate is binned to the brain's TR grid, then convolved with the canonical hemodynamic response so the predicted signal arrives at roughly the same offset as the observed BOLD. Drag the slider to sweep the HRF delay between 0 and 10 s." />
+
+The design adds a small temporal kit to `core`: utilities for binning
+features into a target time grid, convolving with the canonical
+hemodynamic response function, and constructing cross-validation
+splits that respect run boundaries (random K-fold on continuous data
+leaks future information into the training fold). Per-backbone
+caching by `backbone_id` enables cross-model and cross-benchmark
+reuse — two models that share a vision backbone share its
+activations cache.
+
+For multimodal scoring with disparate per-tower regularization needs,
+the design recommends banded ridge regression with a separate
+regularization strength per modality, picked via cross-validation.
+
+</Section>
+
+## Embodied intelligence as a first-class evaluation regime
+
+<Section id="embodied" eyebrow="MISSION" heading="Action and perception are tightly coupled — the platform should evaluate models that act, not just label.">
+
+Brain-Score's mission has historically been "what does the brain
+do?" — measured through neural prediction and behavioral
+classification on stimuli the subject does not act on. That framing
+captures one half of cortex. The other half — sensorimotor
+integration in motor and parietal cortex, the action-selection
+circuitry of basal ganglia, the closed-loop control that all
+biological organisms operate under — has been outside scope because
+the platform had no representation for an agent that acts.
+
+The next generation of brain-relevant models *does* act. Vision-
+language-action (VLA) models for robotics. Browser agents that
+observe a screenshot and click. Game-playing agents that produce
+keyboard output in response to pixels. Each of these is a
+fundamentally different scientific object than a model that produces
+a label. A model that can pick up a red block when told to is
+exercising perception, language understanding, planning, and
+control in the same forward pass — the same loop the brain runs
+when you reach for a coffee mug.
+
+The unified interface accommodates this through the
+`EnvironmentStep` event type. The shape mirrors **DROID**
+(Distributed Robot Interaction Dataset), which has emerged as the
+de-facto interchange format for VLA models. An `EnvironmentStep`
+carries one or more named camera frames, a proprioception vector
+(joint positions, gripper state), a language instruction, and
+optional reward / episode-boundary signals. The model returns an
+`EnvironmentResponse` with a 7-DOF action vector ready for the
+robot.
+
+```python
+for step_num in range(max_steps):
+    obs = env.observe()
+    response = model.process(EnvironmentStep(
+        cameras={'primary': CameraFrame(rgb=obs['primary'])},
+        proprioception=Proprioception(joint_position=obs['joints'], ...),
+        instruction='pick up the red block',
+    ))
+    env.act(response.action)
+```
+
+The benchmark drives the loop and scores the resulting trajectory
+against the published reference. The model implementation handles
+the perception-to-action mapping; the platform handles the
+observation-action protocol and the metric. The same model that gets
+scored on a static-image neural benchmark via `StimulusSet` can be
+scored on a robotics benchmark via `EnvironmentStep` — the shared
+interface is what makes "is this model brain-like across both
+regimes?" a question the platform can ask.
+
+What the right metric is for an embodied benchmark — task success
+(binary, per episode), trajectory similarity to a human reference
+(continuous), neural alignment of intermediate features against
+simultaneously-recorded brain data, or some combination — is
+deliberately deferred. The interface produces the data each metric
+would need; the leaderboard layer decides which one to enforce, and
+the scientific community decides whether brain-likeness in the
+action loop is the same kind of thing as brain-likeness in
+perception.
+
+</Section>
+
+## Perturbation as a first-class measurement
+
+<Section id="perturbation" eyebrow="STATE CHANGE" heading="Apply a lesion, measure, reset, recover.">
+
+When a clinical population shows a specific deficit, a model that
+exhibits the same deficit under analogous lesion is more likely to
+be capturing the underlying mechanism. The platform should support
+model lesions as a first-class measurement, not as a one-off
+custom benchmark.
+
+The `StateChange` event type lets a benchmark apply a perturbation,
+make a measurement, and selectively reset.
+
+<BsPerturbationCycle caption="The state-change lifecycle. Step through to see baseline behavior, the apply call returning a handle, the lesioned behavior with target units zero'd out, and the reset call restoring baseline. Press play to auto-cycle." />
+
+The state change carries a unit selection (which units to modify;
+layer path plus optional indices) and a perturbation type (zero-out,
+scale, or replace). The model returns a handle that the benchmark
+uses to selectively reset that perturbation later. `model.reset()`
+undoes everything. Perturbation logic is model-side; the platform
+provides a helper that builds the standard PyTorch forward-hook
+implementation for typical architectures, and custom architectures
+can supply their own.
+
+</Section>
+
+## What the interface deliberately does not decide
+
+<Section id="open-questions" eyebrow="DEFERRED" heading="Seven scientific questions the interface leaves to the leaderboard layer.">
+
+The proposal records the data each scientific question needs without
+committing to its answer. Seven decisions are deferred to the
+leaderboard / aggregation layer once empirical evidence is available:
+
+1. **How should incompatible model-benchmark pairs appear on the
+   leaderboard?** Under the current architecture, a model that
+   cannot execute a benchmark is effectively scored as 0. In a
+   unified leaderboard that aggregates across all benchmarks, models
+   supporting fewer modalities are penalized — not because they
+   perform poorly, but because they're scored on fewer benchmarks.
+2. **What if a model supports multiple protocols on the same
+   benchmark?** A `TaskContext` may carry both `fitting_stimuli` and
+   `instruction`. Whether the pipeline runs both protocols by default
+   and records both scores, or picks one, is unresolved.
+3. **Are scores comparable across protocols?** Fitted-readout vs.
+   instruction-following on the same task. The interface records
+   which protocol was used so the question can be studied
+   empirically; whether the leaderboard should eventually enforce
+   one-protocol-per-track is open.
+4. **Are graceful-degradation scores comparable to full-modality
+   scores?** A three-tower model evaluated on a two-modality stimulus
+   produces a degraded score. Should it be flagged, weighted, or
+   excluded from aggregation?
+5. **Are perturbation scores comparable across architectures?**
+   "Ablate 500 units in layer 20" is not the same operation across
+   architectures with different layer counts and dimensionalities.
+6. **What is the right metric for an embodied benchmark?** Task
+   success, trajectory similarity, neural alignment of intermediate
+   features, or combinations.
+7. **How are scores aggregated across heterogeneous benchmarks?**
+   Static-image neural prediction, continuous-naturalistic neural
+   prediction, behavioral classification, perturbation, embodied —
+   each on a different scale.
+
+The interface's position on all seven is the same: produce the data
+the question needs, defer the rule to the leaderboard / aggregation
+layer, and revisit once empirical evidence is available. Getting the
+contract right means the rules can change later without changing the
+interface.
+
+</Section>
