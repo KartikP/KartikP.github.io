@@ -25,6 +25,7 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
+    updated: z.coerce.date().optional(), // last meaningful revision — renders an "UPDATED" hero tag
     description: z.string().optional(),
     summary: z.string().optional(),     // long-form hero paragraph; falls back to description
     accent: z.string().default("#404040"),

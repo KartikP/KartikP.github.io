@@ -24,6 +24,7 @@ const fmt = (d: Date) =>
   d.toLocaleDateString("en-US", { year: "numeric", month: "short" });
 
 const heroTags = [fmt(project.data.date).toUpperCase()];
+if (project.data.updated) heroTags.push(`UPDATED ${fmt(project.data.updated).toUpperCase()}`);
 if (project.data.repo) heroTags.push("REPO");
 if (project.data.url) heroTags.push("LIVE");
 

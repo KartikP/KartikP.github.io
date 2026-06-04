@@ -2,6 +2,7 @@
 title: Homelab
 summary: "A self-hosted infrastructure built on an HP EliteDesk and a 6-bay DAS — around forty Docker containers across media, photos, home automation, and personal apps; 55 TB of mergerfs-pooled storage with SnapRAID parity; router-level VPN with kill switch; everything reproducible from a Git repo and an Ansible playbook."
 date: 2026-05-05
+updated: 2026-06-04
 accent: "#a06a3c"
 tags: [homelab, self-hosted, infrastructure, docker]
 role: Solo
@@ -284,6 +285,85 @@ coverage matters in the same room. The interference profile is
 broadband and largely unmitigated by typical chassis shielding.
 Wiring the server directly to the router removed the symptom by
 eliminating the dependency on WiFi for the most noise-sensitive link.
+
+</Section>
+
+## DAS dropouts and self-healing mounts
+
+<Section id="self-healing" eyebrow="CHALLENGE 04" heading="Surviving a DAS that silently drops off the bus.">
+
+Some months after the storage migration, `/mnt/storage` appeared to
+lose nearly everything. The mergerfs pool — normally showing around
+34 TB across five drives — was reporting under two terabytes, and most
+top-level directories returned stale-handle errors. No drive had
+actually failed.
+
+The cause traced back to the same USB link behind the WiFi
+interference above. The TerraMaster DAS presents its six drives behind
+an internal USB hub, and one afternoon at 14:27 that hub dropped off
+the bus and re-enumerated about three seconds later. Because the
+drives mount with `nofail` and nothing re-runs `mount -a` on
+reconnect, the underlying ext4 mounts went stale while the pool stayed
+up on the branches that happened to survive. mergerfs faithfully
+presented a union of whatever was still mounted — which is why the
+data looked *gone* rather than erroring outright. The degraded state
+went unnoticed for roughly fourteen hours, background library scans
+dutifully hitting the dead mounts every fifteen minutes.
+
+<Callout>
+The kernel log made the diagnosis — and prevented the wrong fix. The
+first device to disconnect was the *hub itself*, with every drive
+following and the whole tree re-appearing seconds later, and with no
+UAS task-abort or reset messages anywhere. That rules out the textbook
+culprit for flaky ASMedia USB-SATA bridges — a UAS protocol bug, whose
+standard remedy (`usb-storage.quirks=…:u`) sits one layer below the
+hub and would have changed nothing here. This was a physical link
+drop, not a protocol fault.
+</Callout>
+
+Recovery was mechanical: stop the containers holding the pool open,
+tear down the stale mounts, `mount -a` to remount everything by UUID
+(which also sidesteps the device-letter reshuffling a re-enumeration
+causes), and restart the containers. Both the data and the SnapRAID
+parity were intact — the last nightly sync had completed cleanly hours
+before the drop. The real lesson was that a transient, self-correcting
+hardware event had become a half-day outage purely for lack of anyone
+watching. So I automated the watching:
+
+<KeyFlow num={1} title="Probe every mount, not just for presence">
+A small systemd service checks all six mounts every two minutes —
+confirming not just that each is mounted but that a read returns
+within a timeout, since a *stale* mount still looks mounted while
+erroring on every access. It waits for two consecutive failures, not
+one, before acting, to ride out momentary hiccups.
+</KeyFlow>
+
+<KeyFlow num={2} title="Run the recovery automatically">
+On a confirmed failure it performs the same sequence I would by hand:
+wait for the drives to reappear on the bus, stop the containers
+binding the pool, lazily unmount the stale handles, `mount -a`, and
+restart the containers — then push an ntfy notification on both the
+failure and the recovery, so silence is never ambiguous.
+</KeyFlow>
+
+<KeyFlow num={3} title="Fail safe at the edges">
+Two guards close the gaps a remount can't. The nightly SnapRAID job
+now aborts (and alerts) if any data or parity disk is missing, so a
+dropout can never poison parity with a half-empty array. And the
+mountpoint directories are made immutable while unmounted, so a
+service writing to `/mnt/diskN` with the drive absent fails loudly
+instead of quietly filling the OS SSD with data that gets shadowed on
+remount.
+</KeyFlow>
+
+<Callout>
+The watchdog turns a dropout from a fourteen-hour silent outage into a
+few-minute self-heal with a notification. It doesn't stop the DAS from
+dropping — that's a hardware-level problem, addressed separately
+through cable, port, and placement changes — but it makes each
+occurrence a non-event instead of a discovery days later, and closes
+part of the *limited alerting* gap noted below.
+</Callout>
 
 </Section>
 
