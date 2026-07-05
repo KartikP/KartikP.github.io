@@ -4,7 +4,7 @@
 export const site = {
   name: "Kartik Pradeepan",
   tagline: "Computational neuroscientist",
-  hero: "Biology solved intelligence long before silicon did. Building software — and eventually hardware — to learn how to replicate it.",
+  hero: "Biological saved intelligence long before silicon did. Building software and hardware to learn how to replicate it.",
   email: "kartikspradeepan@gmail.com",
   social: {
     github: "https://github.com/KartikP",
