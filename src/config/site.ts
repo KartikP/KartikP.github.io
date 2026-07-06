@@ -4,7 +4,11 @@
 export const site = {
   name: "Kartik Pradeepan",
   tagline: "Computational neuroscientist",
-  hero: "Biological saved intelligence long before silicon did. Building software and hardware to learn how to replicate it.",
+  hero: "Biology solved intelligence long before silicon did. Building software and hardware to learn how to replicate it.",
+  // Meta description for search engines (the Google snippet). Mirrors the About page,
+  // not the visual hero tagline. ~160 chars is the display sweet spot.
+  description:
+    "Kartik Pradeepan is a research scientist and engineer working across neuroscience, AI, and research infrastructure, building software to evaluate how closely AI matches biological intelligence.",
   email: "kartikspradeepan@gmail.com",
   social: {
     github: "https://github.com/KartikP",
