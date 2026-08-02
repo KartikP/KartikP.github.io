@@ -1,90 +1,317 @@
-import { SPEED, LFP_HISTORY_MAX } from './config.js';
+import { SPEED } from './config.js';
 import { inputState, updateSmoothing } from './input.js';
 import { rsbState, rsbTick } from './rsb.js';
 import { learningTick, learningBurstEnvelope, learningIsBurstActive, learningState } from './learning.js';
-import { hoverFiringRate, hoverIsActive } from './hover.js';
-import { drawMinimap } from './minimap.js';
+import { prepareHoverFrame, hoverFiringRate } from './hover.js';
 
-function angleToDeg(rad) {
-    let deg = (rad * 180 / Math.PI) % 360;
-    if (deg < 0) deg += 360;
-    return deg.toFixed(0);
-}
+const RASTER_BG = '#050507';
+const LFP_BG = '#08080a';
+const LFP_GLOW_WIDTH = 16;
 
 export function createRenderer(dom, neurons, getScheme) {
-    const { rCtx, lCtx, mCtx, rCanvas, lCanvas } = dom;
-    const { statStatus, statPop, statDir, pulseDot } = dom;
+    const { rCtx, lCtx, gCtx, rCanvas, lCanvas, glowCanvas } = dom;
     const rowCount = neurons.length;
 
-    let width, rHeight, lHeight;
-    const lfpHistory = []; // entries: { spikes, active }
-    let _lastScheme = null; // sentinel for per-scheme color cache rebuild
+    let width = 0;
+    let rHeight = 0;
+    let lHeight = 0;
+    let rasterWriteX = 0;
+    let _lastScheme = null;
 
-    // Simulated baseline value for pre-populating history so the LFP strip
-    // appears full on first paint regardless of how wide the viewport is.
+    // The visible raster is a viewport onto a double-width cyclic canvas.
+    // This two-pixel strip retains the right-edge fade from the original
+    // renderer before being copied into both halves of the cyclic buffer.
+    const edgeCanvas = document.createElement('canvas');
+    const edgeCtx = edgeCanvas.getContext('2d', { alpha: false });
+
+    // LFP history uses fixed-capacity typed arrays. A monotonic queue tracks
+    // the maximum without rescanning the full history every frame.
+    let historySpikes = new Uint16Array(0);
+    let historyActive = new Uint8Array(0);
+    let historySerials = new Float64Array(0);
+    let historyCapacity = 0;
+    let historyStart = 0;
+    let historyLength = 0;
+    let nextHistorySerial = 0;
+    let maxSerials = [];
+    let maxValues = [];
+    let maxHead = 0;
+    let renderedLfpMax = 0;
+    let renderedLfpScheme = null;
+    let lfpNeedsRedraw = true;
+
     const baselineMean = rowCount * 0.004;
+
     function synthBaseline() {
-        const jitter = 0.6 + Math.random() * 0.8; // 0.6×–1.4× the mean
+        const jitter = 0.6 + Math.random() * 0.8;
         return {
             spikes: Math.max(1, Math.round(baselineMean * jitter)),
             active: false,
         };
     }
 
-    function ensureHistoryCoversWidth(targetPx) {
-        // Each history entry renders as a SPEED-wide column; need enough to
-        // cover the full canvas width plus a small cushion. Prepend synthetic
-        // baseline entries if we're short (never truncate — real history stays).
-        const needed = Math.ceil(targetPx / SPEED) + 8;
-        while (lfpHistory.length < needed) {
-            lfpHistory.unshift(synthBaseline());
+    function historyIndex(logicalIndex) {
+        return (historyStart + logicalIndex) % historyCapacity;
+    }
+
+    function snapshotHistory() {
+        const entries = new Array(historyLength);
+        for (let i = 0; i < historyLength; i++) {
+            const index = historyIndex(i);
+            entries[i] = {
+                spikes: historySpikes[index],
+                active: historyActive[index] === 1,
+            };
+        }
+        return entries;
+    }
+
+    function compactMaxQueue() {
+        if (maxHead > 256 && maxHead * 2 > maxValues.length) {
+            maxSerials = maxSerials.slice(maxHead);
+            maxValues = maxValues.slice(maxHead);
+            maxHead = 0;
         }
     }
 
-    function resize() {
-        // Read dimensions from the canvases themselves so we pick up the
-        // final CSS-laid-out size rather than racing window.innerWidth
-        // against flex layout on initial load.
-        const w = rCanvas.offsetWidth || lCanvas.offsetWidth || window.innerWidth;
-        const rH = rCanvas.offsetHeight;
-        const lH = lCanvas.offsetHeight;
-        if (!w || !rH || !lH) return; // layout not ready yet
+    function appendHistory(spikes, active) {
+        if (historyCapacity === 0) return;
 
-        // Idempotent: if nothing changed, skip. Setting canvas.width clears
-        // the drawing buffer, so re-running a no-op resize during the tick
-        // loop would wipe accumulated raster history.
+        if (historyLength === historyCapacity) {
+            const evictedSerial = historySerials[historyStart];
+            historyStart = (historyStart + 1) % historyCapacity;
+            historyLength--;
+            while (maxHead < maxSerials.length && maxSerials[maxHead] <= evictedSerial) {
+                maxHead++;
+            }
+        }
+
+        const index = historyIndex(historyLength);
+        const serial = nextHistorySerial++;
+        historySpikes[index] = spikes;
+        historyActive[index] = active ? 1 : 0;
+        historySerials[index] = serial;
+        historyLength++;
+
+        while (maxValues.length > maxHead && maxValues[maxValues.length - 1] <= spikes) {
+            maxValues.pop();
+            maxSerials.pop();
+        }
+        maxSerials.push(serial);
+        maxValues.push(spikes);
+        compactMaxQueue();
+    }
+
+    function configureHistory(targetPx) {
+        const previous = snapshotHistory();
+        const needed = Math.ceil(targetPx / SPEED) + 8;
+        const capacity = Math.ceil(targetPx / SPEED) + 20;
+        let entries = previous.length > capacity
+            ? previous.slice(previous.length - capacity)
+            : previous;
+
+        while (entries.length < needed) {
+            entries.unshift(synthBaseline());
+        }
+
+        historySpikes = new Uint16Array(capacity);
+        historyActive = new Uint8Array(capacity);
+        historySerials = new Float64Array(capacity);
+        historyCapacity = capacity;
+        historyStart = 0;
+        historyLength = 0;
+        nextHistorySerial = 0;
+        maxSerials = [];
+        maxValues = [];
+        maxHead = 0;
+
+        for (let i = 0; i < entries.length; i++) {
+            appendHistory(entries[i].spikes, entries[i].active);
+        }
+        lfpNeedsRedraw = true;
+    }
+
+    function historyMax() {
+        return Math.max(1, maxHead < maxValues.length ? maxValues[maxHead] : 0);
+    }
+
+    function drawLfpBar(ctx, x, spikes, active, cs, visibleMax) {
+        const topPad = 6;
+        const availableH = Math.max(1, lHeight - topPad);
+        const rawH = (spikes / visibleMax) * availableH;
+        const barH = spikes > 0 ? Math.max(1, rawH) : 0;
+        if (barH === 0) return;
+        ctx.fillStyle = active ? cs.lfpActive : cs.lfpBaseline;
+        ctx.fillRect(x, lHeight - barH, SPEED, barH);
+    }
+
+    function redrawLfp(cs, visibleMax) {
+        lCtx.fillStyle = LFP_BG;
+        lCtx.fillRect(0, 0, width, lHeight);
+
+        for (let i = 0; i < historyLength; i++) {
+            const x = width - (historyLength - i) * SPEED;
+            if (x + SPEED < 0) continue;
+            const index = historyIndex(i);
+            drawLfpBar(
+                lCtx,
+                x,
+                historySpikes[index],
+                historyActive[index] === 1,
+                cs,
+                visibleMax,
+            );
+        }
+
+        renderedLfpMax = visibleMax;
+        renderedLfpScheme = cs;
+        lfpNeedsRedraw = false;
+    }
+
+    function advanceLfp(spikes, active, cs) {
+        appendHistory(spikes, active);
+        const visibleMax = historyMax();
+
+        if (lfpNeedsRedraw || visibleMax !== renderedLfpMax || cs !== renderedLfpScheme) {
+            redrawLfp(cs, visibleMax);
+        } else {
+            // With stable normalization, every existing bar simply advances
+            // left by SPEED and only the newly exposed strip needs drawing.
+            lCtx.drawImage(lCanvas, -SPEED, 0);
+            lCtx.fillStyle = LFP_BG;
+            lCtx.fillRect(width - SPEED, 0, SPEED, lHeight);
+            drawLfpBar(lCtx, width - SPEED, spikes, active, cs, visibleMax);
+        }
+
+        // Draw the active glow on a small transparent overlay so it never
+        // becomes part of the scrolling LFP history.
+        gCtx.clearRect(0, 0, LFP_GLOW_WIDTH, lHeight);
+        if (active && spikes > 0) {
+            const availableH = Math.max(1, lHeight - 6);
+            const latestBarH = (spikes / visibleMax) * availableH;
+            gCtx.shadowColor = cs.lfpGlow;
+            gCtx.shadowBlur = 4;
+            gCtx.fillStyle = cs.lfpActive;
+            gCtx.fillRect(
+                LFP_GLOW_WIDTH - SPEED,
+                lHeight - latestBarH,
+                SPEED,
+                latestBarH,
+            );
+            gCtx.shadowBlur = 0;
+        }
+    }
+
+    function resetRasterBuffer() {
+        edgeCanvas.width = SPEED;
+        edgeCanvas.height = rHeight;
+        edgeCtx.fillStyle = RASTER_BG;
+        edgeCtx.fillRect(0, 0, SPEED, rHeight);
+
+        rCtx.fillStyle = RASTER_BG;
+        rCtx.fillRect(0, 0, width * 2, rHeight);
+        rasterWriteX = 0;
+        rCanvas.style.transform = 'translate3d(0, 0, 0)';
+    }
+
+    function copyRasterStrip(writeX) {
+        const firstWidth = Math.min(SPEED, width - writeX);
+        rCtx.drawImage(
+            edgeCanvas,
+            0,
+            0,
+            firstWidth,
+            rHeight,
+            writeX,
+            0,
+            firstWidth,
+            rHeight,
+        );
+        rCtx.drawImage(
+            edgeCanvas,
+            0,
+            0,
+            firstWidth,
+            rHeight,
+            writeX + width,
+            0,
+            firstWidth,
+            rHeight,
+        );
+
+        if (firstWidth < SPEED) {
+            const wrappedWidth = SPEED - firstWidth;
+            rCtx.drawImage(
+                edgeCanvas,
+                firstWidth,
+                0,
+                wrappedWidth,
+                rHeight,
+                0,
+                0,
+                wrappedWidth,
+                rHeight,
+            );
+            rCtx.drawImage(
+                edgeCanvas,
+                firstWidth,
+                0,
+                wrappedWidth,
+                rHeight,
+                width,
+                0,
+                wrappedWidth,
+                rHeight,
+            );
+        }
+
+        const viewportStart = (writeX + SPEED) % width;
+        rCanvas.style.transform = `translate3d(${-viewportStart}px, 0, 0)`;
+        rasterWriteX = viewportStart;
+    }
+
+    function resize() {
+        // The raster canvas itself is double width, so dimensions come from
+        // its clipped viewport rather than from the canvas element.
+        const viewport = rCanvas.parentElement;
+        const w = viewport.offsetWidth || window.innerWidth;
+        const rH = viewport.offsetHeight;
+        const lH = lCanvas.offsetHeight;
+        if (!w || !rH || !lH) return;
+
         if (w === width && rH === rHeight && lH === lHeight) return;
 
         width = w;
-        rHeight = rCanvas.height = rH;
-        lHeight = lCanvas.height = lH;
-        rCanvas.width = w;
-        lCanvas.width = w;
+        rHeight = rH;
+        lHeight = lH;
+        rCanvas.width = width * 2;
+        rCanvas.height = rHeight;
+        lCanvas.width = width;
+        lCanvas.height = lHeight;
+        glowCanvas.width = LFP_GLOW_WIDTH;
+        glowCanvas.height = lHeight;
 
-        // Make sure history covers the full canvas width for this viewport.
-        ensureHistoryCoversWidth(width);
+        configureHistory(width);
+        resetRasterBuffer();
 
-        rCtx.fillStyle = '#050507';
-        rCtx.fillRect(0, 0, width, rHeight);
-        lCtx.fillStyle = '#08080a';
+        lCtx.fillStyle = LFP_BG;
         lCtx.fillRect(0, 0, width, lHeight);
+        gCtx.clearRect(0, 0, LFP_GLOW_WIDTH, lHeight);
+        renderedLfpMax = 0;
+        renderedLfpScheme = null;
+        lfpNeedsRedraw = true;
     }
 
-    // Window resize keeps working as a backstop.
     window.addEventListener('resize', resize);
 
-    // ResizeObserver fires on the actual canvas boxes — covers the initial
-    // layout settle as well as any later resize from CSS (container changes,
-    // font loads, etc.).
     let ro = null;
     if (typeof ResizeObserver !== 'undefined') {
         ro = new ResizeObserver(() => resize());
-        ro.observe(rCanvas);
+        ro.observe(rCanvas.parentElement);
         ro.observe(lCanvas);
     }
 
     resize();
-    // If the first call raced layout, try again on the next frame.
     requestAnimationFrame(resize);
 
     let rafHandle = null;
@@ -93,31 +320,28 @@ export function createRenderer(dom, neurons, getScheme) {
     function tick() {
         updateSmoothing();
 
+        if (!width) {
+            if (!stopped) rafHandle = requestAnimationFrame(tick);
+            return;
+        }
+
         const isActive = inputState.movementIntensity > 1;
         const cs = getScheme();
 
-        // Shift raster left
-        rCtx.drawImage(rCanvas, -SPEED, 0);
-        rCtx.fillStyle = 'rgba(5, 5, 7, 0.85)';
-        rCtx.fillRect(width - SPEED, 0, SPEED, rHeight);
+        // Preserve the original right-edge phosphor fade in a two-pixel
+        // accumulator. The completed strip is committed after spike drawing.
+        edgeCtx.fillStyle = 'rgba(5, 5, 7, 0.85)';
+        edgeCtx.fillRect(0, 0, SPEED, rHeight);
 
-        // RSB state machine
         const rsbFiringProb = rsbTick(rowCount);
 
-        // Learned / spontaneous-network-burst state — evolves with RSB count.
         learningTick(rowCount, rsbState.phase);
         const inLearnedBurst = learningIsBurstActive();
-        // Hoist the time-only burst envelope out of the per-neuron loop.
         const learnEnvelope = inLearnedBurst
             ? learningState.burstBaseProb * learningBurstEnvelope()
             : 0;
         const learnMask = inLearnedBurst ? learningState.burstNeuronMask : null;
 
-        // Per-neuron color strings are pure functions of the scheme + the
-        // neuron's static properties (preferredAngle, baseAlpha). Caching
-        // them once per scheme avoids ~200 template-literal allocations
-        // and CSS color parses every burst frame. Rebuilds only when the
-        // scheme reference actually changes.
         if (cs !== _lastScheme) {
             for (let i = 0; i < rowCount; i++) {
                 const n = neurons[i];
@@ -127,22 +351,14 @@ export function createRenderer(dom, neurons, getScheme) {
             _lastScheme = cs;
         }
 
-        // Hover-evoked selective firing — the hovered element's preferred
-        // angle drives the matching subpopulation of direction-tuned neurons,
-        // at a higher intensity than mouse movement does.
-        const inHover = hoverIsActive();
-
-        // Spikes
-        let totalSpikes = 0;
-        const rowStep = rHeight / rowCount;
-        rCtx.save();
-
+        const hoverScalar = prepareHoverFrame(neurons);
         const movementIntensity = inputState.movementIntensity;
         const evokedScalar = movementIntensity * 0.003;
+        const rowStep = rHeight / rowCount;
+        let totalSpikes = 0;
 
-        neurons.forEach((n, i) => {
-            // Skip the angular-tuning Math.exp entirely when there's no
-            // movement-evoked drive — saves ~1000 exps per idle frame.
+        for (let i = 0; i < rowCount; i++) {
+            const n = neurons[i];
             let tuningEffect = 0;
             let evokedRate = 0;
             if (evokedScalar > 0) {
@@ -153,9 +369,11 @@ export function createRenderer(dom, neurons, getScheme) {
                 evokedRate = evokedScalar * tuningEffect;
             }
 
-            const rsbRate = (rsbFiringProb > 0 && rsbState.neuronMask[i]) ? rsbFiringProb : 0;
+            const rsbRate = (rsbFiringProb > 0 && rsbState.neuronMask[i])
+                ? rsbFiringProb
+                : 0;
             const learnRate = (learnMask && learnMask[i]) ? learnEnvelope : 0;
-            const hoverRate = inHover ? hoverFiringRate(n) : 0;
+            const hoverRate = hoverFiringRate(i, hoverScalar);
 
             if (n.isPersistent) {
                 const drive = evokedRate * 1.5;
@@ -172,89 +390,43 @@ export function createRenderer(dom, neurons, getScheme) {
                 p = n.burstProb;
                 n.burstRemaining--;
             } else {
-                p = n.baseExcitability + evokedRate + rsbRate + learnRate + hoverRate + (n.isPersistent ? n.residual : 0);
+                p = n.baseExcitability
+                    + evokedRate
+                    + rsbRate
+                    + learnRate
+                    + hoverRate
+                    + (n.isPersistent ? n.residual : 0);
             }
 
             if (Math.random() < p) {
-                if (n.isBursty && n.burstRemaining <= 0 && (evokedRate > 0.005 || n.residual > 0.005 || rsbRate > 0.05 || learnRate > 0.05)) {
+                if (
+                    n.isBursty
+                    && n.burstRemaining <= 0
+                    && (
+                        evokedRate > 0.005
+                        || n.residual > 0.005
+                        || rsbRate > 0.05
+                        || learnRate > 0.05
+                    )
+                ) {
                     n.burstRemaining = n.burstLen;
                 }
 
-                const isEvoked = (inputState.movementIntensity > 2 && tuningEffect > 0.7)
+                const isEvoked = (movementIntensity > 2 && tuningEffect > 0.7)
                     || n.burstRemaining > 0
                     || (n.isPersistent && n.residual > 0.003)
                     || rsbRate > 0
                     || learnRate > 0.01
                     || hoverRate > 0;
-                const y = i * rowStep;
 
-                rCtx.fillStyle = isEvoked ? n._evokedColor : n._baselineColor;
-                rCtx.fillRect(width - SPEED, y, n.size, n.size);
+                edgeCtx.fillStyle = isEvoked ? n._evokedColor : n._baselineColor;
+                edgeCtx.fillRect(0, i * rowStep, n.size, n.size);
                 totalSpikes++;
             }
-        });
-
-        rCtx.restore();
-
-        // UI updates
-        const activePercent = ((totalSpikes / rowCount) * 100).toFixed(1);
-        const rsbLabel = rsbState.phase === 'holding' ? 'RSB Init'
-            : rsbState.phase === 'decaying' ? 'RSB Decay'
-            : rsbState.phase === 'miniburst' ? 'RSB Mini'
-            : null;
-        statStatus.textContent = rsbLabel || (isActive ? 'Active' : 'Baseline');
-        statStatus.style.color = rsbLabel ? cs.accent : (isActive ? cs.accent : cs.accentDim);
-        statPop.textContent = activePercent + '%';
-        statPop.style.color = isActive ? cs.accent : cs.accentDim;
-        statDir.textContent = isActive ? angleToDeg(inputState.smoothAngle) + '\u00B0' : '\u2014';
-        statDir.style.color = isActive ? cs.accent : cs.accentDim;
-        pulseDot.style.background = isActive ? cs.dotActive : cs.dotBaseline;
-        pulseDot.style.boxShadow = isActive ? cs.dotGlow : 'none';
-
-        // LFP histogram — redraw from history each frame, y-axis normalized to visible max.
-        lfpHistory.push({ spikes: totalSpikes, active: isActive });
-        // Cap history to what the current canvas width actually needs,
-        // plus a small cushion. This adapts as the window resizes.
-        const historyCap = Math.ceil(width / SPEED) + 20;
-        while (lfpHistory.length > historyCap) lfpHistory.shift();
-
-        // Normalize to max of what's currently visible (floor at 1 to avoid /0).
-        let visibleMax = 1;
-        for (let i = 0; i < lfpHistory.length; i++) {
-            if (lfpHistory[i].spikes > visibleMax) visibleMax = lfpHistory[i].spikes;
-        }
-        const topPad = 6; // keeps bars and glow from touching the top edge
-        const availableH = Math.max(1, lHeight - topPad);
-
-        // Clear and redraw all bars aligned to the right edge.
-        lCtx.fillStyle = '#08080a';
-        lCtx.fillRect(0, 0, width, lHeight);
-
-        const n = lfpHistory.length;
-        const minBarH = 1; // keep baseline visible even when dwarfed by a burst
-        for (let i = 0; i < n; i++) {
-            const entry = lfpHistory[i];
-            const x = width - (n - i) * SPEED;
-            if (x + SPEED < 0) continue;
-            const rawH = (entry.spikes / visibleMax) * availableH;
-            const barH = entry.spikes > 0 ? Math.max(minBarH, rawH) : 0;
-            if (barH === 0) continue;
-            lCtx.fillStyle = entry.active ? cs.lfpActive : cs.lfpBaseline;
-            lCtx.fillRect(x, lHeight - barH, SPEED, barH);
         }
 
-        // Glow on the newest bar only when active.
-        if (isActive && totalSpikes > 0) {
-            const latestBarH = (totalSpikes / visibleMax) * availableH;
-            lCtx.shadowColor = cs.lfpGlow;
-            lCtx.shadowBlur = 4;
-            lCtx.fillStyle = cs.lfpActive;
-            lCtx.fillRect(width - SPEED, lHeight - latestBarH, SPEED, latestBarH);
-            lCtx.shadowBlur = 0;
-        }
-
-        // Minimap
-        drawMinimap(mCtx, cs, inputState.smoothAngle, inputState.movementIntensity);
+        copyRasterStrip(rasterWriteX);
+        advanceLfp(totalSpikes, isActive, cs);
 
         if (!stopped) rafHandle = requestAnimationFrame(tick);
     }

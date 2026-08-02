@@ -98,16 +98,11 @@ function init() {
     const dom = {
         rCanvas,
         lCanvas: document.getElementById('lfpCanvas'),
-        mCanvas: document.getElementById('minimapCanvas'),
-        statStatus: document.getElementById('stat-status'),
-        statPop: document.getElementById('stat-pop'),
-        statDir: document.getElementById('stat-dir'),
-        statCount: document.getElementById('stat-count'),
-        pulseDot: document.getElementById('pulse'),
+        glowCanvas: document.getElementById('lfpGlowCanvas'),
     };
     dom.rCtx = dom.rCanvas.getContext('2d', { alpha: false });
     dom.lCtx = dom.lCanvas.getContext('2d', { alpha: false });
-    dom.mCtx = dom.mCanvas.getContext('2d');
+    dom.gCtx = dom.glowCanvas.getContext('2d');
 
     let currentScheme = schemes.greyscale;
     const neurons = createNeurons(ROW_COUNT);

@@ -12,6 +12,7 @@
   display: flex;
   flex-direction: column;
   background: #050507;
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -20,10 +21,12 @@
   min-height: 0;
   position: relative;
   width: 100%;
+  overflow: hidden;
 }
 
 #neural-bg #rasterCanvas {
-  width: 100%;
+  width: 200%;
+  max-width: none;
   height: 100%;
   display: block;
   /* Promote the canvas to its own compositing layer so reveal blurs and
@@ -41,6 +44,18 @@
   display: block;
   transform: translateZ(0);
   contain: paint;
+}
+
+#neural-bg #lfpGlowCanvas {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 16px;
+  height: 5%;
+  min-height: 40px;
+  max-height: 64px;
+  pointer-events: none;
 }
 
 /* Design tokens — edit in one place. */

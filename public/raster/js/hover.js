@@ -20,6 +20,9 @@ export const hoverState = {
 };
 
 let hoverStartTimeMs = 0;
+let cachedNeurons = null;
+let cachedAngle = NaN;
+let cachedTuning = null;
 
 // Sparseness controls — lower = sparser & sharper.
 const HOVER_TUNING_WIDTH = 0.15;     // gaussian width on the angular tuning curve
@@ -41,22 +44,36 @@ export function setHoverInactive() {
     hoverState.buttonId = null;
 }
 
-export function hoverFiringRate(neuron) {
+// Prepare the hover response once per animation frame. The tuning curve only
+// depends on the active target and each neuron's fixed preferred angle, so it
+// is rebuilt only when either of those inputs changes. Previously both the
+// decay and tuning exponentials were evaluated for every neuron, every frame.
+export function prepareHoverFrame(neurons) {
     if (!hoverState.active) return 0;
 
-    // Decay envelope — flash fades to ~0 over ~5τ.
     const elapsed = performance.now() - hoverStartTimeMs;
     const decay = Math.exp(-elapsed / HOVER_DECAY_TAU_MS);
-    if (decay < 0.01) return 0; // gate: don't bother computing tuning once faded
+    if (decay < 0.01) return 0;
 
-    // Angular selectivity (narrow gaussian).
-    let dist = Math.abs(hoverState.angle - neuron.preferredAngle);
-    if (dist > Math.PI) dist = Math.PI * 2 - dist;
-    const tuning = Math.exp(
-        -(dist * dist) / (2 * HOVER_TUNING_WIDTH * HOVER_TUNING_WIDTH)
-    );
+    if (cachedNeurons !== neurons || cachedAngle !== hoverState.angle) {
+        const sigma2 = 2 * HOVER_TUNING_WIDTH * HOVER_TUNING_WIDTH;
+        const tuning = new Float64Array(neurons.length);
+        for (let i = 0; i < neurons.length; i++) {
+            let dist = Math.abs(hoverState.angle - neurons[i].preferredAngle);
+            if (dist > Math.PI) dist = Math.PI * 2 - dist;
+            tuning[i] = Math.exp(-(dist * dist) / sigma2);
+        }
+        cachedNeurons = neurons;
+        cachedAngle = hoverState.angle;
+        cachedTuning = tuning;
+    }
 
-    return HOVER_PEAK_INTENSITY * tuning * decay;
+    return HOVER_PEAK_INTENSITY * decay;
+}
+
+export function hoverFiringRate(neuronIndex, hoverScalar) {
+    if (!cachedTuning || hoverScalar === 0) return 0;
+    return cachedTuning[neuronIndex] * hoverScalar;
 }
 
 export function hoverIsActive() {
